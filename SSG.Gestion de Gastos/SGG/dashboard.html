@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGG - Dashboard Aesthetic</title>
+    <title>SGG - Dashboard Aesthetic 🍓</title>
     <style>
         :root {
             --bg-page: #fff0f3;
             --bg-card: #ffffff;
             --pink-accent: #ff85a1;
             --pink-soft: #fbb1bd;
-            --pink-light: #f7cad0;
             --text-dark: #5c3d46;
             --text-muted: #8d6e75;
             --border-color: #f7cad0;
@@ -41,7 +40,6 @@
             box-shadow: 0 10px 25px rgba(255, 133, 161, 0.15);
         }
 
-        /* Encabezado */
         .header {
             display: flex;
             align-items: center;
@@ -76,14 +74,10 @@
             border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.2s;
+            text-decoration: none;
+            font-size: 13px;
         }
 
-        .btn-logout:hover {
-            background: var(--pink-accent);
-        }
-
-        /* Tarjetas de Totales */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -104,7 +98,6 @@
             color: var(--text-muted);
             margin-bottom: 6px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .card .amount {
@@ -113,7 +106,6 @@
             color: var(--text-dark);
         }
 
-        /* Layout Principal */
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 2fr;
@@ -133,7 +125,6 @@
             color: var(--text-dark);
         }
 
-        /* Formularios e Inputs */
         .form-group {
             margin-bottom: 12px;
         }
@@ -166,14 +157,8 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
-            transition: 0.2s;
         }
 
-        .btn-add:hover {
-            background: #ff6b8b;
-        }
-
-        /* Tabla de Gastos */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -199,28 +184,22 @@
             cursor: pointer;
             font-size: 11px;
         }
-
-        .btn-delete:hover {
-            background: #e56b6f;
-        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <div class="header-title">
-                <span>🍓</span>
+                <span style="font-size: 32px;">🍓</span>
                 <div>
                     <h1>Budget Tracker</h1>
                     <p class="subtitle">Take control of your money & reach your goals 🎀</p>
                 </div>
             </div>
-            <button class="btn-logout" id="btn-cerrar-sesion">Cerrar Sesión</button>
+            <a href="./index.html" class="btn-logout">Cerrar Sesión</a>
         </div>
 
-        <!-- Tarjetas de Resumen -->
         <div class="cards-grid">
             <div class="card">
                 <h3>Total Ingresos 👛</h3>
@@ -236,15 +215,13 @@
             </div>
         </div>
 
-        <!-- Panel Principal -->
         <div class="main-grid">
-            <!-- Formulario de Carga -->
             <div class="box">
                 <h2>Cargar Nuevo Gasto ✨</h2>
                 <form id="form-gasto">
                     <div class="form-group">
                         <label>Descripción</label>
-                        <input type="text" id="gasto-descripcion" placeholder="Ej. Materiales, Cafecito..." required>
+                        <input type="text" id="gasto-descripcion" placeholder="Ej. Insumos..." required>
                     </div>
                     <div class="form-group">
                         <label>Monto ($)</label>
@@ -267,7 +244,6 @@
                 </form>
             </div>
 
-            <!-- Tabla de Historial -->
             <div class="box">
                 <h2>Historial de Gastos 📋</h2>
                 <table>
@@ -280,13 +256,13 @@
                         </tr>
                     </thead>
                     <tbody id="tabla-gastos-body">
-                        <!-- Se puebla dinámicamente desde js/gastos.js -->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
+    <!-- Enlace exacto al script -->
     <script src="./js/gastos.js"></script>
 </body>
 </html>
