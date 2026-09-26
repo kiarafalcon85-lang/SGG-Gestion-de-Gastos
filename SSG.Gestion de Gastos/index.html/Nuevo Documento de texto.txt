@@ -2,99 +2,10 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestión de Gastos (SGG) - Menú Principal</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: #f4f6f9;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            max-width: 600px;
-            width: 100%;
-            padding: 40px;
-            text-align: center;
-        }
-        h1 {
-            color: #1a365d;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-        p {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 16px;
-        }
-        .menu-grid {
-            display: grid;
-            gap: 15px;
-        }
-        .btn-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #2b6cb0;
-            color: white;
-            padding: 16px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 16px;
-            transition: background 0.2s ease, transform 0.2s ease;
-        }
-        .btn-card:hover {
-            background: #2c5282;
-            transform: translateY(-2px);
-        }
-        .btn-card.secondary {
-            background: #4a5568;
-        }
-        .btn-card.secondary:hover {
-            background: #2d3748;
-        }
-        .badge {
-            background: rgba(255,255,255,0.2);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-        }
-    </style>
+    <meta http-equiv="refresh" content="0; url=./SGG/index.html">
+    <title>Sistema de Gestión de Gastos (SGG)</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Sistema de Gestión de Gastos</h1>
-        <p>Seleccione una opción del menú interactivo para ingresar al módulo correspondiente:</p>
-        
-        <div class="menu-grid">
-            <a href="./SGG/index.html" class="btn-card">
-                <span>🔐 Módulo 1: Autenticación / Login</span>
-                <span class="badge">Acceder</span>
-            </a>
-
-            <a href="./SGG/dashboard.html" class="btn-card">
-                <span>📊 Módulo 2: Dashboard de Gastos (CRUD)</span>
-                <span class="badge">Privado</span>
-            </a>
-
-            <a href="./README.md" class="btn-card secondary">
-                <span>📄 Ver Documentación Técnica</span>
-                <span class="badge">IEEE 830 / 829</span>
-            </a>
-        </div>
-    </div>
+    <p>Redirigiendo al Sistema de Gestión de Gastos... <a href="./SGG/index.html">Haz clic aquí si no redirige automáticamente</a>.</p>
 </body>
 </html>
