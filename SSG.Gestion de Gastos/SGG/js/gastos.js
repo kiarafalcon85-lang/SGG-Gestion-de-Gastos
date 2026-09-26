@@ -62,7 +62,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
     actualizarUI();
 });
-
-    // Cargar datos al iniciar
-    actualizarUI();
-});
