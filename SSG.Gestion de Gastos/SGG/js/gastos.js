@@ -5,12 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalGastosEl = document.getElementById("total-gastos");
     const totalBalanceEl = document.getElementById("total-balance");
 
-    // Array para almacenar la lista de gastos
     let gastos = JSON.parse(localStorage.getItem("sgg_gastos")) || [];
-    let ingresos = 5820; // Puedes cambiar o dinamizar este valor inicial
+    let ingresos = 5820;
 
-    // Función para renderizar los gastos en la tabla y actualizar totales
     function actualizarUI() {
+        if (!tablaGastos) return;
         tablaGastos.innerHTML = "";
         let sumaGastos = 0;
 
@@ -27,19 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
             tablaGastos.appendChild(fila);
         });
 
-        // Calcular balances
         const balance = ingresos - sumaGastos;
 
-        // Actualizar valores en pantalla
-        totalIngresosEl.textContent = `$${ingresos.toFixed(2)}`;
-        totalGastosEl.textContent = `$${sumaGastos.toFixed(2)}`;
-        totalBalanceEl.textContent = `$${balance.toFixed(2)}`;
+        if (totalIngresosEl) totalIngresosEl.textContent = `$${ingresos.toFixed(2)}`;
+        if (totalGastosEl) totalGastosEl.textContent = `$${sumaGastos.toFixed(2)}`;
+        if (totalBalanceEl) totalBalanceEl.textContent = `$${balance.toFixed(2)}`;
 
-        // Guardar en el almacenamiento local del navegador
         localStorage.setItem("sgg_gastos", JSON.stringify(gastos));
     }
 
-    // Evento para agregar un gasto
     if (formGasto) {
         formGasto.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -49,15 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const categoria = document.getElementById("gasto-categoria").value;
             const fecha = document.getElementById("gasto-fecha").value;
 
-            const nuevoGasto = { descripcion, monto, categoria, fecha };
-            gastos.push(nuevoGasto);
-
+            gastos.push({ descripcion, monto, categoria, fecha });
             actualizarUI();
             formGasto.reset();
         });
     }
 
-    // Evento para eliminar un gasto de la lista
     if (tablaGastos) {
         tablaGastos.addEventListener("click", (e) => {
             if (e.target.classList.contains("btn-delete")) {
@@ -67,6 +59,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    actualizarUI();
+});
 
     // Cargar datos al iniciar
     actualizarUI();
