@@ -1,27 +1,29 @@
 :root {
-    --bg-main: #f0f2f5;
+    --bg-main: #fff0f5;
     --card-bg: #ffffff;
-    --text-primary: #1c1e21;
-    --border-color: #dadde1;
-    --primary-btn: #1877f2;
-    --primary-hover: #166fe5;
-    --danger-btn: #dc3545;
+    --text-primary: #5c2c3b;
+    --border-color: #f7cad0;
+    --primary-btn: #ffb3c1;
+    --primary-hover: #ff8fa3;
+    --accent-pink: #ff758f;
+    --danger-btn: #ff4d6d;
 }
 
 body.dark-mode {
-    --bg-main: #18191a;
-    --card-bg: #242526;
-    --text-primary: #e4e6eb;
-    --border-color: #3e4042;
-    --primary-btn: #2d88ff;
-    --primary-hover: #3a8fff;
-    --danger-btn: #e41e3f;
+    --bg-main: #2b1e23;
+    --card-bg: #3d2730;
+    --text-primary: #fec5bb;
+    --border-color: #633745;
+    --primary-btn: #ff758f;
+    --primary-hover: #ff4d6d;
+    --accent-pink: #ff8fa3;
+    --danger-btn: #c9184a;
 }
 
 body {
     background-color: var(--bg-main);
     color: var(--text-primary);
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
     transition: background-color 0.3s, color 0.3s;
@@ -33,7 +35,14 @@ body {
     align-items: center;
     padding: 15px 30px;
     background-color: var(--card-bg);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
+    box-shadow: 0 2px 10px rgba(255, 182, 193, 0.2);
+}
+
+.top-bar h1 {
+    font-size: 1.4rem;
+    margin: 0;
+    color: var(--accent-pink);
 }
 
 .header-btns {
@@ -43,12 +52,17 @@ body {
 
 .btn-theme, .btn-logout {
     padding: 8px 16px;
-    border-radius: 6px;
+    border-radius: 20px;
     border: 1px solid var(--border-color);
     cursor: pointer;
     background: var(--card-bg);
     color: var(--text-primary);
     font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.btn-theme:hover, .btn-logout:hover {
+    transform: scale(1.05);
 }
 
 .btn-logout {
@@ -58,26 +72,27 @@ body {
 }
 
 .main-container {
-    max-width: 600px;
+    max-width: 650px;
     margin: 30px auto;
     padding: 20px;
 }
 
 .auth-card, .crud-section {
     background-color: var(--card-bg);
-    padding: 25px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
+    padding: 30px;
+    border-radius: 20px;
+    border: 2px solid var(--border-color);
+    box-shadow: 0 8px 20px rgba(255, 182, 193, 0.15);
 }
 
 .demo-info {
-    background-color: #e7f3fe;
-    color: #0c5460;
-    padding: 12px;
-    border-radius: 6px;
+    background-color: #ffe5ec;
+    color: #a4133c;
+    padding: 12px 16px;
+    border-radius: 12px;
     margin-bottom: 20px;
     font-size: 0.9em;
-    border: 1px solid #bee5eb;
+    border: 1px solid var(--border-color);
 }
 
 .input-group {
@@ -86,43 +101,69 @@ body {
 
 .input-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    font-size: 0.9em;
+    font-weight: bold;
 }
 
 .input-group input, .gastos-form input {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: 12px;
     background-color: var(--bg-main);
     color: var(--text-primary);
     box-sizing: border-box;
+    outline: none;
+}
+
+.input-group input:focus, .gastos-form input:focus {
+    border-color: var(--accent-pink);
 }
 
 .btn-primary {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     background-color: var(--primary-btn);
-    color: white;
+    color: #5c2c3b;
     border: none;
-    border-radius: 6px;
+    border-radius: 12px;
     font-weight: bold;
+    font-size: 1em;
     cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    color: #ffffff;
 }
 
 .switch-auth {
     text-align: center;
     margin-top: 15px;
+    font-size: 0.9em;
+}
+
+.switch-auth a {
+    color: var(--accent-pink);
+    text-decoration: none;
+    font-weight: bold;
 }
 
 .hidden {
     display: none !important;
 }
 
+.welcome-section h2 {
+    color: var(--accent-pink);
+    margin-top: 0;
+}
+
 .gastos-form {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .tabla-gastos {
@@ -130,8 +171,15 @@ body {
     border-collapse: collapse;
 }
 
-.tabla-gastos th, .tabla-gastos td {
-    padding: 10px;
+.tabla-gastos th {
+    background-color: var(--bg-main);
+    color: var(--accent-pink);
+    padding: 12px;
     text-align: left;
+    border-radius: 8px 8px 0 0;
+}
+
+.tabla-gastos td {
+    padding: 12px;
     border-bottom: 1px solid var(--border-color);
 }
