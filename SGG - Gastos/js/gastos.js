@@ -1,64 +1,101 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const formGasto = document.getElementById("form-gasto");
-    const tablaGastos = document.getElementById("tabla-gastos-body");
-    const totalIngresosEl = document.getElementById("total-ingresos");
-    const totalGastosEl = document.getElementById("total-gastos");
-    const totalBalanceEl = document.getElementById("total-balance");
+    // 1. Gestión del Modo Oscuro
+    const themeBtn = document.getElementById("theme-toggle");
+    const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
-    let gastos = JSON.parse(localStorage.getItem("sgg_gastos")) || [];
-    let ingresos = 5820;
-
-    function actualizarUI() {
-        if (!tablaGastos) return;
-        tablaGastos.innerHTML = "";
-        let sumaGastos = 0;
-
-        gastos.forEach((gasto, index) => {
-            sumaGastos += parseFloat(gasto.monto);
-
-            const fila = document.createElement("tr");
-            fila.innerHTML = `
-                <td>${gasto.descripcion}</td>
-                <td><span style="background: #fbb1bd; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px;">${gasto.categoria}</span></td>
-                <td>$${parseFloat(gasto.monto).toFixed(2)}</td>
-                <td><button class="btn-delete" data-index="${index}">Eliminar ✖</button></td>
-            `;
-            tablaGastos.appendChild(fila);
-        });
-
-        const balance = ingresos - sumaGastos;
-
-        if (totalIngresosEl) totalIngresosEl.textContent = `$${ingresos.toFixed(2)}`;
-        if (totalGastosEl) totalGastosEl.textContent = `$${sumaGastos.toFixed(2)}`;
-        if (totalBalanceEl) totalBalanceEl.textContent = `$${balance.toFixed(2)}`;
-
-        localStorage.setItem("sgg_gastos", JSON.stringify(gastos));
+    if (savedTheme === "dark") {
+        document.body.classList.replace("light-mode", "dark-mode");
+        if (themeBtn) themeBtn.textContent = "☀️️ Modo Claro";
     }
 
-    if (formGasto) {
-        formGasto.addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            const descripcion = document.getElementById("gasto-descripcion").value;
-            const monto = parseFloat(document.getElementById("gasto-monto").value);
-            const categoria = document.getElementById("gasto-categoria").value;
-            const fecha = document.getElementById("gasto-fecha").value;
-
-            gastos.push({ descripcion, monto, categoria, fecha });
-            actualizarUI();
-            formGasto.reset();
-        });
-    }
-
-    if (tablaGastos) {
-        tablaGastos.addEventListener("click", (e) => {
-            if (e.target.classList.contains("btn-delete")) {
-                const index = e.target.getAttribute("data-index");
-                gastos.splice(index, 1);
-                actualizarUI();
+    if (themeBtn) {
+        themeBtn.addEventListener("click", () => {
+            if (document.body.classList.contains("light-mode")) {
+                document.body.classList.replace("light-mode", "dark-mode");
+                localStorage.setItem("sgg_theme", "dark");
+                themeBtn.textContent = "☀️ Modo Claro";
+            } else {
+                document.body.classList.replace("dark-mode", "light-mode");
+                localStorage.setItem("sgg_theme", "light");
+                themeBtn.textContent = "🌙 Modo Oscuro";
             }
         });
     }
 
-    actualizarUI();
+    // 2. Cerrar Sesión
+    const btnLogout = document.getElementById("btn-logout");
+    if (btnLogout) {
+        btnLogout.addEventListener("click", () => {
+            sessionStorage.removeItem("usuarioAutenticado");
+            window.location.href = "index.html";
+        });
+    }
+
+    // Mostrar el usuario activo
+    const userDisplay = document.getElementById("user-display-name");
+    const activeUser = sessionStorage.getItem("usuarioAutenticado");
+    if (userDisplay && activeUser) {
+        userDisplay.textContent = activeUser;
+    }
+
+    // 3. Lógica CRUD de Gastos
+    const formGastos = document.getElementById("form-gastos");
+    const listaGastos = document.getElementById("lista-gastos");
+    let gastos = JSON.parse(localStorage.getItem("sgg_gastos")) || [
+        { id: 1, concepto: "Servicios de Luz/Agua", monto: 4500, activo: true },
+        { id: 2, concepto: "Insumos de Oficina", monto: 12000, activo: true }
+    ];
+
+    function renderGastos() {
+        if (!listaGastos) return;
+        listaGastos.innerHTML = "";
+        
+        gastos.forEach((item) => {
+            if (item.activo) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${item.concepto}</td>
+                    <td>$${parseFloat(item.monto).toFixed(2)}</td>
+                    <td><span style="color: green; font-weight: bold;">Activo</span></td>
+                    <td>
+                        <button onclick="eliminarGasto(${item.id})" class="btn-logout" style="padding: 4px 8px; font-size: 12px;">Baja Lógica</button>
+                    </td>
+                `;
+                listaGastos.appendChild(tr);
+            }
+        });
+
+        localStorage.setItem("sgg_gastos", JSON.stringify(gastos));
+    }
+
+    if (formGastos) {
+        formGastos.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const concepto = document.getElementById("gasto-concepto").value;
+            const monto = document.getElementById("gasto-monto").value;
+
+            if (monto <= 0) {
+                alert("El monto debe ser un número positivo mayor a 0.");
+                return;
+            }
+
+            const nuevoGasto = {
+                id: Date.now(),
+                concepto: concepto,
+                monto: parseFloat(monto),
+                activo: true
+            };
+
+            gastos.push(nuevoGasto);
+            renderGastos();
+            formGastos.reset();
+        });
+    }
+
+    window.eliminarGasto = function(id) {
+        gastos = gastos.map(g => g.id === id ? { ...g, activo: false } : g);
+        renderGastos();
+    };
+
+    renderGastos();
 });
