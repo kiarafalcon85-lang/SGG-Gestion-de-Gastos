@@ -1,1 +1,118 @@
+/* Variables CSS para cambio de tema */
+:root {
+    --bg-main: #f0f2f5;
+    --card-bg: #ffffff;
+    --text-primary: #1c1e21;
+    --text-secondary: #606770;
+    --border-color: #dadde1;
+    --primary-btn: #1877f2;
+    --primary-hover: #166fe5;
+    --danger-btn: #dc3545;
+}
 
+body.dark-mode {
+    --bg-main: #18191a;
+    --card-bg: #242526;
+    --text-primary: #e4e6eb;
+    --text-secondary: #b0b3b8;
+    --border-color: #3e4042;
+    --primary-btn: #2d88ff;
+    --primary-hover: #3a8fff;
+    --danger-btn: #e41e3f;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Barra superior */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.user-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-theme, .btn-logout {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+.btn-logout {
+    background-color: var(--danger-btn);
+    color: white;
+    border: none;
+}
+
+/* Panel principal */
+.main-container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.crud-section {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-top: 20px;
+}
+
+.gastos-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.gastos-form input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+}
+
+.btn-primary {
+    background-color: var(--primary-btn);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Tabla */
+.tabla-gastos {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-gastos th, .tabla-gastos td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
