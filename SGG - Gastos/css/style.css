@@ -1,27 +1,24 @@
 /* PALETA DE COLORES - AESTHETIC COQUETTE / FRUTILLA */
 :root {
-    --bg-main: #fce4ec !important;        /* Rosa pastel suave de fondo */
-    --card-bg: #ffffff !important;        /* Blanco para las tarjetas */
-    --text-primary: #880e4f !important;   /* Texto borgoña/rosa oscuro */
-    --border-color: #f8bbd0 !important;   /* Bordes rosa suave */
-    --primary-btn: #f48fb1 !important;    /* Botón rosa lindo */
-    --primary-hover: #f06292 !important;  /* Hover del botón */
-    --accent-pink: #d81b60 !important;    /* Rosa fuerte/frutilla */
-    --demo-bg: #f8bbd0 !important;        /* Fondo caja credenciales */
-    --demo-text: #880e4f !important;      /* Texto credenciales */
+    --bg-main: #fce4ec !important;
+    --card-bg: #ffffff !important;
+    --text-primary: #880e4f !important;
+    --border-color: #f8bbd0 !important;
+    --primary-btn: #f48fb1 !important;
+    --primary-hover: #f06292 !important;
+    --accent-pink: #d81b60 !important;
+    --danger-btn: #e91e63 !important;
 }
 
-/* MODO OSCURO - ROSA VIEJO / APAGADO */
 body.dark-mode {
-    --bg-main: #2d1b22 !important;        /* Rosa apagado muy oscuro/opaco */
-    --card-bg: #422530 !important;        /* Tarjeta rosa opaco */
-    --text-primary: #f8bbd0 !important;   /* Texto rosa claro legible */
-    --border-color: #5c3543 !important;   /* Bordes sutiles */
-    --primary-btn: #ad1457 !important;    /* Botón rosa viejo intenso */
+    --bg-main: #2d1b22 !important;
+    --card-bg: #422530 !important;
+    --text-primary: #f8bbd0 !important;
+    --border-color: #5c3543 !important;
+    --primary-btn: #ad1457 !important;
     --primary-hover: #c2185b !important;
     --accent-pink: #f48fb1 !important;
-    --demo-bg: #5c3543 !important;
-    --demo-text: #f8bbd0 !important;
+    --danger-btn: #c2185b !important;
 }
 
 body {
@@ -40,7 +37,6 @@ body {
     padding: 15px 30px;
     background-color: var(--card-bg) !important;
     border-bottom: 2px solid var(--border-color);
-    box-shadow: 0 2px 10px rgba(248, 187, 208, 0.4);
 }
 
 .top-bar h1 {
@@ -59,132 +55,117 @@ body {
     border-radius: 20px;
     border: 1px solid var(--border-color);
     cursor: pointer;
-    background: var(--card-bg);
-    color: var(--text-primary) !important;
     font-weight: bold;
-    transition: transform 0.2s;
-}
-
-.btn-theme:hover, .btn-logout:hover {
-    transform: scale(1.05);
 }
 
 .btn-logout {
-    background-color: #e91e63 !important;
+    background-color: var(--danger-btn) !important;
     color: white !important;
     border: none;
 }
 
 .main-container {
-    max-width: 650px;
-    margin: 30px auto;
-    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 15px;
 }
 
-.auth-card, .crud-section {
+.summary-card, .crud-section {
     background-color: var(--card-bg) !important;
-    padding: 30px;
+    padding: 20px 25px;
     border-radius: 20px;
     border: 2px solid var(--border-color);
-    box-shadow: 0 8px 25px rgba(244, 143, 177, 0.25);
-}
-
-.demo-info {
-    background-color: var(--demo-bg) !important;
-    color: var(--demo-text) !important;
-    padding: 12px 16px;
-    border-radius: 12px;
     margin-bottom: 20px;
-    font-size: 0.9em;
-    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(248, 187, 208, 0.2);
 }
 
-.input-group {
-    margin-bottom: 15px;
+.summary-card {
+    text-align: center;
+}
+
+.summary-card h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    color: var(--accent-pink) !important;
+}
+
+.total-monto {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: var(--accent-pink) !important;
+}
+
+.gastos-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.full-width {
+    grid-column: span 3;
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 6px;
-    font-size: 0.9em;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
     font-weight: bold;
-    color: var(--text-primary) !important;
 }
 
-.input-group input, .gastos-form input {
+.input-group input, .input-group select {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     border: 1.5px solid var(--border-color);
     border-radius: 12px;
     background-color: var(--bg-main) !important;
     color: var(--text-primary) !important;
     box-sizing: border-box;
-    outline: none;
 }
 
-.input-group input:focus, .gastos-form input:focus {
-    border-color: var(--accent-pink);
-}
-
-.btn-primary {
-    width: 100%;
-    padding: 12px;
-    background-color: var(--primary-btn) !important;
-    color: #ffffff !important;
+.btn-primary, .btn-secondary {
+    padding: 10px 20px;
     border: none;
     border-radius: 12px;
     font-weight: bold;
-    font-size: 1em;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
-    box-shadow: 0 4px 10px rgba(240, 98, 146, 0.3);
 }
 
-.btn-primary:hover {
-    background-color: var(--primary-hover) !important;
+.btn-primary {
+    background-color: var(--primary-btn) !important;
+    color: white !important;
 }
 
-.switch-auth {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 0.9em;
-}
-
-.switch-auth a {
-    color: var(--accent-pink) !important;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.hidden {
-    display: none !important;
-}
-
-.welcome-section h2 {
-    color: var(--accent-pink) !important;
-    margin-top: 0;
-}
-
-.gastos-form {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
+.btn-secondary {
+    background-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
 }
 
 .tabla-gastos {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.tabla-gastos th, .tabla-gastos td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .tabla-gastos th {
-    background-color: var(--bg-main) !important;
     color: var(--accent-pink) !important;
-    padding: 12px;
-    text-align: left;
-    border-radius: 8px 8px 0 0;
 }
 
-.tabla-gastos td {
-    padding: 12px;
-    border-bottom: 1px solid var(--border-color);
+.btn-edit, .btn-delete {
+    padding: 4px 8px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-right: 5px;
 }
+
+.btn-edit { background-color: #ba68c8; color: white; }
+.btn-delete { background-color: var(--danger-btn); color: white; }
+
+.hidden { display: none !important; }
