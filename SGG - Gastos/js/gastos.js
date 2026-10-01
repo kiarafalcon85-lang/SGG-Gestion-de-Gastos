@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (savedTheme === "dark") {
         document.body.classList.replace("light-mode", "dark-mode");
-        if (themeBtn) themeBtn.textContent = "☀️️ Modo Claro";
+        if (themeBtn) themeBtn.textContent = "☀️ Modo Claro";
     }
 
     if (themeBtn) {
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Login del Profesor
+    // Login
     if (formLogin) {
         formLogin.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 sessionStorage.setItem("sgg_logged", "true");
                 cargarVistaPanel();
             } else {
-                alert("Credenciales incorrectas. Use: admin@profesor.com / 123456");
+                alert("Credenciales incorrectas. Usar: admin@profesor.com / 123456");
             }
         });
     }
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (formRegister) {
         formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
-            alert("¡Cuenta creada correctamente! Ahora inicia sesión.");
+            alert("¡Cuenta creada con éxito! 🍓 Ahora puedes iniciar sesión.");
             formRegister.classList.add("hidden");
             formLogin.classList.remove("hidden");
         });
@@ -100,8 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const formGastos = document.getElementById("form-gastos");
     const listaGastos = document.getElementById("lista-gastos");
     let gastos = JSON.parse(localStorage.getItem("sgg_gastos")) || [
-        { id: 1, concepto: "Servicios de Luz/Agua", monto: 4500, activo: true },
-        { id: 2, concepto: "Insumos de Oficina", monto: 12000, activo: true }
+        { id: 1, concepto: "Papelería & Stickers 🌸", monto: 4500, activo: true },
+        { id: 2, concepto: "Café con amigas 🍓", monto: 12000, activo: true }
     ];
 
     function renderGastos() {
@@ -114,9 +114,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 tr.innerHTML = `
                     <td>${item.concepto}</td>
                     <td>$${parseFloat(item.monto).toFixed(2)}</td>
-                    <td><span style="color: green; font-weight: bold;">Activo</span></td>
+                    <td><span style="color: #ff758f; font-weight: bold;">Activo</span></td>
                     <td>
-                        <button onclick="eliminarGasto(${item.id})" class="btn-logout" style="padding: 4px 8px; font-size: 11px;">Baja Lógica</button>
+                        <button onclick="eliminarGasto(${item.id})" class="btn-logout" style="padding: 4px 10px; font-size: 11px;">Eliminar 🍓</button>
                     </td>
                 `;
                 listaGastos.appendChild(tr);
