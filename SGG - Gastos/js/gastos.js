@@ -1,14 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. REGLA A: SEGURIDAD DE RUTAS (CP-05.1)
-    const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
-    
-    // Si no existe la sesión activa, redirige forzosamente a index.html
-    if (!usuarioActivo || !usuarioActivo.email) {
-        window.location.href = "index.html";
-        return;
-    }
-
-    // 2. MODO OSCURO / DÍA
+    // 1. MODO OSCURO / CLARO
     const themeBtn = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
@@ -31,16 +22,88 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 3. CERRAR SESIÓN
+    // 2. REFERENCIAS DOM DE VISTAS Y AUTENTICACIÓN
+    const authView = document.getElementById("auth-view");
+    const panelView = document.getElementById("panel-view");
+    const formLogin = document.getElementById("form-login");
+    const formRegister = document.getElementById("form-register");
+    const goToRegister = document.getElementById("go-to-register");
+    const goToLogin = document.getElementById("go-to-login");
     const btnLogout = document.getElementById("btn-logout");
-    if (btnLogout) {
-        btnLogout.addEventListener("click", () => {
-            localStorage.removeItem("usuario_activo_sgg");
-            window.location.href = "index.html";
+
+    // Alternar entre Formulario de Login y Registro
+    if (goToRegister) {
+        goToRegister.addEventListener("click", (e) => {
+            e.preventDefault();
+            formLogin.classList.add("hidden");
+            formRegister.classList.remove("hidden");
         });
     }
 
-    // 4. CRUD Y REGLAS DE NEGOCIO (RF-05 a RF-09)
+    if (goToLogin) {
+        goToLogin.addEventListener("click", (e) => {
+            e.preventDefault();
+            formRegister.classList.add("hidden");
+            formLogin.classList.remove("hidden");
+        });
+    }
+
+    // INICIO DE SESIÓN
+    if (formLogin) {
+        formLogin.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("login-email").value.trim();
+            const pass = document.getElementById("login-password").value.trim();
+
+            if (email === "admin@profesor.com" && pass === "123456") {
+                const usuario = { email: email };
+                localStorage.setItem("usuario_activo_sgg", JSON.stringify(usuario));
+                verificarSesion();
+            } else {
+                alert("Credenciales incorrectas. Prueba con admin@profesor.com / 123456");
+            }
+        });
+    }
+
+    // REGISTRO DE USUARIO
+    if (formRegister) {
+        formRegister.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("reg-email").value.trim();
+            if (!email) return;
+
+            const usuario = { email: email };
+            localStorage.setItem("usuario_activo_sgg", JSON.stringify(usuario));
+            alert("¡Cuenta creada e iniciada con éxito! 🍓");
+            verificarSesion();
+        });
+    }
+
+    // CIERRE DE SESIÓN
+    if (btnLogout) {
+        btnLogout.addEventListener("click", () => {
+            localStorage.removeItem("usuario_activo_sgg");
+            verificarSesion();
+        });
+    }
+
+    // CONTROL DE VISTAS SEGÚN SESIÓN
+    function verificarSesion() {
+        const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
+
+        if (usuarioActivo && usuarioActivo.email) {
+            authView.classList.add("hidden");
+            panelView.classList.remove("hidden");
+            btnLogout.classList.remove("hidden");
+            renderizarDashboard();
+        } else {
+            authView.classList.remove("hidden");
+            panelView.classList.add("hidden");
+            btnLogout.classList.add("hidden");
+        }
+    }
+
+    // 3. LOGICA DE GASTOS (CRUD Y DASHBOARD)
     const formGastos = document.getElementById("form-gastos");
     const listaGastos = document.getElementById("lista-gastos");
     const totalMontoDisplay = document.getElementById("total-monto");
@@ -48,20 +111,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnGuardar = document.getElementById("btn-guardar");
     const btnCancelar = document.getElementById("btn-cancelar");
 
-    // Carga de array global desde LocalStorage
     let gastosSGG = JSON.parse(localStorage.getItem("gastos_sgg")) || [];
 
-    // RF-06: RENDERIZADO DINÁMICO & RF-09: PANEL DE RESUMEN
     function renderizarDashboard() {
+        const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
+        if (!usuarioActivo || !listaGastos) return;
+
         listaGastos.innerHTML = "";
         let totalAcumulado = 0;
 
-        // Filtra únicamente los registros del usuario actual con estado_activo === true
-        const misGastosActivos = gastosSGG.filter(gasto => 
-            gasto.email_usuario === usuarioActivo.email && gasto.estado_activo === true
+        // Filtra los gastos activos del usuario logueado
+        const misGastos = gastosSGG.filter(g => 
+            g.email_usuario === usuarioActivo.email && g.estado_activo === true
         );
 
-        misGastosActivos.forEach((item) => {
+        misGastos.forEach((item) => {
             totalAcumulado += parseFloat(item.monto);
 
             const tr = document.createElement("tr");
@@ -78,57 +142,68 @@ document.addEventListener("DOMContentLoaded", () => {
             listaGastos.appendChild(tr);
         });
 
-        // Formatea y actualiza la tarjeta principal del total (RF-09)
-        totalMontoDisplay.textContent = `$${totalAcumulado.toFixed(2)}`;
+        if (totalMontoDisplay) {
+            totalMontoDisplay.textContent = `$${totalAcumulado.toFixed(2)}`;
+        }
 
-        // Sincroniza en LocalStorage
         localStorage.setItem("gastos_sgg", JSON.stringify(gastosSGG));
     }
 
-    // RF-05 / RF-07: CREAR Y EDITAR
-    formGastos.addEventListener("submit", (e) => {
-        e.preventDefault();
+    // GUARDAR O ACTUALIZAR GASTO
+    if (formGastos) {
+        formGastos.addEventListener("submit", (e) => {
+            e.preventDefault();
 
-        const idGasto = document.getElementById("gasto-id").value;
-        const monto = parseFloat(document.getElementById("gasto-monto").value);
-        const fecha = document.getElementById("gasto-fecha").value;
-        const categoria = document.getElementById("gasto-categoria").value;
-        const descripcion = document.getElementById("gasto-descripcion").value;
+            const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
+            if (!usuarioActivo) return;
 
-        // CP-05.2: Validación de monto positivo
-        if (monto <= 0 || isNaN(monto)) {
-            alert("El monto debe ser un valor positivo mayor a 0.");
-            return;
-        }
+            const idGasto = document.getElementById("gasto-id").value;
+            const monto = parseFloat(document.getElementById("gasto-monto").value);
+            const fecha = document.getElementById("gasto-fecha").value;
+            const categoria = document.getElementById("gasto-categoria").value;
+            const descripcion = document.getElementById("gasto-descripcion").value;
 
-        if (idGasto) {
-            // RF-07: EDICIÓN
-            const index = gastosSGG.findIndex(g => g.id == idGasto);
-            if (index !== -1) {
-                gastosSGG[index].monto = monto;
-                gastosSGG[index].fecha = fecha;
-                gastosSGG[index].categoria = categoria;
-                gastosSGG[index].descripcion = descripcion;
+            if (monto <= 0 || isNaN(monto)) {
+                alert("El monto debe ser un número mayor a 0.");
+                return;
             }
-        } else {
-            // RF-05: CREACIÓN
-            const nuevoGasto = {
-                id: Date.now(),
-                email_usuario: usuarioActivo.email,
-                monto: monto,
-                fecha: fecha,
-                categoria: categoria,
-                descripcion: descripcion,
-                estado_activo: true
-            };
-            gastosSGG.push(nuevoGasto);
-        }
 
-        resetearFormulario();
-        renderizarDashboard();
-    };
+            if (idGasto) {
+                // Modo Edición
+                const idx = gastosSGG.findIndex(g => g.id == idGasto);
+                if (idx !== -1) {
+                    gastosSGG[idx].monto = monto;
+                    gastosSGG[idx].fecha = fecha;
+                    gastosSGG[idx].categoria = categoria;
+                    gastosSGG[idx].descripcion = descripcion;
+                }
+            } else {
+                // Modo Creación
+                const nuevoGasto = {
+                    id: Date.now(),
+                    email_usuario: usuarioActivo.email,
+                    monto: monto,
+                    fecha: fecha,
+                    categoria: categoria,
+                    descripcion: descripcion,
+                    estado_activo: true
+                };
+                gastosSGG.push(nuevoGasto);
+            }
 
-    // Prepara los campos del formulario para editar (RF-07)
+            resetearFormulario();
+            renderizarDashboard();
+        });
+    }
+
+    function resetearFormulario() {
+        if (formGastos) formGastos.reset();
+        document.getElementById("gasto-id").value = "";
+        formTitle.textContent = "Registrar Nuevo Gasto 🌸";
+        btnGuardar.textContent = "Guardar Gasto 🍓";
+        btnCancelar.classList.add("hidden");
+    }
+
     window.prepararEdicion = function(id) {
         const gasto = gastosSGG.find(g => g.id === id);
         if (gasto) {
@@ -144,31 +219,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    btnCancelar.addEventListener("click", resetearFormulario);
-
-    function resetearFormulario() {
-        formGastos.reset();
-        document.getElementById("gasto-id").value = "";
-        formTitle.textContent = "Registrar Nuevo Gasto 🌸";
-        btnGuardar.textContent = "Guardar Gasto 🍓";
-        btnCancelar.classList.add("hidden");
+    if (btnCancelar) {
+        btnCancelar.addEventListener("click", resetearFormulario);
     }
 
-    // RF-08 / CP-08.1: ELIMINACIÓN SEGURA (BAJA LÓGICA)
+    // ELIMINACIÓN SEGURA (BAJA LÓGICA)
     window.eliminarGasto = function(id) {
-        const confirmacion = confirm("¿Estás segura de que deseas eliminar este registro?");
-        if (confirmacion) {
-            // Cambia el estado_activo a false sin usar .splice()
-            gastosSGG = gastosSGG.map(gasto => {
-                if (gasto.id === id) {
-                    return { ...gasto, estado_activo: false };
-                }
-                return gasto;
-            });
+        if (confirm("¿Estás segura de eliminar este gasto?")) {
+            gastosSGG = gastosSGG.map(g => g.id === id ? { ...g, estado_activo: false } : g);
             renderizarDashboard();
         }
     };
 
-    // Renderizado inicial
-    renderizarDashboard();
+    // Inicialización
+    verificarSesion();
 });
