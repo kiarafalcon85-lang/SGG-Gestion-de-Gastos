@@ -1,63 +1,156 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGG - Autenticación</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body class="light-mode">
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. MODO OSCURO
+    const themeBtn = document.getElementById("theme-toggle");
+    const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
-    <header class="top-bar">
-        <h1>SGG - Gestión de Gastos</h1>
-        <button id="theme-toggle" class="btn-theme">🌙 Modo Oscuro</button>
-    </header>
+    if (savedTheme === "dark") {
+        document.body.classList.replace("light-mode", "dark-mode");
+        if (themeBtn) themeBtn.textContent = "☀️️ Modo Claro";
+    }
 
-    <main class="auth-container">
-        <!-- Notificación para el Profesor -->
-        <div class="demo-info">
-            <p><strong>📌 Credenciales para Corrección del Profesor:</strong></p>
-            <p><strong>Usuario / Email:</strong> admin@profesor.com</p>
-            <p><strong>Contraseña:</strong> 123456</p>
-        </div>
+    if (themeBtn) {
+        themeBtn.addEventListener("click", () => {
+            if (document.body.classList.contains("light-mode")) {
+                document.body.classList.replace("light-mode", "dark-mode");
+                localStorage.setItem("sgg_theme", "dark");
+                themeBtn.textContent = "☀️ Modo Claro";
+            } else {
+                document.body.classList.replace("dark-mode", "light-mode");
+                localStorage.setItem("sgg_theme", "light");
+                themeBtn.textContent = "🌙 Modo Oscuro";
+            }
+        });
+    }
 
-        <div class="auth-card">
-            <!-- Formulario de Login -->
-            <form id="form-login" class="auth-form">
-                <h2>Iniciar Sesión</h2>
-                <div class="input-group">
-                    <label for="login-email">Correo Electrónico</label>
-                    <input type="email" id="login-email" required placeholder="admin@profesor.com">
-                </div>
-                <div class="input-group">
-                    <label for="login-password">Contraseña</label>
-                    <input type="password" id="login-password" required placeholder="••••••">
-                </div>
-                <button type="submit" class="btn-primary">Ingresar</button>
-                <p class="switch-auth">¿No tienes una cuenta? <a href="#" id="go-to-register">Regístrate aquí</a></p>
-            </form>
+    // 2. VISTAS Y AUTENTICACIÓN
+    const authView = document.getElementById("auth-view");
+    const crudView = document.getElementById("crud-view");
+    const formLogin = document.getElementById("form-login");
+    const formRegister = document.getElementById("form-register");
+    const goToRegister = document.getElementById("go-to-register");
+    const goToLogin = document.getElementById("go-to-login");
+    const btnLogout = document.getElementById("btn-logout");
 
-            <!-- Formulario de Registro -->
-            <form id="form-register" class="auth-form hidden">
-                <h2>Crear Cuenta</h2>
-                <div class="input-group">
-                    <label for="reg-nombre">Nombre Completo</label>
-                    <input type="text" id="reg-nombre" required placeholder="Tu Nombre">
-                </div>
-                <div class="input-group">
-                    <label for="reg-email">Correo Electrónico</label>
-                    <input type="email" id="reg-email" required placeholder="correo@ejemplo.com">
-                </div>
-                <div class="input-group">
-                    <label for="reg-password">Contraseña</label>
-                    <input type="password" id="reg-password" required placeholder="••••••">
-                </div>
-                <button type="submit" class="btn-primary">Registrarse</button>
-                <p class="switch-auth">¿Ya tienes cuenta? <a href="#" id="go-to-login">Inicia sesión</a></p>
-            </form>
-        </div>
-    </main>
+    // Alternar Login y Registro
+    if (goToRegister) {
+        goToRegister.addEventListener("click", (e) => {
+            e.preventDefault();
+            formLogin.classList.add("hidden");
+            formRegister.classList.remove("hidden");
+        });
+    }
 
-    <script src="js/auth.js"></script>
-</body>
-</html>
+    if (goToLogin) {
+        goToLogin.addEventListener("click", (e) => {
+            e.preventDefault();
+            formRegister.classList.add("hidden");
+            formLogin.classList.remove("hidden");
+        });
+    }
+
+    // Login del Profesor
+    if (formLogin) {
+        formLogin.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("login-email").value;
+            const pass = document.getElementById("login-password").value;
+
+            if (email === "admin@profesor.com" && pass === "123456") {
+                sessionStorage.setItem("sgg_logged", "true");
+                cargarVistaPanel();
+            } else {
+                alert("Credenciales incorrectas. Use: admin@profesor.com / 123456");
+            }
+        });
+    }
+
+    // Registro Simulado
+    if (formRegister) {
+        formRegister.addEventListener("submit", (e) => {
+            e.preventDefault();
+            alert("¡Cuenta creada correctamente! Ahora inicia sesión.");
+            formRegister.classList.add("hidden");
+            formLogin.classList.remove("hidden");
+        });
+    }
+
+    // Cerrar Sesión
+    if (btnLogout) {
+        btnLogout.addEventListener("click", () => {
+            sessionStorage.removeItem("sgg_logged");
+            authView.classList.remove("hidden");
+            crudView.classList.add("hidden");
+            btnLogout.classList.add("hidden");
+        });
+    }
+
+    function cargarVistaPanel() {
+        if (sessionStorage.getItem("sgg_logged") === "true") {
+            authView.classList.add("hidden");
+            crudView.classList.remove("hidden");
+            btnLogout.classList.remove("hidden");
+            renderGastos();
+        }
+    }
+
+    // Verificación inicial al cargar
+    cargarVistaPanel();
+
+    // 3. TABLA Y CRUD DE GASTOS
+    const formGastos = document.getElementById("form-gastos");
+    const listaGastos = document.getElementById("lista-gastos");
+    let gastos = JSON.parse(localStorage.getItem("sgg_gastos")) || [
+        { id: 1, concepto: "Servicios de Luz/Agua", monto: 4500, activo: true },
+        { id: 2, concepto: "Insumos de Oficina", monto: 12000, activo: true }
+    ];
+
+    function renderGastos() {
+        if (!listaGastos) return;
+        listaGastos.innerHTML = "";
+        
+        gastos.forEach((item) => {
+            if (item.activo) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${item.concepto}</td>
+                    <td>$${parseFloat(item.monto).toFixed(2)}</td>
+                    <td><span style="color: green; font-weight: bold;">Activo</span></td>
+                    <td>
+                        <button onclick="eliminarGasto(${item.id})" class="btn-logout" style="padding: 4px 8px; font-size: 11px;">Baja Lógica</button>
+                    </td>
+                `;
+                listaGastos.appendChild(tr);
+            }
+        });
+
+        localStorage.setItem("sgg_gastos", JSON.stringify(gastos));
+    }
+
+    if (formGastos) {
+        formGastos.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const concepto = document.getElementById("gasto-concepto").value;
+            const monto = document.getElementById("gasto-monto").value;
+
+            if (monto <= 0) {
+                alert("El monto debe ser un número positivo.");
+                return;
+            }
+
+            gastos.push({
+                id: Date.now(),
+                concepto: concepto,
+                monto: parseFloat(monto),
+                activo: true
+            });
+
+            renderGastos();
+            formGastos.reset();
+        });
+    }
+
+    window.eliminarGasto = function(id) {
+        gastos = gastos.map(g => g.id === id ? { ...g, activo: false } : g);
+        renderGastos();
+    };
+});
