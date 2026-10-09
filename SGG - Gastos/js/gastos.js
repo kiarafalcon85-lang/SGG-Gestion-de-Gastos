@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // FECHA LÍMITE HASTA HOY
+    // FECHA MÁXIMA AL DÍA DE HOY
     const fechaInput = document.getElementById("gasto-fecha");
     const hoyObj = new Date();
     const anio = hoyObj.getFullYear();
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         fechaInput.setAttribute("max", hoyStr);
     }
 
-    // MOSTRAR MENSAJES/ERRORES AESTHETIC INTEGRADOS
+    // CUADRO DE ERRORES AESTHETIC DENTRO DE LA PÁGINA
     const msgBox = document.getElementById("msg-box");
 
     function mostrarMensaje(texto, tipo = "error") {
@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
         msgBox.className = `msg-box ${tipo}`;
         msgBox.classList.remove("hidden");
 
-        // Ocultar suavemente a los 4 segundos
         setTimeout(() => {
             msgBox.classList.add("hidden");
         }, 4000);
@@ -30,13 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (msgBox) msgBox.classList.add("hidden");
     }
 
-    // VALIDADOR DE EMAIL
+    // VALIDACIÓN ESTRICTA DE CORREO (Gmail / dominios válidos)
     function esEmailValido(email) {
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return regex.test(email);
     }
 
-    // MODO OSCURO / CLARO
+    // MODO OSCURO / DÍA
     const themeBtn = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
@@ -59,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // TOGGLE CONTRASEÑA CLÁSICO (ICONO OJO NORMAL)
+    // TOGGLE CONTRASEÑA OJO VECTORES SVG
     document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
         btn.addEventListener("click", () => {
             const targetId = btn.getAttribute("data-target");
@@ -67,16 +66,24 @@ document.addEventListener("DOMContentLoaded", () => {
             if (input) {
                 if (input.type === "password") {
                     input.type = "text";
-                    btn.textContent = "🔒";
+                    btn.innerHTML = `
+                        <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                            <line x1="1" y1="1" x2="23" y2="23"></line>
+                        </svg>`;
                 } else {
                     input.type = "password";
-                    btn.textContent = "👁️";
+                    btn.innerHTML = `
+                        <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>`;
                 }
             }
         });
     });
 
-    // VISTAS Y NAVEGACIÓN
+    // REFERENCIAS Y USUARIOS
     const authView = document.getElementById("auth-view");
     const panelView = document.getElementById("panel-view");
     const formLogin = document.getElementById("form-login");
@@ -109,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goToRecover) goToRecover.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("recover"); });
     if (goToLoginFromRec) goToLoginFromRec.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
 
-    // REGISTRO
+    // REGISTRO ESTRICTO
     if (formRegister) {
         formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -147,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // LOGIN
+    // LOGIN ESTRICTO
     if (formLogin) {
         formLogin.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -172,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // RECUPERAR CONTRASEÑA
+    // CAMBIO/RECUPERACIÓN DE CONTRASEÑA
     if (formRecover) {
         formRecover.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -189,12 +196,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (idx !== -1) {
                 if (usuariosBD[idx].pass === newPass) {
-                    mostrarMensaje("⚠️ La nueva contraseña no debe ser igual a la anterior.");
+                    mostrarMensaje("⚠️ La nueva contraseña no debe ser igual a la contraseña anterior.");
                     return;
                 }
 
                 if (newPass.length < 6 || !/\d/.test(newPass)) {
-                    mostrarMensaje("⚠️ La contraseña debe tener al menos 6 caracteres y 1 número.");
+                    mostrarMensaje("⚠️ La nueva contraseña debe tener al menos 6 caracteres y 1 número.");
                     return;
                 }
 
@@ -209,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // LOGOUT
+    // CIERRE DE SESIÓN
     if (btnLogout) {
         btnLogout.addEventListener("click", () => {
             localStorage.removeItem("usuario_activo_sgg");
@@ -294,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const descripcion = document.getElementById("gasto-descripcion").value.trim();
 
             if (!monto || monto <= 0 || isNaN(monto)) {
-                mostrarMensaje("⚠️ El monto debe ser un valor mayor a $0.");
+                mostrarMensaje("⚠️ El monto debe ser un número positivo mayor a $0.");
                 return;
             }
 
