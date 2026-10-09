@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="SGG - Sistema de Gestión de Gastos y Presupuesto Personal">
-    <title>SGG - Budget Tracker 🍓</title>
+    <title>SGG - Budget Tracker 🎀</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="light-mode">
 
     <header class="top-bar">
-        <h1>🍓 SGG - Budget Tracker</h1>
+        <h1>🎀 SGG - Budget Tracker</h1>
         <div class="header-btns">
             <button id="theme-toggle" class="btn-theme" type="button" aria-label="Cambiar Tema">🌙 Modo Oscuro</button>
             <button id="btn-logout" class="btn-logout hidden" type="button">Cerrar Sesión</button>
@@ -27,8 +30,9 @@
 
             <!-- Form Iniciar Sesión -->
             <form id="form-login" class="auth-form" novalidate>
-                <h2>¡Hola de nuevo! 🎀</h2>
-                <p class="sub-title">Ingresa tus datos para acceder a tu panel financiero.</p>
+                <div class="coquette-bow-header">🎀</div>
+                <h2>¡Hola de nuevo!</h2>
+                <p class="sub-title">Ingresa tus datos para acceder a tu panel diario ♡</p>
                 
                 <div class="input-group">
                     <label for="login-email">CORREO ELECTRÓNICO</label>
@@ -48,24 +52,25 @@
                     </div>
                 </div>
                 
-                <button type="submit" class="btn-primary">INGRESAR 🍓</button>
+                <button type="submit" class="btn-primary">INGRESAR 🎀</button>
                 <p class="switch-auth">¿Olvidaste tu contraseña? <a href="#" id="go-to-recover">Recupérala aquí</a></p>
                 <p class="switch-auth">¿No tienes una cuenta aún? <a href="#" id="go-to-register">Regístrate aquí</a></p>
             </form>
 
-            <!-- Form Registro (Inspirado en la Foto 1) -->
+            <!-- Form Registro (Inspirado en Planner Coquette) -->
             <form id="form-register" class="auth-form hidden" novalidate>
-                <h2>Crear Cuenta 🌸</h2>
-                <p class="sub-title">Completa tus datos para comenzar tu registro.</p>
+                <div class="coquette-bow-header">🎀</div>
+                <h2>Crear Cuenta</h2>
+                <p class="sub-title">Completa tus datos para comenzar tu registro ♡</p>
 
                 <div class="input-group">
                     <label for="reg-nombre">NOMBRE/S</label>
-                    <input type="text" id="reg-nombre" required placeholder="Ej. Juan">
+                    <input type="text" id="reg-nombre" required placeholder="Ingresa tu nombre">
                 </div>
 
                 <div class="input-group">
                     <label for="reg-apellido">APELLIDO/S</label>
-                    <input type="text" id="reg-apellido" required placeholder="Ej. Pérez">
+                    <input type="text" id="reg-apellido" required placeholder="Ingresa tu apellido">
                 </div>
 
                 <div class="input-group">
@@ -89,10 +94,9 @@
                             </svg>
                         </button>
                     </div>
-                    <!-- Requisitos estilo Foto 1 -->
                     <ul class="pass-req-list">
-                        <li id="req-length">❗ Mínimo 6 caracteres</li>
-                        <li id="req-number">❗ Al menos 1 número</li>
+                        <li id="req-length">♡ Mínimo 6 caracteres</li>
+                        <li id="req-number">♡ Al menos 1 número</li>
                     </ul>
                 </div>
 
@@ -120,8 +124,9 @@
 
             <!-- Form Recuperación / Cambio de Contraseña -->
             <form id="form-recover" class="auth-form hidden" novalidate>
-                <h2>Cambiar Contraseña 🔐</h2>
-                <p class="sub-title">Ingresa tus datos para restablecer la contraseña.</p>
+                <div class="coquette-bow-header">🎀</div>
+                <h2>Cambiar Contraseña</h2>
+                <p class="sub-title">Ingresa tus datos para restablecer tu acceso ♡</p>
 
                 <div class="input-group">
                     <label for="rec-email">CORREO ELECTRÓNICO</label>
@@ -146,7 +151,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-primary">ACTUALIZAR CONTRASEÑA 🍓</button>
+                <button type="submit" class="btn-primary">ACTUALIZAR CONTRASEÑA 🎀</button>
                 <p class="switch-auth"><a href="#" id="go-to-login-from-rec">Volver al Inicio de Sesión</a></p>
             </form>
         </section>
@@ -154,12 +159,12 @@
         <!-- VISTA PANEL DE GASTOS -->
         <div id="panel-view" class="hidden">
             <section class="summary-card">
-                <h2>Total Gastado (<span id="user-display">Usuario</span>) 🍓</h2>
+                <h2>Total Gastado (<span id="user-display">Usuario</span>) ♡</h2>
                 <div class="total-monto" id="total-monto">$0.00</div>
             </section>
 
             <section class="crud-section">
-                <h2 id="form-title">Registrar Nuevo Gasto 🌸</h2>
+                <h2 id="form-title">Registrar Nuevo Gasto 🎀</h2>
                 <form id="form-gastos" class="gastos-form-grid" novalidate>
                     <input type="hidden" id="gasto-id">
 
@@ -177,7 +182,7 @@
                         <label for="gasto-categoria">CATEGORÍA</label>
                         <select id="gasto-categoria" required>
                             <option value="" disabled selected>Seleccionar...</option>
-                            <option value="Alimentación">Alimentación 🍓</option>
+                            <option value="Alimentación">Alimentación 🌸</option>
                             <option value="Transporte">Transporte 🚌</option>
                             <option value="Servicios">Servicios 💡</option>
                             <option value="Ocio">Ocio 🎀</option>
@@ -190,7 +195,7 @@
                     </div>
 
                     <div class="form-actions full-width">
-                        <button type="submit" id="btn-guardar" class="btn-primary">Guardar Gasto 🍓</button>
+                        <button type="submit" id="btn-guardar" class="btn-primary">Guardar Gasto 🎀</button>
                         <button type="button" id="btn-cancelar" class="btn-secondary hidden">Cancelar Edición</button>
                     </div>
                 </form>
