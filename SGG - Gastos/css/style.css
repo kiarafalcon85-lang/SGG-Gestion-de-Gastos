@@ -92,104 +92,51 @@ body {
     border: 1px solid var(--border-color);
 }
 
-.summary-card {
-    text-align: center;
+.summary-card { text-align: center; }
+.summary-card h2 { margin: 0 0 10px 0; font-size: 1.1rem; color: var(--accent-pink) !important; }
+.total-monto { font-size: 2.2rem; font-weight: bold; color: var(--accent-pink) !important; }
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
-.summary-card h2 {
-    margin: 0 0 10px 0;
+.password-wrapper input {
+    padding-right: 40px !important;
+}
+
+.btn-toggle-pass {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
     font-size: 1.1rem;
-    color: var(--accent-pink) !important;
 }
 
-.total-monto {
-    font-size: 2.2rem;
-    font-weight: bold;
-    color: var(--accent-pink) !important;
-}
+.gastos-form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+.full-width { grid-column: span 3; }
 
-.gastos-form-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-}
-
-.full-width {
-    grid-column: span 3;
-}
-
-.input-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 0.85rem;
-    font-weight: bold;
-}
-
+.input-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: bold; }
 .input-group input, .input-group select {
-    width: 100%;
-    padding: 10px;
-    border: 1.5px solid var(--border-color);
-    border-radius: 12px;
-    background-color: var(--bg-main) !important;
-    color: var(--text-primary) !important;
-    box-sizing: border-box;
+    width: 100%; padding: 10px; border: 1.5px solid var(--border-color);
+    border-radius: 12px; background-color: var(--bg-main) !important;
+    color: var(--text-primary) !important; box-sizing: border-box;
 }
 
-.btn-primary, .btn-secondary {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 12px;
-    font-weight: bold;
-    cursor: pointer;
-}
+.btn-primary, .btn-secondary { padding: 10px 20px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
+.btn-primary { background-color: var(--primary-btn) !important; color: white !important; }
+.btn-secondary { background-color: var(--border-color) !important; color: var(--text-primary) !important; }
 
-.btn-primary {
-    background-color: var(--primary-btn) !important;
-    color: white !important;
-}
+.switch-auth { text-align: center; margin-top: 10px; font-size: 0.85em; }
+.switch-auth a { color: var(--accent-pink) !important; text-decoration: none; font-weight: bold; }
 
-.btn-secondary {
-    background-color: var(--border-color) !important;
-    color: var(--text-primary) !important;
-}
+.tabla-gastos { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.tabla-gastos th, .tabla-gastos td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border-color); }
+.tabla-gastos th { color: var(--accent-pink) !important; }
 
-.switch-auth {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 0.9em;
-}
-
-.switch-auth a {
-    color: var(--accent-pink) !important;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.tabla-gastos {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.tabla-gastos th, .tabla-gastos td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.tabla-gastos th {
-    color: var(--accent-pink) !important;
-}
-
-.btn-edit, .btn-delete {
-    padding: 4px 8px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: 0.8rem;
-    margin-right: 5px;
-}
-
+.btn-edit, .btn-delete { padding: 4px 8px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.8rem; margin-right: 5px; }
 .btn-edit { background-color: #ba68c8; color: white; }
 .btn-delete { background-color: var(--danger-btn); color: white; }
 
