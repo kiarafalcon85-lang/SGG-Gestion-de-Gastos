@@ -12,14 +12,14 @@
     <header class="top-bar">
         <h1>🍓 SGG - Budget Tracker</h1>
         <div class="header-btns">
-            <button id="theme-toggle" class="btn-theme" aria-label="Cambiar Tema">🌙 Modo Oscuro</button>
-            <button id="btn-logout" class="btn-logout hidden">Cerrar Sesión</button>
+            <button id="theme-toggle" class="btn-theme" type="button" aria-label="Cambiar Tema">🌙 Modo Oscuro</button>
+            <button id="btn-logout" class="btn-logout hidden" type="button">Cerrar Sesión</button>
         </div>
     </header>
 
     <main class="main-container">
 
-        <!-- VISTA DE AUTENTICACIÓN (LOGIN Y REGISTRO) -->
+        <!-- VISTA AUTENTICACIÓN (LOGIN, REGISTRO Y RECUPERACIÓN) -->
         <section id="auth-view" class="auth-card">
             <div class="demo-info">
                 <p><strong>🍓 Credenciales de demostración:</strong></p>
@@ -27,7 +27,7 @@
                 <p><strong>Contraseña:</strong> 123456</p>
             </div>
 
-            <!-- Formulario Iniciar Sesión -->
+            <!-- Form Iniciar Sesión -->
             <form id="form-login" class="auth-form">
                 <h2>¡Hola de nuevo! 🎀</h2>
                 <div class="input-group">
@@ -36,42 +36,72 @@
                 </div>
                 <div class="input-group">
                     <label for="login-password">Contraseña</label>
-                    <input type="password" id="login-password" required placeholder="••••••">
+                    <div class="password-wrapper">
+                        <input type="password" id="login-password" required placeholder="••••••">
+                        <button type="button" class="btn-toggle-pass" data-target="login-password" title="Ver contraseña">👁️</button>
+                    </div>
                 </div>
                 <button type="submit" class="btn-primary">Ingresar 🍓</button>
+                <p class="switch-auth">¿Olvidaste tu contraseña? <a href="#" id="go-to-recover">Recupérala aquí</a></p>
                 <p class="switch-auth">¿No tienes cuenta? <a href="#" id="go-to-register">Regístrate aquí</a></p>
             </form>
 
-            <!-- Formulario Registro -->
+            <!-- Form Registro -->
             <form id="form-register" class="auth-form hidden">
                 <h2>Crear Cuenta 🌸</h2>
                 <div class="input-group">
-                    <label for="reg-nombre">Nombre Completo</label>
-                    <input type="text" id="reg-nombre" required placeholder="Tu Nombre">
+                    <label for="reg-nombre">Nombre de Usuario</label>
+                    <input type="text" id="reg-nombre" required placeholder="Ej. Kimchi">
                 </div>
                 <div class="input-group">
                     <label for="reg-email">Correo Electrónico</label>
                     <input type="email" id="reg-email" required placeholder="correo@ejemplo.com">
                 </div>
                 <div class="input-group">
-                    <label for="reg-password">Contraseña</label>
-                    <input type="password" id="reg-password" required placeholder="••••••">
+                    <label for="reg-password">Contraseña (Min 6 caracteres y 1 número)</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="reg-password" required placeholder="••••••">
+                        <button type="button" class="btn-toggle-pass" data-target="reg-password" title="Ver contraseña">👁️</button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="reg-mascota">Pregunta de Seguridad: ¿Nombre de tu 1° mascota?</label>
+                    <input type="text" id="reg-mascota" required placeholder="Ej. Chaqui">
                 </div>
                 <button type="submit" class="btn-primary">Registrarse 🎀</button>
-                <p class="switch-auth">¿Ya tienes cuenta? <a href="#" id="go-to-login">Inicia sesión</a></p>
+                <p class="switch-auth">¿Ya tienes cuenta? <a href="#" id="go-to-login-from-reg">Inicia sesión</a></p>
+            </form>
+
+            <!-- Form Recuperación/Cambio de Contraseña -->
+            <form id="form-recover" class="auth-form hidden">
+                <h2>Cambiar Contraseña 🔐</h2>
+                <div class="input-group">
+                    <label for="rec-email">Correo Electrónico</label>
+                    <input type="email" id="rec-email" required placeholder="correo@ejemplo.com">
+                </div>
+                <div class="input-group">
+                    <label for="rec-mascota">Respuesta de Seguridad: ¿1° mascota?</label>
+                    <input type="text" id="rec-mascota" required placeholder="Nombre de tu mascota">
+                </div>
+                <div class="input-group">
+                    <label for="rec-new-password">Nueva Contraseña</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="rec-new-password" required placeholder="••••••">
+                        <button type="button" class="btn-toggle-pass" data-target="rec-new-password" title="Ver contraseña">👁️</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Actualizar Contraseña 🍓</button>
+                <p class="switch-auth"><a href="#" id="go-to-login-from-rec">Volver al Inicio de Sesión</a></p>
             </form>
         </section>
 
-        <!-- VISTA DEL PANEL DE GASTOS (CRUD Y TOTALES) -->
+        <!-- VISTA PANEL DE GASTOS -->
         <div id="panel-view" class="hidden">
-            
-            <!-- PANEL DE RESUMEN (RF-09) -->
             <section class="summary-card">
-                <h2>Total Gastado 🍓</h2>
+                <h2>Total Gastado (<span id="user-display">Usuario</span>) 🍓</h2>
                 <div class="total-monto" id="total-monto">$0.00</div>
             </section>
 
-            <!-- FORMULARIO DE CARGA / EDICIÓN (RF-05 / RF-07) -->
             <section class="crud-section">
                 <h2 id="form-title">Registrar Nuevo Gasto 🌸</h2>
                 <form id="form-gastos" class="gastos-form-grid">
@@ -83,8 +113,8 @@
                     </div>
 
                     <div class="input-group">
-                        <label for="gasto-fecha">Fecha</label>
-                        <input type="date" id="gasto-fecha" required>
+                        <label for="gasto-fecha">Fecha (Año válido 1900 - 2099)</label>
+                        <input type="date" id="gasto-fecha" required min="1900-01-01" max="2099-12-31">
                     </div>
 
                     <div class="input-group">
@@ -110,7 +140,6 @@
                 </form>
             </section>
 
-            <!-- HISTORIAL DINÁMICO DE GASTOS (RF-06 / RF-08) -->
             <section class="crud-section">
                 <h2>Historial de Gastos 📋</h2>
                 <table class="tabla-gastos">
@@ -123,12 +152,9 @@
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="lista-gastos">
-                        <!-- Filas dinámicas de gastos -->
-                    </tbody>
+                    <tbody id="lista-gastos"></tbody>
                 </table>
             </section>
-
         </div>
 
     </main>
