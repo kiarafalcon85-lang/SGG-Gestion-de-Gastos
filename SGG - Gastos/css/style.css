@@ -1,5 +1,4 @@
 :root {
-    /* PALETA COQUETTE / PASTELES ROMÁNTICOS (FOTOS DE INSPIRACIÓN) */
     --bg-main: #fff5f7 !important;
     --card-bg: #ffffff !important;
     --text-primary: #801336 !important;
@@ -8,7 +7,6 @@
     --border-color: #f8bbd0 !important;
     --border-coquette: #c2185b !important;
     
-    /* BOTÓN COQUETTE PRINCIPAL (ROSADO/VINO ELEGANTE) */
     --btn-dark-bg: #801336 !important;
     --btn-dark-text: #ffffff !important;
     --btn-dark-hover: #510a20 !important;
@@ -91,19 +89,17 @@ body.dark-mode .top-bar {
 }
 
 .main-container {
-    max-width: 520px;
+    max-width: 550px;
     margin: 35px auto;
     padding: 0 20px;
 }
 
-/* MOÑO DE ENCABEZADO COQUETTE */
 .coquette-bow-header {
     text-align: center;
     font-size: 2.2rem;
     margin-bottom: 5px;
 }
 
-/* CAJA DE ERRORES / MENSAJES AESTHETIC INTEGRADA */
 .msg-box {
     padding: 12px 18px;
     border-radius: 16px;
@@ -126,7 +122,6 @@ body.dark-mode .top-bar {
     border: 1.5px solid #f8bbd0 !important;
 }
 
-/* TARJETA TIPO PLANNER COQUETTE */
 .auth-card, .summary-card, .crud-section {
     background-color: var(--card-bg) !important;
     padding: 38px 32px;
@@ -152,7 +147,6 @@ body.dark-mode .top-bar {
     font-style: italic;
 }
 
-/* ENTRADAS BORDES FINOS SUAVES */
 .input-group {
     margin-bottom: 16px;
 }
@@ -190,7 +184,6 @@ body.dark-mode .input-group input:focus {
     background-color: #3d222a !important;
 }
 
-/* OJO SVG VECTORIAL */
 .password-wrapper {
     position: relative;
     display: flex;
@@ -217,42 +210,71 @@ body.dark-mode .input-group input:focus {
 
 .btn-toggle-pass:hover { opacity: 1; }
 
-/* LISTA DE REQUISITOS DE CONTRASEÑA */
+/* REQUISITOS DE CONTRASEÑA ESTILO CORAZONES */
 .pass-req-list {
     list-style: none;
     padding: 0;
-    margin: 8px 0 0 8px;
-    font-size: 0.8rem;
+    margin: 8px 0 0 6px;
+    font-size: 0.82rem;
     color: var(--text-muted);
 }
 
 .pass-req-list li {
-    margin-bottom: 3px;
+    margin-bottom: 4px;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
+    transition: color 0.2s ease;
 }
 
-/* BOTÓN PRINCIPAL ESTILO COQUETTE */
-.btn-primary {
-    width: 100%;
-    padding: 15px;
+.pass-req-list li.valid {
+    color: var(--border-coquette);
+    font-weight: 700;
+}
+
+.heart-icon {
+    font-size: 0.9rem;
+}
+
+/* BOTÓN PRINCIPAL Y SECUNDARIO CON ESTILO INTEGRADO (CORRIGE CANCELAR EDICIÓN) */
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 14px 20px;
     border: none;
     border-radius: 50px;
-    background-color: var(--btn-dark-bg) !important;
-    color: var(--btn-dark-text) !important;
     font-size: 0.95rem;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     cursor: pointer;
-    margin-top: 10px;
     transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.btn-primary {
+    width: 100%;
+    background-color: var(--btn-dark-bg) !important;
+    color: var(--btn-dark-text) !important;
     box-shadow: 0 6px 16px rgba(128, 19, 54, 0.2);
 }
 
 .btn-primary:hover {
     background-color: var(--btn-dark-hover) !important;
     transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #f8bbd0 !important;
+    color: #801336 !important;
+    border: 1.5px solid var(--border-coquette);
+}
+
+.btn-secondary:hover {
+    background-color: #f48fb1 !important;
 }
 
 .switch-auth {
@@ -268,7 +290,7 @@ body.dark-mode .input-group input:focus {
     font-weight: 700;
 }
 
-/* PANEL DE GASTOS */
+/* TABLA DE GASTOS Y BOTONES EDITAR / ELIMINAR */
 .summary-card { text-align: center; }
 .summary-card h2 { margin: 0 0 8px 0; font-size: 0.95rem; color: var(--text-muted) !important; letter-spacing: 0.5px; }
 .total-monto { font-size: 2.8rem; font-weight: 800; color: var(--text-primary) !important; }
@@ -276,11 +298,38 @@ body.dark-mode .input-group input:focus {
 .gastos-form-grid { display: flex; flex-direction: column; gap: 12px; }
 
 .tabla-gastos { width: 100%; border-collapse: collapse; margin-top: 15px; }
-.tabla-gastos th, .tabla-gastos td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+.tabla-gastos th, .tabla-gastos td { padding: 12px 8px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.88rem; }
 .tabla-gastos th { color: var(--text-muted) !important; font-weight: 700; }
+.text-center { text-align: center !important; }
 
-.btn-edit, .btn-delete { padding: 6px 14px; border-radius: 50px; border: none; cursor: pointer; font-size: 0.78rem; font-weight: 700; margin-right: 4px; }
-.btn-edit { background-color: #f8bbd0; color: #801336; }
+/* CONTENEDOR EN FILA HORIZONTAL DE ACCIONES */
+.action-btns {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.btn-edit, .btn-delete {
+    padding: 6px 12px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    transition: transform 0.15s ease;
+}
+
+.btn-edit:hover, .btn-delete:hover {
+    transform: scale(1.04);
+}
+
+.btn-edit { background-color: #f8bbd0; color: #801336; border: 1px solid #f48fb1; }
 .btn-delete { background-color: var(--danger-color); color: white; }
 
 .hidden { display: none !important; }
