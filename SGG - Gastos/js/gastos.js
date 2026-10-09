@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // FECHA LÍMITE (HASTA HOY)
+    // FECHA MÁXIMA AL DÍA DE HOY (HASTA EL PRESENTE)
     const fechaInput = document.getElementById("gasto-fecha");
     const regNacimiento = document.getElementById("reg-nacimiento");
     
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (fechaInput) fechaInput.setAttribute("max", hoyStr);
     if (regNacimiento) regNacimiento.setAttribute("max", hoyStr);
 
-    // CUADRO DE ERROR/ÉXITO AESTHETIC EN PÁGINA
+    // CUADRO DE ERROR/ÉXITO AESTHETIC INTEGRADO EN PÁGINA
     const msgBox = document.getElementById("msg-box");
 
     function mostrarMensaje(texto, tipo = "error") {
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
             usuariosBD.push({ email, pass, nombre: `${nombre} ${apellido}`, pregunta });
             localStorage.setItem("usuarios_sgg", JSON.stringify(usuariosBD));
 
-            mostrarMensaje("¡Cuenta registrada con éxito! 🍓 Inicia sesión.", "success");
+            mostrarMensaje("¡Cuenta registrada con éxito! 🎀 Inicia sesión.", "success");
             formRegister.reset();
             mostrarVistaAuth("login");
         });
@@ -216,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 usuariosBD[idx].pass = newPass;
                 localStorage.setItem("usuarios_sgg", JSON.stringify(usuariosBD));
-                mostrarMensaje("¡Contraseña actualizada con éxito! 🍓 Inicia sesión.", "success");
+                mostrarMensaje("¡Contraseña actualizada con éxito! 🎀 Inicia sesión.", "success");
                 formRecover.reset();
                 mostrarVistaAuth("login");
             } else {
@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>$${parseFloat(item.monto).toFixed(2)}</td>
                 <td>
                     <button type="button" class="btn-edit" onclick="prepararEdicion(${item.id})">Editar ✏️</button>
-                    <button type="button" class="btn-delete" onclick="eliminarGasto(${item.id})">Eliminar 🍓</button>
+                    <button type="button" class="btn-delete" onclick="eliminarGasto(${item.id})">Eliminar 🎀</button>
                 </td>
             `;
             listaGastos.appendChild(tr);
@@ -365,7 +365,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (formGastos) formGastos.reset();
         document.getElementById("gasto-id").value = "";
         formTitle.textContent = "Registrar Nuevo Gasto 🌸";
-        btnGuardar.textContent = "Guardar Gasto 🍓";
+        btnGuardar.textContent = "Guardar Gasto 🎀";
         btnCancelar.classList.add("hidden");
     }
 
