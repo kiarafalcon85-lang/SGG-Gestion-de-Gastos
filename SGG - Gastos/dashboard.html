@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="light-mode">
 
@@ -57,7 +57,7 @@
                 <p class="switch-auth">¿No tienes una cuenta aún? <a href="#" id="go-to-register">Regístrate aquí</a></p>
             </form>
 
-            <!-- Form Registro (Inspirado en Planner Coquette) -->
+            <!-- Form Registro -->
             <form id="form-register" class="auth-form hidden" novalidate>
                 <div class="coquette-bow-header">🎀</div>
                 <h2>Crear Cuenta</h2>
@@ -94,9 +94,12 @@
                             </svg>
                         </button>
                     </div>
+                    <!-- REQUISITOS DINÁMICOS CON CORAZONES (FOTO 2) -->
                     <ul class="pass-req-list">
-                        <li id="req-length">♡ Mínimo 6 caracteres</li>
-                        <li id="req-number">♡ Al menos 1 número</li>
+                        <li id="req-length"><span class="heart-icon">♡</span> Mínimo 6 caracteres</li>
+                        <li id="req-number"><span class="heart-icon">♡</span> Al menos 1 número</li>
+                        <li id="req-upper"><span class="heart-icon">♡</span> Al menos 1 mayúscula</li>
+                        <li id="req-lower"><span class="heart-icon">♡</span> Al menos 1 minúscula</li>
                     </ul>
                 </div>
 
@@ -122,7 +125,7 @@
                 <p class="switch-auth">¿Ya tienes cuenta? <a href="#" id="go-to-login-from-reg">Inicia sesión</a></p>
             </form>
 
-            <!-- Form Recuperación / Cambio de Contraseña -->
+            <!-- Form Recuperación -->
             <form id="form-recover" class="auth-form hidden" novalidate>
                 <div class="coquette-bow-header">🎀</div>
                 <h2>Cambiar Contraseña</h2>
@@ -210,7 +213,7 @@
                             <th>Categoría</th>
                             <th>Descripción</th>
                             <th>Monto</th>
-                            <th>Acciones</th>
+                            <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="lista-gastos"></tbody>
