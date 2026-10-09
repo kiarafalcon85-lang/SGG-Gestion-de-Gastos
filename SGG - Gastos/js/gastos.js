@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // FECHA LÍMITE (HASTA HOY)
+    // FECHA LÍMITE HASTA HOY
     const fechaInput = document.getElementById("gasto-fecha");
     const hoyObj = new Date();
     const anio = hoyObj.getFullYear();
@@ -11,7 +11,26 @@ document.addEventListener("DOMContentLoaded", () => {
         fechaInput.setAttribute("max", hoyStr);
     }
 
-    // VALIDADOR DE EMAIL ESTRICTO (Ej. kiarafalcon@gmail.com)
+    // MOSTRAR MENSAJES/ERRORES AESTHETIC INTEGRADOS
+    const msgBox = document.getElementById("msg-box");
+
+    function mostrarMensaje(texto, tipo = "error") {
+        if (!msgBox) return;
+        msgBox.textContent = texto;
+        msgBox.className = `msg-box ${tipo}`;
+        msgBox.classList.remove("hidden");
+
+        // Ocultar suavemente a los 4 segundos
+        setTimeout(() => {
+            msgBox.classList.add("hidden");
+        }, 4000);
+    }
+
+    function ocultarMensaje() {
+        if (msgBox) msgBox.classList.add("hidden");
+    }
+
+    // VALIDADOR DE EMAIL
     function esEmailValido(email) {
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return regex.test(email);
@@ -40,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // VISUALIZAR / OCULTAR CONTRASEÑA
+    // TOGGLE CONTRASEÑA CLÁSICO (ICONO OJO NORMAL)
     document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
         btn.addEventListener("click", () => {
             const targetId = btn.getAttribute("data-target");
@@ -48,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (input) {
                 if (input.type === "password") {
                     input.type = "text";
-                    btn.textContent = "🙈";
+                    btn.textContent = "🔒";
                 } else {
                     input.type = "password";
                     btn.textContent = "👁️";
@@ -57,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // VISTAS & AUTENTICACIÓN
+    // VISTAS Y NAVEGACIÓN
     const authView = document.getElementById("auth-view");
     const panelView = document.getElementById("panel-view");
     const formLogin = document.getElementById("form-login");
@@ -76,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     function mostrarVistaAuth(vista) {
+        ocultarMensaje();
         formLogin.classList.add("hidden");
         formRegister.classList.add("hidden");
         formRecover.classList.add("hidden");
@@ -99,29 +119,29 @@ document.addEventListener("DOMContentLoaded", () => {
             const pregunta = document.getElementById("reg-pregunta").value.trim();
 
             if (!nombre || !email || !pass || !pregunta) {
-                alert("Error: Por favor completa todos los campos.");
+                mostrarMensaje("⚠️ Por favor completa todos los campos.");
                 return;
             }
 
             if (!esEmailValido(email)) {
-                alert("Error: El correo electrónico no es válido. Ejemplo: tu.correo@gmail.com");
+                mostrarMensaje("⚠️ Ingrese un correo electrónico válido (ej. tu.correo@gmail.com).");
                 return;
             }
 
             if (pass.length < 6 || !/\d/.test(pass)) {
-                alert("Error: La contraseña debe tener al menos 6 caracteres e incluir al menos 1 número.");
+                mostrarMensaje("⚠️ La contraseña debe tener al menos 6 caracteres y 1 número.");
                 return;
             }
 
             if (usuariosBD.some(u => u.email === email)) {
-                alert("Error: El correo electrónico ya se encuentra registrado.");
+                mostrarMensaje("⚠️ El correo electrónico ya se encuentra registrado.");
                 return;
             }
 
             usuariosBD.push({ email, pass, nombre, pregunta });
             localStorage.setItem("usuarios_sgg", JSON.stringify(usuariosBD));
 
-            alert("¡Cuenta registrada con éxito! 🍓 Inicia sesión con tus credenciales.");
+            mostrarMensaje("¡Cuenta registrada con éxito! 🍓 Inicia sesión.", "success");
             formRegister.reset();
             mostrarVistaAuth("login");
         });
@@ -135,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const pass = document.getElementById("login-password").value.trim();
 
             if (!esEmailValido(email)) {
-                alert("Error: Por favor ingresa un correo electrónico válido.");
+                mostrarMensaje("⚠️ Ingresa un correo electrónico válido.");
                 return;
             }
 
@@ -144,14 +164,15 @@ document.addEventListener("DOMContentLoaded", () => {
             if (userValido) {
                 localStorage.setItem("usuario_activo_sgg", JSON.stringify(userValido));
                 formLogin.reset();
+                ocultarMensaje();
                 verificarSesion();
             } else {
-                alert("Credenciales incorrectas. Verifica tu correo y contraseña.");
+                mostrarMensaje("⚠️ Credenciales incorrectas. Verifica correo y contraseña.");
             }
         });
     }
 
-    // CAMBIO DE CONTRASEÑA
+    // RECUPERAR CONTRASEÑA
     if (formRecover) {
         formRecover.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -160,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const newPass = document.getElementById("rec-new-password").value.trim();
 
             if (!esEmailValido(email)) {
-                alert("Error: Ingrese un correo electrónico válido.");
+                mostrarMensaje("⚠️ Ingrese un correo electrónico válido.");
                 return;
             }
 
@@ -168,30 +189,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (idx !== -1) {
                 if (usuariosBD[idx].pass === newPass) {
-                    alert("Error: La nueva contraseña no debe ser igual a la contraseña anterior.");
+                    mostrarMensaje("⚠️ La nueva contraseña no debe ser igual a la anterior.");
                     return;
                 }
 
                 if (newPass.length < 6 || !/\d/.test(newPass)) {
-                    alert("Error: La nueva contraseña debe tener al menos 6 caracteres y un número.");
+                    mostrarMensaje("⚠️ La contraseña debe tener al menos 6 caracteres y 1 número.");
                     return;
                 }
 
                 usuariosBD[idx].pass = newPass;
                 localStorage.setItem("usuarios_sgg", JSON.stringify(usuariosBD));
-                alert("¡Contraseña actualizada con éxito! 🍓 Inicia sesión con tu nueva contraseña.");
+                mostrarMensaje("¡Contraseña actualizada con éxito! 🍓 Inicia sesión.", "success");
                 formRecover.reset();
                 mostrarVistaAuth("login");
             } else {
-                alert("Los datos de correo o respuesta de seguridad son incorrectos.");
+                mostrarMensaje("⚠️ Correo o respuesta de seguridad incorrectos.");
             }
         });
     }
 
-    // CIERRE DE SESIÓN
+    // LOGOUT
     if (btnLogout) {
         btnLogout.addEventListener("click", () => {
             localStorage.removeItem("usuario_activo_sgg");
+            ocultarMensaje();
             verificarSesion();
         });
     }
@@ -272,28 +294,27 @@ document.addEventListener("DOMContentLoaded", () => {
             const descripcion = document.getElementById("gasto-descripcion").value.trim();
 
             if (!monto || monto <= 0 || isNaN(monto)) {
-                alert("Error: El monto debe ser un número positivo mayor a 0.");
+                mostrarMensaje("⚠️ El monto debe ser un valor mayor a $0.");
                 return;
             }
 
             if (!fechaStr) {
-                alert("Error: Selecciona una fecha válida.");
+                mostrarMensaje("⚠️ Por favor selecciona una fecha.");
                 return;
             }
 
-            // BLOQUEO ESTRICTO DE FECHAS FUTURAS
             if (fechaStr > hoyStr) {
-                alert("Error: No puedes ingresar un gasto con fecha futura. La fecha debe ser igual o anterior a hoy.");
+                mostrarMensaje("⚠️ No puedes registrar un gasto con fecha futura.");
                 return;
             }
 
             if (!categoria) {
-                alert("Error: Selecciona una categoría.");
+                mostrarMensaje("⚠️ Por favor selecciona una categoría.");
                 return;
             }
 
             if (!descripcion) {
-                alert("Error: Ingresa una descripción para el gasto.");
+                mostrarMensaje("⚠️ Ingresa una descripción para el gasto.");
                 return;
             }
 
@@ -319,6 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             resetearFormulario();
+            ocultarMensaje();
             renderizarDashboard();
         });
     }
