@@ -1,49 +1,41 @@
 :root {
-    /* PALETA DE COLORES (Extrayendo valores de tu imagen) */
-    --c-brown-dark: #8c5a3c !important;
-    --c-brown-medium: #a37252 !important;
-    --c-beige: #d4beab !important;
-    --c-cream: #ffffeb !important;
-    --c-pink-soft: #ffd1dc !important;
-    --c-pink-vibrant: #ff9ebe !important;
-    
-    /* MODO CLARO */
-    --bg-main: #f9f5f0 !important;
+    /* PALETA ROSA PASTEL / KAWAII (FOTO 2 Y FOTO 3) */
+    --bg-main: #fce4ec !important;
     --card-bg: #ffffff !important;
-    --text-primary: #5c3d2e !important;
-    --text-muted: #8d7063 !important;
-    --input-bg: #f4efe9 !important;
-    --border-color: #ebdcd0 !important;
+    --text-primary: #5c2438 !important;
+    --text-muted: #880e4f !important;
+    --input-bg: #f8ecef !important;
+    --border-color: #f8bbd0 !important;
     
-    /* BOTÓN TIPO FOTO 1 (Oscuro y moderno) */
-    --btn-dark-bg: #363231 !important;
+    /* BOTÓN OSCURO MODERNO (FOTO 2) */
+    --btn-dark-bg: #362a2b !important;
     --btn-dark-text: #ffffff !important;
-    --btn-dark-hover: #211e1d !important;
+    --btn-dark-hover: #1f1718 !important;
     
-    --accent-color: var(--c-brown-medium) !important;
-    --link-color: #3b82f6 !important;
-    --danger-btn: #d32f2f !important;
+    --accent-pink: #d81b60 !important;
+    --link-color: #2196f3 !important;
+    --danger-color: #c62828 !important;
 }
 
 body.dark-mode {
-    --bg-main: #1f1a17 !important;
-    --card-bg: #2d2622 !important;
-    --text-primary: #f5ebe6 !important;
-    --text-muted: #c4b5ac !important;
-    --input-bg: #3a322d !important;
-    --border-color: #4a4039 !important;
+    --bg-main: #2d1b22 !important;
+    --card-bg: #3d242e !important;
+    --text-primary: #f8bbd0 !important;
+    --text-muted: #f48fb1 !important;
+    --input-bg: #4a2d39 !important;
+    --border-color: #5c3543 !important;
     
-    --btn-dark-bg: #ff9ebe !important;
-    --btn-dark-text: #2d2622 !important;
-    --btn-dark-hover: #fca5c0 !important;
+    --btn-dark-bg: #f48fb1 !important;
+    --btn-dark-text: #2d1b22 !important;
+    --btn-dark-hover: #f06292 !important;
     
-    --accent-color: var(--c-pink-vibrant) !important;
-    --link-color: #60a5fa !important;
-    --danger-btn: #ef5350 !important;
+    --accent-pink: #f48fb1 !important;
+    --link-color: #64b5f6 !important;
+    --danger-color: #ef5350 !important;
 }
 
 body {
-    background: radial-gradient(circle at top left, var(--c-pink-soft) 0%, var(--c-cream) 40%, var(--bg-main) 100%) !important;
+    background: radial-gradient(circle at top left, #fff0f5 0%, #fce4ec 50%, #f8bbd0 100%) !important;
     background-attachment: fixed !important;
     color: var(--text-primary) !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -57,31 +49,26 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 18px 35px;
-    background-color: rgba(255, 255, 255, 0.7) !important;
-    backdrop-filter: blur(10px);
+    padding: 16px 30px;
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border-color);
 }
 
 body.dark-mode .top-bar {
-    background-color: rgba(45, 38, 34, 0.7) !important;
+    background-color: rgba(45, 27, 34, 0.8) !important;
 }
 
 .top-bar h1 {
     font-size: 1.3rem;
     margin: 0;
     font-weight: 700;
-    color: var(--c-brown-dark) !important;
-    letter-spacing: -0.5px;
-}
-
-body.dark-mode .top-bar h1 {
-    color: var(--c-pink-vibrant) !important;
+    color: var(--text-muted) !important;
 }
 
 .header-btns {
     display: flex;
-    gap: 12px;
+    gap: 10px;
 }
 
 .btn-theme, .btn-logout {
@@ -93,87 +80,80 @@ body.dark-mode .top-bar h1 {
     cursor: pointer;
     font-weight: 600;
     font-size: 0.85rem;
-    transition: all 0.2s ease;
-}
-
-.btn-theme:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .btn-logout {
-    background-color: var(--danger-btn) !important;
+    background-color: var(--danger-color) !important;
     color: white !important;
     border: none;
 }
 
 .main-container {
     max-width: 520px;
-    margin: 40px auto;
+    margin: 35px auto;
     padding: 0 20px;
 }
 
-/* MENSAJES DE ERROR E INFORMACIÓN INTEGRADOS */
+/* CAJA DE ERRORES / MENSAJES AESTHETIC INTEGRADA */
 .msg-box {
-    padding: 14px 20px;
+    padding: 12px 18px;
     border-radius: 16px;
     margin-bottom: 20px;
     font-weight: 600;
     font-size: 0.88rem;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
 .msg-box.error {
-    background-color: #fdeded !important;
-    color: #5f2120 !important;
-    border: 1px solid #f2b8b5 !important;
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+    border: 1.5px solid #ef9a9a !important;
 }
 
 .msg-box.success {
-    background-color: #edf7ed !important;
-    color: #1e4620 !important;
-    border: 1px solid #b7dfb9 !important;
+    background-color: #fce4ec !important;
+    color: #880e4f !important;
+    border: 1.5px solid #f8bbd0 !important;
 }
 
-/* TARJETAS CON LA ESTÉTICA FLOTANTE DE LA FOTO 1 */
+/* TARJETA DE FORMULARIO ESTILO FOTO 2 */
 .auth-card, .summary-card, .crud-section {
     background-color: var(--card-bg) !important;
-    padding: 40px 35px;
+    padding: 38px 32px;
     border-radius: 28px;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.9);
     margin-bottom: 25px;
-    box-shadow: 0 20px 40px -15px rgba(140, 90, 60, 0.08), 0 0 15px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 15px 35px -10px rgba(136, 14, 79, 0.08);
 }
 
-/* TITULOS DE FORMULARIO ESTILO FOTO 1 */
 .auth-form h2 {
     text-align: center;
     font-size: 2rem;
     font-weight: 800;
-    margin: 0 0 8px 0;
+    margin: 0 0 6px 0;
     color: var(--text-primary);
-    letter-spacing: -0.8px;
 }
 
 .auth-form p.sub-title {
     text-align: center;
     color: var(--text-muted);
-    font-size: 0.92rem;
-    margin-bottom: 30px;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
 }
 
-/* ENTRADAS REDONDEADAS TIPO CÁPSULA (FOTO 1) */
+/* ENTRADAS TIPO CÁPSULA (FOTO 1 Y 2) */
 .input-group {
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 7px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
     color: var(--text-muted);
+    letter-spacing: 0.5px;
 }
 
 .input-group input, .input-group select {
@@ -190,16 +170,16 @@ body.dark-mode .top-bar h1 {
 }
 
 .input-group input:focus, .input-group select:focus {
-    border-color: var(--c-beige);
+    border-color: var(--border-color);
     background-color: #ffffff !important;
-    box-shadow: 0 0 0 4px rgba(212, 190, 171, 0.25);
+    box-shadow: 0 0 0 3px rgba(248, 187, 208, 0.3);
 }
 
 body.dark-mode .input-group input:focus {
-    background-color: #2d2622 !important;
+    background-color: #3d242e !important;
 }
 
-/* CAMPO DE CONTRASEÑA E ICONO OJO CLEAN */
+/* OJO SVG VECTORIAL */
 .password-wrapper {
     position: relative;
     display: flex;
@@ -216,23 +196,40 @@ body.dark-mode .input-group input:focus {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 6px;
+    padding: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text-muted) !important;
-    opacity: 0.6;
-    transition: opacity 0.2s;
+    opacity: 0.7;
 }
 
-.btn-toggle-pass:hover {
-    opacity: 1;
+.btn-toggle-pass:hover { opacity: 1; }
+
+/* LISTA DE REQUISITOS ESTILO FOTO 1 */
+.pass-req-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0 10px;
+    font-size: 0.8rem;
+    color: var(--danger-color);
 }
 
-/* BOTÓN PRINCIPAL ESTILO FOTO 1 (Negro/Marrón Oscuro estilo Pill) */
+.pass-req-list li {
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pass-req-list li.valid {
+    color: #2e7d32;
+}
+
+/* BOTÓN DE ACCIÓN (FOTO 2) */
 .btn-primary {
     width: 100%;
-    padding: 16px;
+    padding: 15px;
     border: none;
     border-radius: 50px;
     background-color: var(--btn-dark-bg) !important;
@@ -244,19 +241,17 @@ body.dark-mode .input-group input:focus {
     cursor: pointer;
     margin-top: 10px;
     transition: all 0.2s ease;
-    box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .btn-primary:hover {
     background-color: var(--btn-dark-hover) !important;
     transform: translateY(-1px);
-    box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.28);
 }
 
-/* LINKS Y ENLACES SECUNDARIOS */
 .switch-auth {
     text-align: center;
-    margin-top: 18px;
+    margin-top: 16px;
     font-size: 0.88rem;
     color: var(--text-muted);
 }
@@ -267,24 +262,21 @@ body.dark-mode .input-group input:focus {
     font-weight: 600;
 }
 
-.switch-auth a:hover {
-    text-decoration: underline;
-}
+.switch-auth a:hover { text-decoration: underline; }
 
-/* SECCIÓN DASHBOARD DE GASTOS */
+/* SECCIÓN PANEL DE GASTOS */
 .summary-card { text-align: center; }
-.summary-card h2 { margin: 0 0 8px 0; font-size: 1rem; color: var(--text-muted) !important; text-transform: uppercase; letter-spacing: 0.5px; }
-.total-monto { font-size: 2.8rem; font-weight: 800; color: var(--c-brown-dark) !important; }
-body.dark-mode .total-monto { color: var(--c-pink-vibrant) !important; }
+.summary-card h2 { margin: 0 0 8px 0; font-size: 0.95rem; color: var(--text-muted) !important; text-transform: uppercase; letter-spacing: 0.5px; }
+.total-monto { font-size: 2.8rem; font-weight: 800; color: var(--text-muted) !important; }
 
 .gastos-form-grid { display: flex; flex-direction: column; gap: 12px; }
 
 .tabla-gastos { width: 100%; border-collapse: collapse; margin-top: 15px; }
 .tabla-gastos th, .tabla-gastos td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
-.tabla-gastos th { color: var(--text-muted) !important; font-weight: 600; }
+.tabla-gastos th { color: var(--text-muted) !important; font-weight: 700; }
 
 .btn-edit, .btn-delete { padding: 6px 12px; border-radius: 20px; border: none; cursor: pointer; font-size: 0.78rem; font-weight: 600; margin-right: 4px; }
-.btn-edit { background-color: var(--c-beige); color: var(--text-primary); }
-.btn-delete { background-color: var(--c-pink-soft); color: #8c2a42; }
+.btn-edit { background-color: #ce93d8; color: white; }
+.btn-delete { background-color: var(--danger-color); color: white; }
 
 .hidden { display: none !important; }
