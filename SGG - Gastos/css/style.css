@@ -69,28 +69,27 @@ body {
     padding: 0 15px;
 }
 
-/* CAJA DE MENSAJES Y ERRORES ESTILO AESTHETIC */
+/* CAJA DE MENSAJES Y ERRORES INTEGRADA AESTHETIC */
 .msg-box {
-    padding: 14px 20px;
+    padding: 12px 18px;
     border-radius: 14px;
-    margin-bottom: 20px;
-    font-weight: bold;
-    font-size: 0.95rem;
+    margin-bottom: 18px;
+    font-weight: 600;
+    font-size: 0.9rem;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .msg-box.error {
     background-color: #ffebee !important;
     color: #c62828 !important;
-    border: 2px solid #ef9a9a !important;
+    border: 1.5px solid #ef9a9a !important;
 }
 
 .msg-box.success {
     background-color: #fce4ec !important;
     color: #880e4f !important;
-    border: 2px solid #f8bbd0 !important;
+    border: 1.5px solid #f8bbd0 !important;
 }
 
 .auth-card, .summary-card, .crud-section {
@@ -113,21 +112,29 @@ body {
 }
 
 .password-wrapper input {
-    padding-right: 40px !important;
+    padding-right: 42px !important;
 }
 
 .btn-toggle-pass {
     position: absolute;
-    right: 12px;
+    right: 10px;
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1rem;
-    opacity: 0.8;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary) !important;
+    opacity: 0.7;
 }
 
 .btn-toggle-pass:hover {
     opacity: 1;
+}
+
+.eye-icon {
+    stroke: var(--text-primary) !important;
 }
 
 .gastos-form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
