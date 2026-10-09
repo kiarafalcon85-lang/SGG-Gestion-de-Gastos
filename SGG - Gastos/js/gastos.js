@@ -1,4 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // ESTABLECER FECHA MÁXIMA PERMITIDA AL DÍA DE HOY (PRESENTES Y PASADOS)
+    const fechaInput = document.getElementById("gasto-fecha");
+    const hoyStr = new Date().toISOString().split("T")[0];
+    if (fechaInput) {
+        fechaInput.setAttribute("max", hoyStr);
+    }
+
     // 1. MODO OSCURO / DÍA
     const themeBtn = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("sgg_theme") || "light";
@@ -55,8 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Base de Usuarios Registrados
     let usuariosBD = JSON.parse(localStorage.getItem("usuarios_sgg")) || [
-        { email: "admin@profesor.com", pass: "123456", nombre: "Profesor", mascota: "Chaqui" },
-        { email: "kiara@gmail.com", pass: "Caca67kiara:", nombre: "Kimchi", mascota: "Chaqui" }
+        { email: "admin@profesor.com", pass: "123456", nombre: "Profesor", pregunta: "Rosa" }
     ];
 
     function mostrarVistaAuth(vista) {
@@ -73,14 +79,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goToRecover) goToRecover.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("recover"); });
     if (goToLoginFromRec) goToLoginFromRec.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
 
-    // REGISTRO ESTRICTO (Regresa a Iniciar Sesión)
+    // REGISTRO
     if (formRegister) {
         formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
             const nombre = document.getElementById("reg-nombre").value.trim();
             const email = document.getElementById("reg-email").value.trim().toLowerCase();
             const pass = document.getElementById("reg-password").value.trim();
-            const mascota = document.getElementById("reg-mascota").value.trim();
+            const pregunta = document.getElementById("reg-pregunta").value.trim();
 
             if (pass.length < 6 || !/\d/.test(pass)) {
                 alert("La contraseña debe tener al menos 6 caracteres e incluir un número.");
@@ -92,16 +98,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            usuariosBD.push({ email, pass, nombre, mascota });
+            usuariosBD.push({ email, pass, nombre, pregunta });
             localStorage.setItem("usuarios_sgg", JSON.stringify(usuariosBD));
 
-            alert("¡Cuenta registrada con éxito! 🍓 Por favor ingresa tus datos para iniciar sesión.");
+            alert("¡Cuenta registrada con éxito! 🍓 Inicia sesión con tus credenciales.");
             formRegister.reset();
             mostrarVistaAuth("login");
         });
     }
 
-    // LOGIN ESTRICTO
+    // LOGIN
     if (formLogin) {
         formLogin.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -120,21 +126,28 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // CAMBIO/RECUPERACIÓN DE CONTRASEÑA
+    // CAMBIO/RECUPERACIÓN DE CONTRASEÑA CON VALIDACIÓN
     if (formRecover) {
         formRecover.addEventListener("submit", (e) => {
             e.preventDefault();
             const email = document.getElementById("rec-email").value.trim().toLowerCase();
-            const mascota = document.getElementById("rec-mascota").value.trim();
+            const pregunta = document.getElementById("rec-pregunta").value.trim();
             const newPass = document.getElementById("rec-new-password").value.trim();
 
-            const idx = usuariosBD.findIndex(u => u.email === email && u.mascota.toLowerCase() === mascota.toLowerCase());
+            const idx = usuariosBD.findIndex(u => u.email === email && u.pregunta.toLowerCase() === pregunta.toLowerCase());
 
             if (idx !== -1) {
+                // Validación: No debe ser igual a la contraseña actual
+                if (usuariosBD[idx].pass === newPass) {
+                    alert("Error: La nueva contraseña no debe ser igual a la contraseña anterior.");
+                    return;
+                }
+
                 if (newPass.length < 6 || !/\d/.test(newPass)) {
                     alert("La nueva contraseña debe tener al menos 6 caracteres y un número.");
                     return;
                 }
+
                 usuariosBD[idx].pass = newPass;
                 localStorage.setItem("usuarios_sgg", JSON.stringify(usuariosBD));
                 alert("¡Contraseña actualizada con éxito! 🍓 Inicia sesión con tu nueva contraseña.");
@@ -229,16 +242,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const categoria = document.getElementById("gasto-categoria").value;
             const descripcion = document.getElementById("gasto-descripcion").value.trim();
 
-            // VALIDACIÓN ESTRICTA DE MONTO (RF-05 / CP-05.2)
             if (monto <= 0 || isNaN(monto)) {
                 alert("Error: El monto debe ser un valor positivo mayor a 0.");
                 return;
             }
 
-            // VALIDACIÓN ESTRICTA DE FECHA (AÑO VÁLIDO)
-            const anio = parseInt(fechaStr.split("-")[0]);
-            if (isNaN(anio) || anio < 1900 || anio > 2099) {
-                alert("Error: Ingrese un año válido para la fecha (entre 1900 y 2099).");
+            // VALIDACIÓN ESTRICTA DE FECHA FUTURA
+            const fechaIngresada = new Date(fechaStr + "T00:00:00");
+            const hoy = new Date();
+            hoy.setHours(23, 59, 59, 999);
+
+            if (fechaIngresada > hoy) {
+                alert("Error: No puedes ingresar un gasto con una fecha futura.");
                 return;
             }
 
@@ -293,7 +308,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (btnCancelar) btnCancelar.addEventListener("click", resetearFormulario);
 
-    // BAJA LÓGICA (RF-08)
     window.eliminarGasto = function(id) {
         if (confirm("¿Estás segura de eliminar este gasto?")) {
             gastosSGG = gastosSGG.map(g => g.id === id ? { ...g, estado_activo: false } : g);
