@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. MODO OSCURO / CLARO
+    // 1. MODO OSCURO / DÍA
     const themeBtn = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
@@ -22,60 +22,127 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 2. REFERENCIAS DOM DE VISTAS Y AUTENTICACIÓN
+    // 2. VISUALIZAR / OCULTAR CONTRASEÑA
+    document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const targetId = btn.getAttribute("data-target");
+            const input = document.getElementById(targetId);
+            if (input) {
+                if (input.type === "password") {
+                    input.type = "text";
+                    btn.textContent = "🙈";
+                } else {
+                    input.type = "password";
+                    btn.textContent = "👁️";
+                }
+            }
+        });
+    });
+
+    // 3. REFERENCIAS DE AUTENTICACIÓN
     const authView = document.getElementById("auth-view");
     const panelView = document.getElementById("panel-view");
     const formLogin = document.getElementById("form-login");
     const formRegister = document.getElementById("form-register");
+    const formRecover = document.getElementById("form-recover");
+
     const goToRegister = document.getElementById("go-to-register");
-    const goToLogin = document.getElementById("go-to-login");
+    const goToLoginFromReg = document.getElementById("go-to-login-from-reg");
+    const goToRecover = document.getElementById("go-to-recover");
+    const goToLoginFromRec = document.getElementById("go-to-login-from-rec");
     const btnLogout = document.getElementById("btn-logout");
+    const userDisplay = document.getElementById("user-display");
 
-    // Alternar entre Formulario de Login y Registro
-    if (goToRegister) {
-        goToRegister.addEventListener("click", (e) => {
+    // Base de Usuarios Registrados
+    let usuariosBD = JSON.parse(localStorage.getItem("usuarios_sgg")) || [
+        { email: "admin@profesor.com", pass: "123456", nombre: "Profesor", mascota: "Chaqui" },
+        { email: "kiara@gmail.com", pass: "Caca67kiara:", nombre: "Kimchi", mascota: "Chaqui" }
+    ];
+
+    function mostrarVistaAuth(vista) {
+        formLogin.classList.add("hidden");
+        formRegister.classList.add("hidden");
+        formRecover.classList.add("hidden");
+        if (vista === "login") formLogin.classList.remove("hidden");
+        if (vista === "register") formRegister.classList.remove("hidden");
+        if (vista === "recover") formRecover.classList.remove("hidden");
+    }
+
+    if (goToRegister) goToRegister.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("register"); });
+    if (goToLoginFromReg) goToLoginFromReg.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
+    if (goToRecover) goToRecover.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("recover"); });
+    if (goToLoginFromRec) goToLoginFromRec.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
+
+    // REGISTRO ESTRICTO (Regresa a Iniciar Sesión)
+    if (formRegister) {
+        formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
-            formLogin.classList.add("hidden");
-            formRegister.classList.remove("hidden");
+            const nombre = document.getElementById("reg-nombre").value.trim();
+            const email = document.getElementById("reg-email").value.trim().toLowerCase();
+            const pass = document.getElementById("reg-password").value.trim();
+            const mascota = document.getElementById("reg-mascota").value.trim();
+
+            if (pass.length < 6 || !/\d/.test(pass)) {
+                alert("La contraseña debe tener al menos 6 caracteres e incluir un número.");
+                return;
+            }
+
+            if (usuariosBD.some(u => u.email === email)) {
+                alert("El correo electrónico ya está registrado.");
+                return;
+            }
+
+            usuariosBD.push({ email, pass, nombre, mascota });
+            localStorage.setItem("usuarios_sgg", JSON.stringify(usuariosBD));
+
+            alert("¡Cuenta registrada con éxito! 🍓 Por favor ingresa tus datos para iniciar sesión.");
+            formRegister.reset();
+            mostrarVistaAuth("login");
         });
     }
 
-    if (goToLogin) {
-        goToLogin.addEventListener("click", (e) => {
-            e.preventDefault();
-            formRegister.classList.add("hidden");
-            formLogin.classList.remove("hidden");
-        });
-    }
-
-    // INICIO DE SESIÓN
+    // LOGIN ESTRICTO
     if (formLogin) {
         formLogin.addEventListener("submit", (e) => {
             e.preventDefault();
-            const email = document.getElementById("login-email").value.trim();
+            const email = document.getElementById("login-email").value.trim().toLowerCase();
             const pass = document.getElementById("login-password").value.trim();
 
-            if (email === "admin@profesor.com" && pass === "123456") {
-                const usuario = { email: email };
-                localStorage.setItem("usuario_activo_sgg", JSON.stringify(usuario));
+            const userValido = usuariosBD.find(u => u.email === email && u.pass === pass);
+
+            if (userValido) {
+                localStorage.setItem("usuario_activo_sgg", JSON.stringify(userValido));
+                formLogin.reset();
                 verificarSesion();
             } else {
-                alert("Credenciales incorrectas. Prueba con admin@profesor.com / 123456");
+                alert("Credenciales incorrectas. Verifica correo y contraseña.");
             }
         });
     }
 
-    // REGISTRO DE USUARIO
-    if (formRegister) {
-        formRegister.addEventListener("submit", (e) => {
+    // CAMBIO/RECUPERACIÓN DE CONTRASEÑA
+    if (formRecover) {
+        formRecover.addEventListener("submit", (e) => {
             e.preventDefault();
-            const email = document.getElementById("reg-email").value.trim();
-            if (!email) return;
+            const email = document.getElementById("rec-email").value.trim().toLowerCase();
+            const mascota = document.getElementById("rec-mascota").value.trim();
+            const newPass = document.getElementById("rec-new-password").value.trim();
 
-            const usuario = { email: email };
-            localStorage.setItem("usuario_activo_sgg", JSON.stringify(usuario));
-            alert("¡Cuenta creada e iniciada con éxito! 🍓");
-            verificarSesion();
+            const idx = usuariosBD.findIndex(u => u.email === email && u.mascota.toLowerCase() === mascota.toLowerCase());
+
+            if (idx !== -1) {
+                if (newPass.length < 6 || !/\d/.test(newPass)) {
+                    alert("La nueva contraseña debe tener al menos 6 caracteres y un número.");
+                    return;
+                }
+                usuariosBD[idx].pass = newPass;
+                localStorage.setItem("usuarios_sgg", JSON.stringify(usuariosBD));
+                alert("¡Contraseña actualizada con éxito! 🍓 Inicia sesión con tu nueva contraseña.");
+                formRecover.reset();
+                mostrarVistaAuth("login");
+            } else {
+                alert("Los datos de correo o respuesta de seguridad son incorrectos.");
+            }
         });
     }
 
@@ -87,7 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // CONTROL DE VISTAS SEGÚN SESIÓN
     function verificarSesion() {
         const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
 
@@ -95,15 +161,17 @@ document.addEventListener("DOMContentLoaded", () => {
             authView.classList.add("hidden");
             panelView.classList.remove("hidden");
             btnLogout.classList.remove("hidden");
+            if (userDisplay) userDisplay.textContent = usuarioActivo.nombre || usuarioActivo.email;
             renderizarDashboard();
         } else {
             authView.classList.remove("hidden");
             panelView.classList.add("hidden");
             btnLogout.classList.add("hidden");
+            mostrarVistaAuth("login");
         }
     }
 
-    // 3. LOGICA DE GASTOS (CRUD Y DASHBOARD)
+    // 4. CRUD Y VALIDACIÓN DE GASTOS
     const formGastos = document.getElementById("form-gastos");
     const listaGastos = document.getElementById("lista-gastos");
     const totalMontoDisplay = document.getElementById("total-monto");
@@ -120,7 +188,6 @@ document.addEventListener("DOMContentLoaded", () => {
         listaGastos.innerHTML = "";
         let totalAcumulado = 0;
 
-        // Filtra los gastos activos del usuario logueado
         const misGastos = gastosSGG.filter(g => 
             g.email_usuario === usuarioActivo.email && g.estado_activo === true
         );
@@ -135,8 +202,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${item.descripcion}</td>
                 <td>$${parseFloat(item.monto).toFixed(2)}</td>
                 <td>
-                    <button class="btn-edit" onclick="prepararEdicion(${item.id})">Editar ✏️</button>
-                    <button class="btn-delete" onclick="eliminarGasto(${item.id})">Eliminar 🍓</button>
+                    <button type="button" class="btn-edit" onclick="prepararEdicion(${item.id})">Editar ✏️</button>
+                    <button type="button" class="btn-delete" onclick="eliminarGasto(${item.id})">Eliminar 🍓</button>
                 </td>
             `;
             listaGastos.appendChild(tr);
@@ -149,7 +216,6 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("gastos_sgg", JSON.stringify(gastosSGG));
     }
 
-    // GUARDAR O ACTUALIZAR GASTO
     if (formGastos) {
         formGastos.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -159,31 +225,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const idGasto = document.getElementById("gasto-id").value;
             const monto = parseFloat(document.getElementById("gasto-monto").value);
-            const fecha = document.getElementById("gasto-fecha").value;
+            const fechaStr = document.getElementById("gasto-fecha").value;
             const categoria = document.getElementById("gasto-categoria").value;
-            const descripcion = document.getElementById("gasto-descripcion").value;
+            const descripcion = document.getElementById("gasto-descripcion").value.trim();
 
+            // VALIDACIÓN ESTRICTA DE MONTO (RF-05 / CP-05.2)
             if (monto <= 0 || isNaN(monto)) {
-                alert("El monto debe ser un número mayor a 0.");
+                alert("Error: El monto debe ser un valor positivo mayor a 0.");
+                return;
+            }
+
+            // VALIDACIÓN ESTRICTA DE FECHA (AÑO VÁLIDO)
+            const anio = parseInt(fechaStr.split("-")[0]);
+            if (isNaN(anio) || anio < 1900 || anio > 2099) {
+                alert("Error: Ingrese un año válido para la fecha (entre 1900 y 2099).");
                 return;
             }
 
             if (idGasto) {
-                // Modo Edición
                 const idx = gastosSGG.findIndex(g => g.id == idGasto);
                 if (idx !== -1) {
                     gastosSGG[idx].monto = monto;
-                    gastosSGG[idx].fecha = fecha;
+                    gastosSGG[idx].fecha = fechaStr;
                     gastosSGG[idx].categoria = categoria;
                     gastosSGG[idx].descripcion = descripcion;
                 }
             } else {
-                // Modo Creación
                 const nuevoGasto = {
                     id: Date.now(),
                     email_usuario: usuarioActivo.email,
                     monto: monto,
-                    fecha: fecha,
+                    fecha: fechaStr,
                     categoria: categoria,
                     descripcion: descripcion,
                     estado_activo: true
@@ -219,11 +291,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    if (btnCancelar) {
-        btnCancelar.addEventListener("click", resetearFormulario);
-    }
+    if (btnCancelar) btnCancelar.addEventListener("click", resetearFormulario);
 
-    // ELIMINACIÓN SEGURA (BAJA LÓGICA)
+    // BAJA LÓGICA (RF-08)
     window.eliminarGasto = function(id) {
         if (confirm("¿Estás segura de eliminar este gasto?")) {
             gastosSGG = gastosSGG.map(g => g.id === id ? { ...g, estado_activo: false } : g);
@@ -231,6 +301,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Inicialización
     verificarSesion();
 });
