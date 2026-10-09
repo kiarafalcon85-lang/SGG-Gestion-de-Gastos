@@ -1,12 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // ESTABLECER FECHA MÁXIMA PERMITIDA AL DÍA DE HOY (PRESENTES Y PASADOS)
+    // FECHA LÍMITE (HASTA HOY)
     const fechaInput = document.getElementById("gasto-fecha");
-    const hoyStr = new Date().toISOString().split("T")[0];
+    const hoyObj = new Date();
+    const anio = hoyObj.getFullYear();
+    const mes = String(hoyObj.getMonth() + 1).padStart(2, '0');
+    const dia = String(hoyObj.getDate()).padStart(2, '0');
+    const hoyStr = `${anio}-${mes}-${dia}`;
+
     if (fechaInput) {
         fechaInput.setAttribute("max", hoyStr);
     }
 
-    // 1. MODO OSCURO / DÍA
+    // VALIDADOR DE EMAIL ESTRICTO (Ej. kiarafalcon@gmail.com)
+    function esEmailValido(email) {
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return regex.test(email);
+    }
+
+    // MODO OSCURO / CLARO
     const themeBtn = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
@@ -29,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 2. VISUALIZAR / OCULTAR CONTRASEÑA
+    // VISUALIZAR / OCULTAR CONTRASEÑA
     document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
         btn.addEventListener("click", () => {
             const targetId = btn.getAttribute("data-target");
@@ -46,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 3. REFERENCIAS DE AUTENTICACIÓN
+    // VISTAS & AUTENTICACIÓN
     const authView = document.getElementById("auth-view");
     const panelView = document.getElementById("panel-view");
     const formLogin = document.getElementById("form-login");
@@ -60,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnLogout = document.getElementById("btn-logout");
     const userDisplay = document.getElementById("user-display");
 
-    // Base de Usuarios Registrados
     let usuariosBD = JSON.parse(localStorage.getItem("usuarios_sgg")) || [
         { email: "admin@profesor.com", pass: "123456", nombre: "Profesor", pregunta: "Rosa" }
     ];
@@ -88,13 +98,23 @@ document.addEventListener("DOMContentLoaded", () => {
             const pass = document.getElementById("reg-password").value.trim();
             const pregunta = document.getElementById("reg-pregunta").value.trim();
 
+            if (!nombre || !email || !pass || !pregunta) {
+                alert("Error: Por favor completa todos los campos.");
+                return;
+            }
+
+            if (!esEmailValido(email)) {
+                alert("Error: El correo electrónico no es válido. Ejemplo: tu.correo@gmail.com");
+                return;
+            }
+
             if (pass.length < 6 || !/\d/.test(pass)) {
-                alert("La contraseña debe tener al menos 6 caracteres e incluir un número.");
+                alert("Error: La contraseña debe tener al menos 6 caracteres e incluir al menos 1 número.");
                 return;
             }
 
             if (usuariosBD.some(u => u.email === email)) {
-                alert("El correo electrónico ya está registrado.");
+                alert("Error: El correo electrónico ya se encuentra registrado.");
                 return;
             }
 
@@ -114,6 +134,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const email = document.getElementById("login-email").value.trim().toLowerCase();
             const pass = document.getElementById("login-password").value.trim();
 
+            if (!esEmailValido(email)) {
+                alert("Error: Por favor ingresa un correo electrónico válido.");
+                return;
+            }
+
             const userValido = usuariosBD.find(u => u.email === email && u.pass === pass);
 
             if (userValido) {
@@ -121,12 +146,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 formLogin.reset();
                 verificarSesion();
             } else {
-                alert("Credenciales incorrectas. Verifica correo y contraseña.");
+                alert("Credenciales incorrectas. Verifica tu correo y contraseña.");
             }
         });
     }
 
-    // CAMBIO/RECUPERACIÓN DE CONTRASEÑA CON VALIDACIÓN
+    // CAMBIO DE CONTRASEÑA
     if (formRecover) {
         formRecover.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -134,17 +159,21 @@ document.addEventListener("DOMContentLoaded", () => {
             const pregunta = document.getElementById("rec-pregunta").value.trim();
             const newPass = document.getElementById("rec-new-password").value.trim();
 
+            if (!esEmailValido(email)) {
+                alert("Error: Ingrese un correo electrónico válido.");
+                return;
+            }
+
             const idx = usuariosBD.findIndex(u => u.email === email && u.pregunta.toLowerCase() === pregunta.toLowerCase());
 
             if (idx !== -1) {
-                // Validación: No debe ser igual a la contraseña actual
                 if (usuariosBD[idx].pass === newPass) {
                     alert("Error: La nueva contraseña no debe ser igual a la contraseña anterior.");
                     return;
                 }
 
                 if (newPass.length < 6 || !/\d/.test(newPass)) {
-                    alert("La nueva contraseña debe tener al menos 6 caracteres y un número.");
+                    alert("Error: La nueva contraseña debe tener al menos 6 caracteres y un número.");
                     return;
                 }
 
@@ -184,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 4. CRUD Y VALIDACIÓN DE GASTOS
+    // CRUD DE GASTOS
     const formGastos = document.getElementById("form-gastos");
     const listaGastos = document.getElementById("lista-gastos");
     const totalMontoDisplay = document.getElementById("total-monto");
@@ -242,18 +271,29 @@ document.addEventListener("DOMContentLoaded", () => {
             const categoria = document.getElementById("gasto-categoria").value;
             const descripcion = document.getElementById("gasto-descripcion").value.trim();
 
-            if (monto <= 0 || isNaN(monto)) {
-                alert("Error: El monto debe ser un valor positivo mayor a 0.");
+            if (!monto || monto <= 0 || isNaN(monto)) {
+                alert("Error: El monto debe ser un número positivo mayor a 0.");
                 return;
             }
 
-            // VALIDACIÓN ESTRICTA DE FECHA FUTURA
-            const fechaIngresada = new Date(fechaStr + "T00:00:00");
-            const hoy = new Date();
-            hoy.setHours(23, 59, 59, 999);
+            if (!fechaStr) {
+                alert("Error: Selecciona una fecha válida.");
+                return;
+            }
 
-            if (fechaIngresada > hoy) {
-                alert("Error: No puedes ingresar un gasto con una fecha futura.");
+            // BLOQUEO ESTRICTO DE FECHAS FUTURAS
+            if (fechaStr > hoyStr) {
+                alert("Error: No puedes ingresar un gasto con fecha futura. La fecha debe ser igual o anterior a hoy.");
+                return;
+            }
+
+            if (!categoria) {
+                alert("Error: Selecciona una categoría.");
+                return;
+            }
+
+            if (!descripcion) {
+                alert("Error: Ingresa una descripción para el gasto.");
                 return;
             }
 
