@@ -1,17 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // FECHA MÁXIMA AL DÍA DE HOY
+    // FECHA LÍMITE (HASTA HOY)
     const fechaInput = document.getElementById("gasto-fecha");
+    const regNacimiento = document.getElementById("reg-nacimiento");
+    
     const hoyObj = new Date();
     const anio = hoyObj.getFullYear();
     const mes = String(hoyObj.getMonth() + 1).padStart(2, '0');
     const dia = String(hoyObj.getDate()).padStart(2, '0');
     const hoyStr = `${anio}-${mes}-${dia}`;
 
-    if (fechaInput) {
-        fechaInput.setAttribute("max", hoyStr);
-    }
+    if (fechaInput) fechaInput.setAttribute("max", hoyStr);
+    if (regNacimiento) regNacimiento.setAttribute("max", hoyStr);
 
-    // CUADRO DE ERRORES AESTHETIC DENTRO DE LA PÁGINA
+    // CUADRO DE ERROR/ÉXITO AESTHETIC EN PÁGINA
     const msgBox = document.getElementById("msg-box");
 
     function mostrarMensaje(texto, tipo = "error") {
@@ -29,13 +30,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (msgBox) msgBox.classList.add("hidden");
     }
 
-    // VALIDACIÓN ESTRICTA DE CORREO (Gmail / dominios válidos)
+    // VALIDACIÓN ESTRICTA DE CORREO
     function esEmailValido(email) {
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return regex.test(email);
     }
 
-    // MODO OSCURO / DÍA
+    // MODO OSCURO / CLARO
     const themeBtn = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
@@ -83,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // REFERENCIAS Y USUARIOS
+    // REFERENCIAS DE USUARIOS
     const authView = document.getElementById("auth-view");
     const panelView = document.getElementById("panel-view");
     const formLogin = document.getElementById("form-login");
@@ -116,17 +117,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goToRecover) goToRecover.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("recover"); });
     if (goToLoginFromRec) goToLoginFromRec.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
 
-    // REGISTRO ESTRICTO
+    // REGISTRO
     if (formRegister) {
         formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
             const nombre = document.getElementById("reg-nombre").value.trim();
+            const apellido = document.getElementById("reg-apellido").value.trim();
+            const nacimiento = document.getElementById("reg-nacimiento").value;
             const email = document.getElementById("reg-email").value.trim().toLowerCase();
             const pass = document.getElementById("reg-password").value.trim();
+            const confirmPass = document.getElementById("reg-confirm-password").value.trim();
             const pregunta = document.getElementById("reg-pregunta").value.trim();
 
-            if (!nombre || !email || !pass || !pregunta) {
-                mostrarMensaje("⚠️ Por favor completa todos los campos.");
+            if (!nombre || !apellido || !nacimiento || !email || !pass || !confirmPass || !pregunta) {
+                mostrarMensaje("⚠️ Por favor completa todos los campos del registro.");
                 return;
             }
 
@@ -140,12 +144,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            if (pass !== confirmPass) {
+                mostrarMensaje("⚠️ Las contraseñas no coinciden. Verifícalas.");
+                return;
+            }
+
             if (usuariosBD.some(u => u.email === email)) {
                 mostrarMensaje("⚠️ El correo electrónico ya se encuentra registrado.");
                 return;
             }
 
-            usuariosBD.push({ email, pass, nombre, pregunta });
+            usuariosBD.push({ email, pass, nombre: `${nombre} ${apellido}`, pregunta });
             localStorage.setItem("usuarios_sgg", JSON.stringify(usuariosBD));
 
             mostrarMensaje("¡Cuenta registrada con éxito! 🍓 Inicia sesión.", "success");
@@ -154,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // LOGIN ESTRICTO
+    // LOGIN
     if (formLogin) {
         formLogin.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -196,12 +205,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (idx !== -1) {
                 if (usuariosBD[idx].pass === newPass) {
-                    mostrarMensaje("⚠️ La nueva contraseña no debe ser igual a la contraseña anterior.");
+                    mostrarMensaje("⚠️ La nueva contraseña no debe ser igual a la anterior.");
                     return;
                 }
 
                 if (newPass.length < 6 || !/\d/.test(newPass)) {
-                    mostrarMensaje("⚠️ La nueva contraseña debe tener al menos 6 caracteres y 1 número.");
+                    mostrarMensaje("⚠️ La contraseña debe tener al menos 6 caracteres y 1 número.");
                     return;
                 }
 
