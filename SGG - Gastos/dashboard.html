@@ -19,24 +19,27 @@
 
     <main class="main-container">
 
-        <!-- CAJA AESTHETIC INTEGRADA PARA MENSAJES Y ERRORES -->
+        <!-- CAJA DE ERRORES / MENSAJES AESTHETIC INTEGRADA -->
         <div id="msg-box" class="msg-box hidden" role="alert"></div>
 
-        <!-- VISTA AUTENTICACIÓN (LOGIN, REGISTRO Y RECUPERACIÓN) -->
+        <!-- VISTA AUTENTICACIÓN -->
         <section id="auth-view" class="auth-card">
 
             <!-- Form Iniciar Sesión -->
             <form id="form-login" class="auth-form" novalidate>
                 <h2>¡Hola de nuevo! 🎀</h2>
+                <p class="sub-title">Ingresa tus datos para acceder a tu panel financiero.</p>
+                
                 <div class="input-group">
-                    <label for="login-email">Correo Electrónico</label>
+                    <label for="login-email">CORREO ELECTRÓNICO</label>
                     <input type="text" id="login-email" required placeholder="tu.correo@gmail.com">
                 </div>
+                
                 <div class="input-group">
-                    <label for="login-password">Contraseña</label>
+                    <label for="login-password">CONTRASEÑA</label>
                     <div class="password-wrapper">
-                        <input type="password" id="login-password" required placeholder="••••••">
-                        <button type="button" class="btn-toggle-pass" data-target="login-password" aria-label="Ver/Ocultar contraseña">
+                        <input type="password" id="login-password" required placeholder="••••••••">
+                        <button type="button" class="btn-toggle-pass" data-target="login-password" aria-label="Ver u Ocultar contraseña">
                             <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
@@ -44,27 +47,60 @@
                         </button>
                     </div>
                 </div>
-                <button type="submit" class="btn-primary">Ingresar 🍓</button>
+                
+                <button type="submit" class="btn-primary">INGRESAR 🍓</button>
                 <p class="switch-auth">¿Olvidaste tu contraseña? <a href="#" id="go-to-recover">Recupérala aquí</a></p>
-                <p class="switch-auth">¿No tienes cuenta? <a href="#" id="go-to-register">Regístrate aquí</a></p>
+                <p class="switch-auth">¿No tienes una cuenta aún? <a href="#" id="go-to-register">Regístrate aquí</a></p>
             </form>
 
-            <!-- Form Registro -->
+            <!-- Form Registro (Inspirado en la Foto 1) -->
             <form id="form-register" class="auth-form hidden" novalidate>
                 <h2>Crear Cuenta 🌸</h2>
+                <p class="sub-title">Completa tus datos para comenzar tu registro.</p>
+
                 <div class="input-group">
-                    <label for="reg-nombre">Nombre de Usuario</label>
-                    <input type="text" id="reg-nombre" required placeholder="Ingresa tu nombre">
+                    <label for="reg-nombre">NOMBRE/S</label>
+                    <input type="text" id="reg-nombre" required placeholder="Ej. Juan">
                 </div>
+
                 <div class="input-group">
-                    <label for="reg-email">Correo Electrónico</label>
+                    <label for="reg-apellido">APELLIDO/S</label>
+                    <input type="text" id="reg-apellido" required placeholder="Ej. Pérez">
+                </div>
+
+                <div class="input-group">
+                    <label for="reg-nacimiento">FECHA DE NACIMIENTO</label>
+                    <input type="date" id="reg-nacimiento" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="reg-email">CORREO ELECTRÓNICO</label>
                     <input type="text" id="reg-email" required placeholder="tu.correo@gmail.com">
                 </div>
+
                 <div class="input-group">
-                    <label for="reg-password">Contraseña (Min 6 caracteres y 1 número)</label>
+                    <label for="reg-password">CONTRASEÑA</label>
                     <div class="password-wrapper">
-                        <input type="password" id="reg-password" required placeholder="••••••">
-                        <button type="button" class="btn-toggle-pass" data-target="reg-password" aria-label="Ver/Ocultar contraseña">
+                        <input type="password" id="reg-password" required placeholder="••••••••">
+                        <button type="button" class="btn-toggle-pass" data-target="reg-password" aria-label="Ver u Ocultar contraseña">
+                            <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Requisitos estilo Foto 1 -->
+                    <ul class="pass-req-list">
+                        <li id="req-length">❗ Mínimo 6 caracteres</li>
+                        <li id="req-number">❗ Al menos 1 número</li>
+                    </ul>
+                </div>
+
+                <div class="input-group">
+                    <label for="reg-confirm-password">REPETIR CONTRASEÑA</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="reg-confirm-password" required placeholder="••••••••">
+                        <button type="button" class="btn-toggle-pass" data-target="reg-confirm-password" aria-label="Ver u Ocultar contraseña">
                             <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
@@ -72,30 +108,36 @@
                         </button>
                     </div>
                 </div>
+
                 <div class="input-group">
-                    <label for="reg-pregunta">Pregunta de Seguridad: ¿Cuál es tu color favorito?</label>
+                    <label for="reg-pregunta">PREGUNTA DE SEGURIDAD: ¿Cuál es tu color favorito?</label>
                     <input type="text" id="reg-pregunta" required placeholder="Ingresa tu respuesta">
                 </div>
-                <button type="submit" class="btn-primary">Registrarse 🎀</button>
+
+                <button type="submit" class="btn-primary">REGISTRARSE 🎀</button>
                 <p class="switch-auth">¿Ya tienes cuenta? <a href="#" id="go-to-login-from-reg">Inicia sesión</a></p>
             </form>
 
-            <!-- Form Recuperación/Cambio de Contraseña -->
+            <!-- Form Recuperación / Cambio de Contraseña -->
             <form id="form-recover" class="auth-form hidden" novalidate>
                 <h2>Cambiar Contraseña 🔐</h2>
+                <p class="sub-title">Ingresa tus datos para restablecer la contraseña.</p>
+
                 <div class="input-group">
-                    <label for="rec-email">Correo Electrónico</label>
+                    <label for="rec-email">CORREO ELECTRÓNICO</label>
                     <input type="text" id="rec-email" required placeholder="tu.correo@gmail.com">
                 </div>
+
                 <div class="input-group">
-                    <label for="rec-pregunta">Respuesta de Seguridad: ¿Cuál es tu color favorito?</label>
+                    <label for="rec-pregunta">RESPUESTA DE SEGURIDAD: ¿Cuál es tu color favorito?</label>
                     <input type="text" id="rec-pregunta" required placeholder="Ingresa tu respuesta">
                 </div>
+
                 <div class="input-group">
-                    <label for="rec-new-password">Nueva Contraseña</label>
+                    <label for="rec-new-password">NUEVA CONTRASEÑA</label>
                     <div class="password-wrapper">
-                        <input type="password" id="rec-new-password" required placeholder="••••••">
-                        <button type="button" class="btn-toggle-pass" data-target="rec-new-password" aria-label="Ver/Ocultar contraseña">
+                        <input type="password" id="rec-new-password" required placeholder="••••••••">
+                        <button type="button" class="btn-toggle-pass" data-target="rec-new-password" aria-label="Ver u Ocultar contraseña">
                             <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
@@ -103,7 +145,8 @@
                         </button>
                     </div>
                 </div>
-                <button type="submit" class="btn-primary">Actualizar Contraseña 🍓</button>
+
+                <button type="submit" class="btn-primary">ACTUALIZAR CONTRASEÑA 🍓</button>
                 <p class="switch-auth"><a href="#" id="go-to-login-from-rec">Volver al Inicio de Sesión</a></p>
             </form>
         </section>
@@ -121,17 +164,17 @@
                     <input type="hidden" id="gasto-id">
 
                     <div class="input-group">
-                        <label for="gasto-monto">Monto ($)</label>
+                        <label for="gasto-monto">MONTO ($)</label>
                         <input type="number" id="gasto-monto" min="0.01" step="0.01" required placeholder="0.00">
                     </div>
 
                     <div class="input-group">
-                        <label for="gasto-fecha">Fecha (Hasta hoy)</label>
+                        <label for="gasto-fecha">FECHA (HASTA HOY)</label>
                         <input type="date" id="gasto-fecha" required min="1900-01-01">
                     </div>
 
                     <div class="input-group">
-                        <label for="gasto-categoria">Categoría</label>
+                        <label for="gasto-categoria">CATEGORÍA</label>
                         <select id="gasto-categoria" required>
                             <option value="" disabled selected>Seleccionar...</option>
                             <option value="Alimentación">Alimentación 🍓</option>
@@ -142,7 +185,7 @@
                     </div>
 
                     <div class="input-group full-width">
-                        <label for="gasto-descripcion">Descripción</label>
+                        <label for="gasto-descripcion">DESCRIPCIÓN</label>
                         <input type="text" id="gasto-descripcion" required placeholder="Ej. Compras del súper, Salida...">
                     </div>
 
