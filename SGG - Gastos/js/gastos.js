@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // FECHA MÁXIMA AL DÍA DE HOY (HASTA EL PRESENTE)
+    // FECHA MÁXIMA PERMITIDA (HASTA HOY)
     const fechaInput = document.getElementById("gasto-fecha");
     const regNacimiento = document.getElementById("reg-nacimiento");
     
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (fechaInput) fechaInput.setAttribute("max", hoyStr);
     if (regNacimiento) regNacimiento.setAttribute("max", hoyStr);
 
-    // CUADRO DE ERROR/ÉXITO AESTHETIC INTEGRADO EN PÁGINA
+    // CUADRO DE MENSAJES AESTHETIC
     const msgBox = document.getElementById("msg-box");
 
     function mostrarMensaje(texto, tipo = "error") {
@@ -30,13 +30,40 @@ document.addEventListener("DOMContentLoaded", () => {
         if (msgBox) msgBox.classList.add("hidden");
     }
 
-    // VALIDACIÓN ESTRICTA DE CORREO
+    // VALIDACIÓN DE CORREO
     function esEmailValido(email) {
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return regex.test(email);
     }
 
-    // MODO OSCURO / CLARO
+    // VALIDACIÓN DINÁMICA DE CONTRASEÑA Y CAMBIO DE CORAZONES (♡ -> ♥)
+    const regPassInput = document.getElementById("reg-password");
+    if (regPassInput) {
+        regPassInput.addEventListener("input", () => {
+            const val = regPassInput.value;
+
+            actualizarRequisito("req-length", val.length >= 6);
+            actualizarRequisito("req-number", /\d/.test(val));
+            actualizarRequisito("req-upper", /[A-Z]/.test(val));
+            actualizarRequisito("req-lower", /[a-z]/.test(val));
+        });
+    }
+
+    function actualizarRequisito(id, esValido) {
+        const item = document.getElementById(id);
+        if (item) {
+            const icon = item.querySelector(".heart-icon");
+            if (esValido) {
+                item.classList.add("valid");
+                if (icon) icon.textContent = "♥";
+            } else {
+                item.classList.remove("valid");
+                if (icon) icon.textContent = "♡";
+            }
+        }
+    }
+
+    // MODO OSCURO / DÍA
     const themeBtn = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
@@ -59,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // TOGGLE CONTRASEÑA OJO VECTORES SVG
+    // TOGGLE OJO VER CONTRASEÑA
     document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
         btn.addEventListener("click", () => {
             const targetId = btn.getAttribute("data-target");
@@ -84,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // REFERENCIAS DE USUARIOS
+    // USUARIOS Y NAVEGACIÓN
     const authView = document.getElementById("auth-view");
     const panelView = document.getElementById("panel-view");
     const formLogin = document.getElementById("form-login");
@@ -117,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goToRecover) goToRecover.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("recover"); });
     if (goToLoginFromRec) goToLoginFromRec.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
 
-    // REGISTRO
+    // REGISTRO CON VALIDACIÓN DE 4 REQUISITOS
     if (formRegister) {
         formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -139,8 +166,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            if (pass.length < 6 || !/\d/.test(pass)) {
-                mostrarMensaje("⚠️ La contraseña debe tener al menos 6 caracteres y 1 número.");
+            if (pass.length < 6 || !/\d/.test(pass) || !/[A-Z]/.test(pass) || !/[a-z]/.test(pass)) {
+                mostrarMensaje("⚠️ La contraseña debe cumplir todos los requisitos (6 caracteres, número, mayúscula y minúscula).");
                 return;
             }
 
@@ -188,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // CAMBIO/RECUPERACIÓN DE CONTRASEÑA
+    // RECUPERAR CONTRASEÑA
     if (formRecover) {
         formRecover.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -210,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 if (newPass.length < 6 || !/\d/.test(newPass)) {
-                    mostrarMensaje("⚠️ La contraseña debe tener al menos 6 caracteres y 1 número.");
+                    mostrarMensaje("⚠️ La nueva contraseña debe tener al menos 6 caracteres y 1 número.");
                     return;
                 }
 
@@ -225,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // CIERRE DE SESIÓN
+    // LOGOUT
     if (btnLogout) {
         btnLogout.addEventListener("click", () => {
             localStorage.removeItem("usuario_activo_sgg");
@@ -251,7 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // CRUD DE GASTOS
+    // CRUD GASTOS
     const formGastos = document.getElementById("form-gastos");
     const listaGastos = document.getElementById("lista-gastos");
     const totalMontoDisplay = document.getElementById("total-monto");
@@ -281,9 +308,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${item.categoria}</td>
                 <td>${item.descripcion}</td>
                 <td>$${parseFloat(item.monto).toFixed(2)}</td>
-                <td>
-                    <button type="button" class="btn-edit" onclick="prepararEdicion(${item.id})">Editar ✏️</button>
-                    <button type="button" class="btn-delete" onclick="eliminarGasto(${item.id})">Eliminar 🎀</button>
+                <td class="text-center">
+                    <div class="action-btns">
+                        <button type="button" class="btn-edit" onclick="prepararEdicion(${item.id})">Editar ✏️</button>
+                        <button type="button" class="btn-delete" onclick="eliminarGasto(${item.id})">Eliminar 🎀</button>
+                    </div>
                 </td>
             `;
             listaGastos.appendChild(tr);
