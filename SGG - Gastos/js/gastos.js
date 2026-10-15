@@ -164,7 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Validar que la fecha de nacimiento no sea menor a 1900 ni futura
             const anioNac = parseInt(nacimiento.split("-")[0], 10);
             if (isNaN(anioNac) || anioNac < 1900 || nacimiento > hoyStr) {
                 mostrarMensaje("⚠️ Ingrese una fecha de nacimiento válida (entre 1900 y hoy).");
@@ -356,7 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // EXTRAER Y VALIDAR EL AÑO NUMÉRICO EXACTO (Evita '0003', '0012', etc.)
+            // AÑO ENTERO PARSEADO
             const anioGasto = parseInt(fechaStr.split("-")[0], 10);
 
             if (isNaN(anioGasto) || anioGasto < 1900 || fechaStr > hoyStr) {
