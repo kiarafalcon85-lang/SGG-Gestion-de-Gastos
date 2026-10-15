@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SGG - Sistema de Gestión de Gastos y Presupuesto Personal">
     <title>SGG - Budget Tracker 🎀</title>
-    <link rel="stylesheet" href="css/style.css">
+    <!-- Vinculación directa al CSS -->
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,13 +15,14 @@
     <header class="top-bar">
         <h1>🎀 SGG - Budget Tracker</h1>
         <div class="header-btns">
-            <button id="theme-toggle" class="btn-theme" type="button" aria-label="Cambiar Tema">🌙 Modo Oscuro</button>
+            <button id="theme-toggle" class="btn-theme" type="button">🌙 Modo Oscuro</button>
             <button id="btn-logout" class="btn-logout hidden" type="button">Cerrar Sesión</button>
         </div>
     </header>
 
     <main class="main-container">
 
+        <!-- CARTEL / MODAL DE MENSAJES CENTRADO -->
         <div id="msg-box" class="msg-box hidden" role="alert"></div>
 
         <!-- VISTA AUTENTICACIÓN -->
@@ -35,19 +36,14 @@
                 
                 <div class="input-group">
                     <label for="login-email">CORREO ELECTRÓNICO</label>
-                    <input type="text" id="login-email" required placeholder="tu.correo@gmail.com">
+                    <input type="email" id="login-email" required placeholder="tu.correo@gmail.com">
                 </div>
                 
                 <div class="input-group">
                     <label for="login-password">CONTRASEÑA</label>
                     <div class="password-wrapper">
                         <input type="password" id="login-password" required placeholder="••••••••">
-                        <button type="button" class="btn-toggle-pass" data-target="login-password" aria-label="Ver u Ocultar contraseña">
-                            <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
+                        <button type="button" class="btn-toggle-pass" data-target="login-password" aria-label="Ver u Ocultar contraseña">👁️</button>
                     </div>
                 </div>
                 
@@ -79,19 +75,14 @@
 
                 <div class="input-group">
                     <label for="reg-email">CORREO ELECTRÓNICO</label>
-                    <input type="text" id="reg-email" required placeholder="tu.correo@gmail.com">
+                    <input type="email" id="reg-email" required placeholder="tu.correo@gmail.com">
                 </div>
 
                 <div class="input-group">
                     <label for="reg-password">CONTRASEÑA</label>
                     <div class="password-wrapper">
                         <input type="password" id="reg-password" required placeholder="••••••••">
-                        <button type="button" class="btn-toggle-pass" data-target="reg-password" aria-label="Ver u Ocultar contraseña">
-                            <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
+                        <button type="button" class="btn-toggle-pass" data-target="reg-password" aria-label="Ver u Ocultar contraseña">👁️</button>
                     </div>
                     <ul class="pass-req-list">
                         <li id="req-length"><span class="heart-icon">♡</span> Mínimo 6 caracteres</li>
@@ -105,12 +96,7 @@
                     <label for="reg-confirm-password">REPETIR CONTRASEÑA</label>
                     <div class="password-wrapper">
                         <input type="password" id="reg-confirm-password" required placeholder="••••••••">
-                        <button type="button" class="btn-toggle-pass" data-target="reg-confirm-password" aria-label="Ver u Ocultar contraseña">
-                            <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
+                        <button type="button" class="btn-toggle-pass" data-target="reg-confirm-password" aria-label="Ver u Ocultar contraseña">👁️</button>
                     </div>
                 </div>
 
@@ -131,7 +117,7 @@
 
                 <div class="input-group">
                     <label for="rec-email">CORREO ELECTRÓNICO</label>
-                    <input type="text" id="rec-email" required placeholder="tu.correo@gmail.com">
+                    <input type="email" id="rec-email" required placeholder="tu.correo@gmail.com">
                 </div>
 
                 <div class="input-group">
@@ -143,12 +129,7 @@
                     <label for="rec-new-password">NUEVA CONTRASEÑA</label>
                     <div class="password-wrapper">
                         <input type="password" id="rec-new-password" required placeholder="••••••••">
-                        <button type="button" class="btn-toggle-pass" data-target="rec-new-password" aria-label="Ver u Ocultar contraseña">
-                            <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
+                        <button type="button" class="btn-toggle-pass" data-target="rec-new-password" aria-label="Ver u Ocultar contraseña">👁️</button>
                     </div>
                 </div>
 
@@ -225,6 +206,6 @@
 
     </main>
 
-    <script src="js/gastos.js"></script>
+    <script src="./js/gastos.js"></script>
 </body>
 </html>
