@@ -89,7 +89,7 @@ body.dark-mode .top-bar {
 }
 
 .main-container {
-    max-width: 550px;
+    max-width: 620px;
     margin: 35px auto;
     padding: 0 20px;
 }
@@ -210,7 +210,6 @@ body.dark-mode .input-group input:focus {
 
 .btn-toggle-pass:hover { opacity: 1; }
 
-/* REQUISITOS DE CONTRASEÑA ESTILO CORAZONES */
 .pass-req-list {
     list-style: none;
     padding: 0;
@@ -232,11 +231,8 @@ body.dark-mode .input-group input:focus {
     font-weight: 700;
 }
 
-.heart-icon {
-    font-size: 0.9rem;
-}
+.heart-icon { font-size: 0.9rem; }
 
-/* BOTÓN PRINCIPAL Y SECUNDARIO CON ESTILO INTEGRADO (CORRIGE CANCELAR EDICIÓN) */
 .form-actions {
     display: flex;
     gap: 10px;
@@ -290,7 +286,6 @@ body.dark-mode .input-group input:focus {
     font-weight: 700;
 }
 
-/* TABLA DE GASTOS Y BOTONES EDITAR / ELIMINAR */
 .summary-card { text-align: center; }
 .summary-card h2 { margin: 0 0 8px 0; font-size: 0.95rem; color: var(--text-muted) !important; letter-spacing: 0.5px; }
 .total-monto { font-size: 2.8rem; font-weight: 800; color: var(--text-primary) !important; }
@@ -298,17 +293,16 @@ body.dark-mode .input-group input:focus {
 .gastos-form-grid { display: flex; flex-direction: column; gap: 12px; }
 
 .tabla-gastos { width: 100%; border-collapse: collapse; margin-top: 15px; }
-.tabla-gastos th, .tabla-gastos td { padding: 12px 8px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.88rem; }
+.tabla-gastos th, .tabla-gastos td { padding: 12px 6px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.88rem; white-space: nowrap; }
 .tabla-gastos th { color: var(--text-muted) !important; font-weight: 700; }
 .text-center { text-align: center !important; }
 
-/* CONTENEDOR EN FILA HORIZONTAL DE ACCIONES */
 .action-btns {
-    display: flex;
+    display: inline-flex;
+    flex-direction: row;
     gap: 6px;
     justify-content: center;
     align-items: center;
-    white-space: nowrap;
 }
 
 .btn-edit, .btn-delete {
@@ -322,11 +316,7 @@ body.dark-mode .input-group input:focus {
     align-items: center;
     justify-content: center;
     gap: 3px;
-    transition: transform 0.15s ease;
-}
-
-.btn-edit:hover, .btn-delete:hover {
-    transform: scale(1.04);
+    white-space: nowrap;
 }
 
 .btn-edit { background-color: #f8bbd0; color: #801336; border: 1px solid #f48fb1; }
