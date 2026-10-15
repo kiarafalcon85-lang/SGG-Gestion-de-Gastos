@@ -22,7 +22,6 @@
 
     <main class="main-container">
 
-        <!-- CAJA DE ERRORES / MENSAJES AESTHETIC INTEGRADA -->
         <div id="msg-box" class="msg-box hidden" role="alert"></div>
 
         <!-- VISTA AUTENTICACIÓN -->
@@ -75,7 +74,7 @@
 
                 <div class="input-group">
                     <label for="reg-nacimiento">FECHA DE NACIMIENTO</label>
-                    <input type="date" id="reg-nacimiento" required>
+                    <input type="date" id="reg-nacimiento" required min="1900-01-01">
                 </div>
 
                 <div class="input-group">
@@ -94,7 +93,6 @@
                             </svg>
                         </button>
                     </div>
-                    <!-- REQUISITOS DINÁMICOS CON CORAZONES (FOTO 2) -->
                     <ul class="pass-req-list">
                         <li id="req-length"><span class="heart-icon">♡</span> Mínimo 6 caracteres</li>
                         <li id="req-number"><span class="heart-icon">♡</span> Al menos 1 número</li>
@@ -189,6 +187,10 @@
                             <option value="Transporte">Transporte 🚌</option>
                             <option value="Servicios">Servicios 💡</option>
                             <option value="Ocio">Ocio 🎀</option>
+                            <option value="Salud & Cuidado">Salud & Cuidado 🍓</option>
+                            <option value="Educación/Estudios">Educación/Estudios 📚</option>
+                            <option value="Compras & Moda">Compras & Moda 🛍️</option>
+                            <option value="Varios/Otros">Varios/Otros 💫</option>
                         </select>
                     </div>
 
