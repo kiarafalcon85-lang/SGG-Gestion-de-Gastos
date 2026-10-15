@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // FECHA MÁXIMA PERMITIDA (HASTA HOY)
+    // FECHA MÁXIMA AL DÍA DE HOY Y MÍNIMA A AÑO 1900
     const fechaInput = document.getElementById("gasto-fecha");
     const regNacimiento = document.getElementById("reg-nacimiento");
     
@@ -9,10 +9,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const dia = String(hoyObj.getDate()).padStart(2, '0');
     const hoyStr = `${anio}-${mes}-${dia}`;
 
-    if (fechaInput) fechaInput.setAttribute("max", hoyStr);
-    if (regNacimiento) regNacimiento.setAttribute("max", hoyStr);
+    if (fechaInput) {
+        fechaInput.setAttribute("max", hoyStr);
+        fechaInput.setAttribute("min", "1900-01-01");
+    }
+    if (regNacimiento) {
+        regNacimiento.setAttribute("max", hoyStr);
+        regNacimiento.setAttribute("min", "1900-01-01");
+    }
 
-    // CUADRO DE MENSAJES AESTHETIC
+    // CAJA DE MENSAJES INTEGRADA
     const msgBox = document.getElementById("msg-box");
 
     function mostrarMensaje(texto, tipo = "error") {
@@ -30,18 +36,16 @@ document.addEventListener("DOMContentLoaded", () => {
         if (msgBox) msgBox.classList.add("hidden");
     }
 
-    // VALIDACIÓN DE CORREO
     function esEmailValido(email) {
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return regex.test(email);
     }
 
-    // VALIDACIÓN DINÁMICA DE CONTRASEÑA Y CAMBIO DE CORAZONES (♡ -> ♥)
+    // VALIDACIÓN DINÁMICA DE CONTRASEÑA (♡ -> ♥)
     const regPassInput = document.getElementById("reg-password");
     if (regPassInput) {
         regPassInput.addEventListener("input", () => {
             const val = regPassInput.value;
-
             actualizarRequisito("req-length", val.length >= 6);
             actualizarRequisito("req-number", /\d/.test(val));
             actualizarRequisito("req-upper", /[A-Z]/.test(val));
@@ -86,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // TOGGLE OJO VER CONTRASEÑA
+    // TOGGLE OJO CONTRASEÑA
     document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
         btn.addEventListener("click", () => {
             const targetId = btn.getAttribute("data-target");
@@ -111,7 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // USUARIOS Y NAVEGACIÓN
     const authView = document.getElementById("auth-view");
     const panelView = document.getElementById("panel-view");
     const formLogin = document.getElementById("form-login");
@@ -144,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goToRecover) goToRecover.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("recover"); });
     if (goToLoginFromRec) goToLoginFromRec.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
 
-    // REGISTRO CON VALIDACIÓN DE 4 REQUISITOS
+    // REGISTRO
     if (formRegister) {
         formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -158,6 +161,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!nombre || !apellido || !nacimiento || !email || !pass || !confirmPass || !pregunta) {
                 mostrarMensaje("⚠️ Por favor completa todos los campos del registro.");
+                return;
+            }
+
+            // Validar que la fecha de nacimiento no sea menor a 1900 ni futura
+            const anioNac = parseInt(nacimiento.split("-")[0], 10);
+            if (isNaN(anioNac) || anioNac < 1900 || nacimiento > hoyStr) {
+                mostrarMensaje("⚠️ Ingrese una fecha de nacimiento válida (entre 1900 y hoy).");
                 return;
             }
 
@@ -215,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // RECUPERAR CONTRASEÑA
+    // CAMBIO Y RECUPERACIÓN DE CONTRASEÑA
     if (formRecover) {
         formRecover.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -252,7 +262,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // LOGOUT
     if (btnLogout) {
         btnLogout.addEventListener("click", () => {
             localStorage.removeItem("usuario_activo_sgg");
@@ -278,7 +287,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // CRUD GASTOS
     const formGastos = document.getElementById("form-gastos");
     const listaGastos = document.getElementById("lista-gastos");
     const totalMontoDisplay = document.getElementById("total-monto");
@@ -348,8 +356,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            if (fechaStr > hoyStr) {
-                mostrarMensaje("⚠️ No puedes registrar un gasto con fecha futura.");
+            // EXTRAER Y VALIDAR EL AÑO NUMÉRICO EXACTO (Evita '0003', '0012', etc.)
+            const anioGasto = parseInt(fechaStr.split("-")[0], 10);
+
+            if (isNaN(anioGasto) || anioGasto < 1900 || fechaStr > hoyStr) {
+                mostrarMensaje("⚠️ Por favor ingrese un año válido (desde 1900 hasta hoy).");
                 return;
             }
 
