@@ -160,7 +160,7 @@
         <!-- VISTA PANEL DE GASTOS -->
         <div id="panel-view" class="hidden">
             
-            <!-- WIDGET DE PERFIL PERSONALIZABLE TIPO NOTION -->
+            <!-- TARJETA PERFIL ESTILO NOTION -->
             <section class="profile-widget-card">
                 <div class="window-header">
                     <div class="window-dots">
@@ -171,26 +171,25 @@
                     <span class="window-title">♡ profile_card.exe</span>
                 </div>
                 
-                <div class="profile-content">
-                    <div class="avatar-container">
-                        <img id="profile-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop" alt="Foto de perfil">
-                        <label for="input-avatar" class="btn-change-avatar" title="Cambiar mi foto de perfil">📷</label>
-                        <input type="file" id="input-avatar" accept="image/*" class="hidden">
+                <div class="profile-layout">
+                    <div class="avatar-wrapper">
+                        <img id="profile-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop" alt="Foto de perfil">
+                        <label for="input-avatar" class="btn-change-avatar" title="Cambiar foto de perfil">📷</label>
+                        <input type="file" id="input-avatar" accept="image/*" style="display:none !important;">
                     </div>
 
-                    <div class="profile-info">
-                        <h3 id="profile-user-name"><span id="user-display">Usuario</span> ♡</h3>
+                    <div class="profile-details">
+                        <h3><span id="user-display">Usuario</span> ♡</h3>
                         <p class="profile-subtitle">Planner & Budget Tracker Personal</p>
                         
-                        <!-- SELECTOR DE COLOR PASTEL DINÁMICO -->
-                        <div class="color-picker-container">
-                            <span class="picker-label">Color de Acento:</span>
+                        <div class="color-picker-box">
+                            <span class="picker-title">Color de Acento:</span>
                             <div class="color-palette">
-                                <button type="button" class="color-btn" data-color="pink" style="background-color: #f8bbd0;" title="Rosa Pastel"></button>
-                                <button type="button" class="color-btn" data-color="purple" style="background-color: #d1c4e9;" title="Lila Pastel"></button>
-                                <button type="button" class="color-btn" data-color="blue" style="background-color: #bbdefb;" title="Azul Celeste"></button>
-                                <button type="button" class="color-btn" data-color="mint" style="background-color: #c8e6c9;" title="Verde Menta"></button>
-                                <button type="button" class="color-btn" data-color="peach" style="background-color: #ffe0b2;" title="Durazno Pastel"></button>
+                                <button type="button" class="color-btn theme-pink-btn" data-color="pink" title="Rosa"></button>
+                                <button type="button" class="color-btn theme-purple-btn" data-color="purple" title="Lila"></button>
+                                <button type="button" class="color-btn theme-blue-btn" data-color="blue" title="Azul"></button>
+                                <button type="button" class="color-btn theme-mint-btn" data-color="mint" title="Verde"></button>
+                                <button type="button" class="color-btn theme-peach-btn" data-color="peach" title="Durazno"></button>
                             </div>
                         </div>
                     </div>
