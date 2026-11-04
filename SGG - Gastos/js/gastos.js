@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // FECHA MÁXIMA AL DÍA DE HOY Y MÍNIMA A AÑO 1900
     const fechaInput = document.getElementById("gasto-fecha");
     const regNacimiento = document.getElementById("reg-nacimiento");
     
@@ -18,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
         regNacimiento.setAttribute("min", "1900-01-01");
     }
 
-    // CAJA DE MENSAJES INTEGRADA
     const msgBox = document.getElementById("msg-box");
 
     function mostrarMensaje(texto, tipo = "error") {
@@ -41,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return regex.test(email);
     }
 
-    // GESTIÓN INDIVIDUAL DE AVATAR POR USUARIO
+    // CARGAR Y CAMBIAR FOTO DE PERFIL LOCAL POR USUARIO
     function cargarAvatarUsuario() {
         const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
         const avatarImg = document.getElementById("profile-avatar-img");
@@ -53,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (avatarGuardado) {
                 avatarImg.src = avatarGuardado;
             } else {
-                avatarImg.src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop";
+                avatarImg.src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop";
             }
         }
     }
@@ -78,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // PALETA DE COLORES PASTEL DINÁMICA
+    // CAMBIO DE PALETA DE COLORES PASTEL
     const colorBtns = document.querySelectorAll(".color-btn");
     const temaGuardado = localStorage.getItem("sgg_color_theme");
 
@@ -97,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // VALIDACIÓN DINÁMICA DE CONTRASEÑA
+    // VALIDACIÓN DE CONTRASEÑA
     const regPassInput = document.getElementById("reg-password");
     if (regPassInput) {
         regPassInput.addEventListener("input", () => {
@@ -123,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // MODO OSCURO / DÍA
+    // MODO OSCURO / CLARO
     const themeBtn = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
@@ -146,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // TOGGLE OJO CONTRASEÑA
+    // VER / OCULTAR CONTRASEÑA
     document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
         btn.addEventListener("click", () => {
             const targetId = btn.getAttribute("data-target");
@@ -227,22 +225,22 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             if (!esEmailValido(email)) {
-                mostrarMensaje("⚠️ Ingrese un correo electrónico válido (ej. tu.correo@gmail.com).");
+                mostrarMensaje("⚠️ Ingrese un correo electrónico válido.");
                 return;
             }
 
             if (pass.length < 6 || !/\d/.test(pass) || !/[A-Z]/.test(pass) || !/[a-z]/.test(pass)) {
-                mostrarMensaje("⚠️ La contraseña debe cumplir todos los requisitos (6 caracteres, número, mayúscula y minúscula).");
+                mostrarMensaje("⚠️ La contraseña debe cumplir todos los requisitos.");
                 return;
             }
 
             if (pass !== confirmPass) {
-                mostrarMensaje("⚠️ Las contraseñas no coinciden. Verifícalas.");
+                mostrarMensaje("⚠️ Las contraseñas no coinciden.");
                 return;
             }
 
             if (usuariosBD.some(u => u.email === email)) {
-                mostrarMensaje("⚠️ El correo electrónico ya se encuentra registrado.");
+                mostrarMensaje("⚠️ El correo ya se encuentra registrado.");
                 return;
             }
 
@@ -275,7 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ocultarMensaje();
                 verificarSesion();
             } else {
-                mostrarMensaje("⚠️ Credenciales incorrectas. Verifica correo y contraseña.");
+                mostrarMensaje("⚠️ Credenciales incorrectas.");
             }
         });
     }
