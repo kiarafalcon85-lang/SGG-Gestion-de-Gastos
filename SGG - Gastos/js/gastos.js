@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Configuración de fechas límites
     const fechaInput = document.getElementById("gasto-fecha");
     const regNacimiento = document.getElementById("reg-nacimiento");
     
@@ -39,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return regex.test(email);
     }
 
-    // CARGAR FOTO ÚNICA POR CORREO
+    // Avatar
     function cargarAvatarUsuario() {
         const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
         const avatarImg = document.getElementById("profile-avatar-img");
@@ -54,7 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // SUBIR Y GUARDAR FOTO LOCAL
     const inputAvatar = document.getElementById("input-avatar");
     if (inputAvatar) {
         inputAvatar.addEventListener("change", (e) => {
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // PALETA DE COLORES PASTEL
+    // Selector de colores pastel
     const colorBtns = document.querySelectorAll(".color-btn");
     const temaGuardado = localStorage.getItem("sgg_color_theme");
 
@@ -94,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Requisitos de contraseña
     const regPassInput = document.getElementById("reg-password");
     if (regPassInput) {
         regPassInput.addEventListener("input", () => {
@@ -119,6 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Switch Modo Oscuro / Claro
     const themeBtn = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
@@ -141,6 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Mostrar/ocultar contraseña
     document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
         btn.addEventListener("click", () => {
             const targetId = btn.getAttribute("data-target");
@@ -165,6 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Gestión de vistas de Autenticación
     const authView = document.getElementById("auth-view");
     const panelView = document.getElementById("panel-view");
     const formLogin = document.getElementById("form-login");
@@ -198,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goToRecover) goToRecover.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("recover"); });
     if (goToLoginFromRec) goToLoginFromRec.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
 
-    // REGISTRO
+    // Formularios
     if (formRegister) {
         formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -250,7 +254,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // LOGIN
     if (formLogin) {
         formLogin.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -275,7 +278,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // RECUPERACIÓN DE CONTRASEÑA
     if (formRecover) {
         formRecover.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -328,7 +330,6 @@ document.addEventListener("DOMContentLoaded", () => {
             panelView.classList.remove("hidden");
             btnLogout.classList.remove("hidden");
             
-            // MOSTRAR SOLAMENTE EL NOMBRE COMPLETO REGISTRADO DEL USUARIO
             if (userDisplay) {
                 userDisplay.textContent = usuarioActivo.nombre || usuarioActivo.email;
             }
