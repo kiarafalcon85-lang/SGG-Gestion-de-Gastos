@@ -24,6 +24,22 @@
         <!-- CARTEL / MODAL DE MENSAJES CENTRADO -->
         <div id="msg-box" class="msg-box hidden" role="alert"></div>
 
+        <!-- MODAL PERSONALIZADO PARA CAMBIAR APODO -->
+        <div id="modal-nickname" class="modal-overlay hidden">
+            <div class="modal-card">
+                <div class="coquette-bow-header">🎀</div>
+                <h3>Cambiar Apodo</h3>
+                <p class="sub-title">Ingresa tu nuevo apodo (Nickname) ♡</p>
+                <div class="input-group">
+                    <input type="text" id="input-new-nickname" placeholder="Tu apodo aquí...">
+                </div>
+                <div class="modal-btns">
+                    <button type="button" id="btn-save-nickname" class="btn-primary">Guardar 🎀</button>
+                    <button type="button" id="btn-cancel-nickname" class="btn-secondary">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
         <!-- VISTA AUTENTICACIÓN -->
         <section id="auth-view" class="auth-card">
 
@@ -160,7 +176,7 @@
         <!-- VISTA PANEL DE GASTOS -->
         <div id="panel-view" class="hidden">
             
-            <!-- TARJETA PERFIL ESTILO NOTION OS (.EXE) -->
+            <!-- TARJETA PERFIL ESTILO NOTION OS -->
             <section class="profile-widget-card">
                 <div class="window-header">
                     <div class="window-dots">
@@ -168,7 +184,7 @@
                         <span class="dot dot-yellow"></span>
                         <span class="dot dot-green"></span>
                     </div>
-                    <span class="window-title">♡ profile_card.exe</span>
+                    <span class="window-title">♡ Bienvenido a su perfil de gastos</span>
                 </div>
                 
                 <div class="profile-layout">
@@ -179,23 +195,23 @@
                     </div>
 
                     <div class="profile-details">
-                        <!-- APODO EDITABLE -->
+                        <!-- APODO EDITABLE EN ESPAÑOL -->
                         <div class="field-box full-name">
-                            <span class="field-label">Nickname</span>
+                            <span class="field-label">Apodo</span>
                             <div class="field-value-wrapper">
                                 <span id="user-nickname-display" class="field-value">Usuario ♡</span>
                                 <button type="button" id="btn-edit-nickname" class="btn-edit-icon" title="Editar Apodo">✏️</button>
                             </div>
                         </div>
 
-                        <!-- NOMBRE Y APELLIDO REGISTRADOS -->
+                        <!-- NOMBRE Y APELLIDO EN ESPAÑOL -->
                         <div class="fields-row">
                             <div class="field-box">
-                                <span class="field-label">Name</span>
+                                <span class="field-label">Nombre</span>
                                 <div class="field-value" id="user-firstname-display">Nombre</div>
                             </div>
                             <div class="field-box">
-                                <span class="field-label">Last Name</span>
+                                <span class="field-label">Apellido</span>
                                 <div class="field-value" id="user-lastname-display">Apellido</div>
                             </div>
                         </div>
