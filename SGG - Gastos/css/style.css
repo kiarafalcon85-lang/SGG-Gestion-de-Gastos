@@ -13,7 +13,7 @@
     --danger-color: #b71c1c;
 }
 
-/* TEMAS PASTEL DINÁMICOS - CLARO */
+/* TEMAS PASTEL DINÁMICOS - MODO CLARO */
 body.theme-purple {
     --bg-gradient: radial-gradient(circle at top left, #f3e5f5 0%, #ede7f6 50%, #d1c4e9 100%);
     --card-bg: #ffffff;
@@ -50,16 +50,17 @@ body.theme-mint {
     --btn-dark-hover: #0f3813;
 }
 
-body.theme-peach {
-    --bg-gradient: radial-gradient(circle at top left, #fff3e0 0%, #fff8e1 50%, #ffe0b2 100%);
+/* TEMA BLANCO EN MODO CLARO */
+body.theme-bw {
+    --bg-gradient: radial-gradient(circle at top left, #ffffff 0%, #f5f5f5 50%, #e0e0e0 100%);
     --card-bg: #ffffff;
-    --text-primary: #e65100;
-    --text-muted: #ef6c00;
-    --input-bg: #fff3e0;
-    --border-color: #ffe0b2;
-    --border-coquette: #f57c00;
-    --btn-dark-bg: #e65100;
-    --btn-dark-hover: #b23c00;
+    --text-primary: #212121;
+    --text-muted: #616161;
+    --input-bg: #f5f5f5;
+    --border-color: #e0e0e0;
+    --border-coquette: #424242;
+    --btn-dark-bg: #212121;
+    --btn-dark-hover: #000000;
 }
 
 /* TEMAS MODO OSCURO */
@@ -115,17 +116,18 @@ body.dark-mode.theme-mint {
     --btn-dark-hover: #66bb6a;
 }
 
-body.dark-mode.theme-peach {
-    --bg-gradient: radial-gradient(circle at top left, #291507 0%, #1a0c03 100%);
-    --card-bg: #3d2210;
-    --text-primary: #ffe0b2;
-    --text-muted: #ffcc80;
-    --input-bg: #523018;
-    --border-color: #734524;
-    --border-coquette: #ffb74d;
-    --btn-dark-bg: #ffcc80;
-    --btn-dark-text: #291507;
-    --btn-dark-hover: #ffa726;
+/* TEMA NEGRO PROFUNDO EN MODO OSCURO */
+body.dark-mode.theme-bw {
+    --bg-gradient: radial-gradient(circle at top left, #121212 0%, #000000 100%);
+    --card-bg: #1e1e1e;
+    --text-primary: #ffffff;
+    --text-muted: #b0b0b0;
+    --input-bg: #2d2d2d;
+    --border-color: #3d3d3d;
+    --border-coquette: #ffffff;
+    --btn-dark-bg: #ffffff;
+    --btn-dark-text: #000000;
+    --btn-dark-hover: #e0e0e0;
 }
 
 * { box-sizing: border-box; }
@@ -435,9 +437,11 @@ body.dark-mode .top-bar {
 .theme-purple-btn { background-color: #d1c4e9; }
 .theme-blue-btn { background-color: #bbdefb; }
 .theme-mint-btn { background-color: #c8e6c9; }
-.theme-peach-btn { background-color: #ffe0b2; }
+.theme-bw-btn { background-color: #ffffff; border: 2px solid #e0e0e0; }
 
-/* MODAL FLOTANTE CON COLORES DINÁMICOS */
+body.dark-mode .theme-bw-btn { background-color: #000000; border: 2px solid #424242; }
+
+/* MODAL FLOTANTE */
 .modal-overlay {
     position: fixed;
     top: 0;
