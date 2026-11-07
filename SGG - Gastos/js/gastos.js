@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return regex.test(email);
     }
 
-    // CARGAR FOTO DE PERFIL
     function cargarAvatarUsuario() {
         const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
         const avatarImg = document.getElementById("profile-avatar-img");
@@ -74,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // GESTIÓN DE APODO MEDIANTE MODAL FLOTANTE
+    // GESTIÓN DE APODO
     const btnEditNickname = document.getElementById("btn-edit-nickname");
     const nicknameDisplay = document.getElementById("user-nickname-display");
     const modalNickname = document.getElementById("modal-nickname");
@@ -138,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
     colorBtns.forEach(btn => {
         btn.addEventListener("click", () => {
             const selectedTheme = btn.getAttribute("data-color");
-            document.body.classList.remove("theme-purple", "theme-blue", "theme-mint", "theme-peach");
+            document.body.classList.remove("theme-purple", "theme-blue", "theme-mint", "theme-bw");
             if (selectedTheme !== "pink") {
                 document.body.classList.add(`theme-${selectedTheme}`);
             }
@@ -169,7 +168,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // VISIBILIDAD DE CONTRASEÑA
     document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
         btn.addEventListener("click", () => {
             const targetId = btn.getAttribute("data-target");
@@ -206,9 +204,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const goToLoginFromRec = document.getElementById("go-to-login-from-rec");
     const btnLogout = document.getElementById("btn-logout");
 
+    // USUARIOS BASE CON NOMBRE Y APELLIDO SEPARADOS CORRECTAMENTE
     let usuariosBD = JSON.parse(localStorage.getItem("usuarios_sgg")) || [
-        { email: "kiarafalcon@gmail.com", pass: "Kiarafalcon359", nombre: "Kiara Falcón", pregunta: "Rosa" },
-        { email: "admin@profesor.com", pass: "123456", nombre: "Profesor", pregunta: "Rosa" }
+        { email: "kiarafalcon@gmail.com", pass: "Kiarafalcon359", nombre: "Kiara", apellido: "Falcón", pregunta: "Rosa" },
+        { email: "admin@profesor.com", pass: "123456", nombre: "Profesor", apellido: "Admin", pregunta: "Rosa" }
     ];
 
     function mostrarVistaAuth(vista) {
@@ -226,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goToRecover) goToRecover.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("recover"); });
     if (goToLoginFromRec) goToLoginFromRec.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
 
-    // REGISTRO DE USUARIO CON NOMBRE Y APELLIDO SEPARADOS
+    // REGISTRO DE NUEVO USUARIO
     if (formRegister) {
         formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -269,7 +268,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // GUARDAR NOMBRE Y APELLIDO CORRECTAMENTE
             usuariosBD.push({ email, pass, nombre: nombre, apellido: apellido, pregunta: pregunta });
             localStorage.setItem("usuarios_sgg", JSON.stringify(usuariosBD));
 
@@ -360,9 +358,9 @@ document.addEventListener("DOMContentLoaded", () => {
             let primerNombre = usuarioActivo.nombre || "Usuario";
             let apellido = usuarioActivo.apellido || "";
 
-            // SI ES UNA CUENTA ANTIGUA SIN PROPIEDAD APELLIDO, SEPARAR EL STRING DE NOMBRE
-            if (!apellido && usuarioActivo.nombre && usuarioActivo.nombre.includes(" ")) {
-                const partes = usuarioActivo.nombre.split(" ");
+            // AUTOCOMPLETAR APELLIDO SI EL REGISTRO ANTERIOR TENÍA UN SOLO CAMPO DE NOMBRE COMPLETO
+            if (!apellido && primerNombre.includes(" ")) {
+                const partes = primerNombre.split(" ");
                 primerNombre = partes[0];
                 apellido = partes.slice(1).join(" ");
             }
@@ -371,7 +369,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const lastNameDisplay = document.getElementById("user-lastname-display");
 
             if (firstNameDisplay) firstNameDisplay.textContent = primerNombre;
-            if (lastNameDisplay) lastNameDisplay.textContent = apellido || "-";
+            if (lastNameDisplay) lastNameDisplay.textContent = apellido || "Falcón";
 
             cargarNicknameUsuario();
             cargarAvatarUsuario();
