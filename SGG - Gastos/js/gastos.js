@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Configuración de fechas
     const fechaInput = document.getElementById("gasto-fecha");
     const regNacimiento = document.getElementById("reg-nacimiento");
     
@@ -39,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return regex.test(email);
     }
 
+    // Avatar
     function cargarAvatarUsuario() {
         const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
         const avatarImg = document.getElementById("profile-avatar-img");
@@ -73,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Nickname
     const btnEditNickname = document.getElementById("btn-edit-nickname");
     const nicknameDisplay = document.getElementById("user-nickname-display");
 
@@ -102,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Paletas pastel
     const colorBtns = document.querySelectorAll(".color-btn");
     const temaGuardado = localStorage.getItem("sgg_color_theme");
 
@@ -120,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Modo oscuro
     const themeBtn = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
@@ -142,6 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Toggle ojo password
     document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
         btn.addEventListener("click", () => {
             const targetId = btn.getAttribute("data-target");
@@ -198,6 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goToRecover) goToRecover.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("recover"); });
     if (goToLoginFromRec) goToLoginFromRec.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
 
+    // Registro
     if (formRegister) {
         formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -249,6 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Login
     if (formLogin) {
         formLogin.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -273,6 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Recuperar
     if (formRecover) {
         formRecover.addEventListener("submit", (e) => {
             e.preventDefault();
