@@ -309,7 +309,7 @@ body.dark-mode .top-bar {
     font-weight: 700;
 }
 
-/* WIDGET PERFIL ESTILO NOTION OS (.EXE) */
+/* WIDGET PERFIL ESTILO NOTION OS */
 .window-header {
     display: flex;
     align-items: center;
@@ -436,6 +436,53 @@ body.dark-mode .top-bar {
 .theme-blue-btn { background-color: #bbdefb; }
 .theme-mint-btn { background-color: #c8e6c9; }
 .theme-peach-btn { background-color: #ffe0b2; }
+
+/* MODAL FLOTANTE CON COLORES DINÁMICOS */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-card {
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 24px;
+    padding: 26px 30px;
+    width: 340px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.modal-card h3 {
+    margin: 0 0 4px 0;
+    color: var(--text-primary);
+    font-size: 1.3rem;
+}
+
+.modal-card p.sub-title {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+}
+
+.modal-btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.modal-btns button {
+    flex: 1;
+}
 
 .summary-card { text-align: center; }
 .summary-card h2 { margin: 0 0 8px 0; font-size: 0.95rem; color: var(--text-muted); }
