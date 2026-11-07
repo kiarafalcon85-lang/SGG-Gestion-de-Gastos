@@ -39,63 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return regex.test(email);
     }
 
-    // CARGAR Y CAMBIAR FOTO DE PERFIL LOCAL POR USUARIO
-    function cargarAvatarUsuario() {
-        const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
-        const avatarImg = document.getElementById("profile-avatar-img");
-        
-        if (!avatarImg) return;
-
-        if (usuarioActivo && usuarioActivo.email) {
-            const avatarGuardado = localStorage.getItem(`sgg_avatar_${usuarioActivo.email}`);
-            if (avatarGuardado) {
-                avatarImg.src = avatarGuardado;
-            } else {
-                avatarImg.src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop";
-            }
-        }
-    }
-
-    const inputAvatar = document.getElementById("input-avatar");
-    if (inputAvatar) {
-        inputAvatar.addEventListener("change", (e) => {
-            const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
-            if (!usuarioActivo || !usuarioActivo.email) return;
-
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    const base64Img = evt.target.result;
-                    const avatarImg = document.getElementById("profile-avatar-img");
-                    if (avatarImg) avatarImg.src = base64Img;
-                    localStorage.setItem(`sgg_avatar_${usuarioActivo.email}`, base64Img);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-
-    // CAMBIO DE PALETA DE COLORES PASTEL
-    const colorBtns = document.querySelectorAll(".color-btn");
-    const temaGuardado = localStorage.getItem("sgg_color_theme");
-
-    if (temaGuardado) {
-        document.body.classList.add(`theme-${temaGuardado}`);
-    }
-
-    colorBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-            const selectedTheme = btn.getAttribute("data-color");
-            document.body.classList.remove("theme-purple", "theme-blue", "theme-mint", "theme-peach");
-            if (selectedTheme !== "pink") {
-                document.body.classList.add(`theme-${selectedTheme}`);
-            }
-            localStorage.setItem("sgg_color_theme", selectedTheme);
-        });
-    });
-
-    // VALIDACIÓN DE CONTRASEÑA
     const regPassInput = document.getElementById("reg-password");
     if (regPassInput) {
         regPassInput.addEventListener("input", () => {
@@ -121,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // MODO OSCURO / CLARO
     const themeBtn = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
@@ -144,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // VER / OCULTAR CONTRASEÑA
     document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
         btn.addEventListener("click", () => {
             const targetId = btn.getAttribute("data-target");
@@ -201,7 +142,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goToRecover) goToRecover.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("recover"); });
     if (goToLoginFromRec) goToLoginFromRec.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
 
-    // REGISTRO
     if (formRegister) {
         formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -253,7 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // LOGIN
     if (formLogin) {
         formLogin.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -278,7 +217,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // RECUPERACIÓN DE CONTRASEÑA
     if (formRecover) {
         formRecover.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -331,7 +269,6 @@ document.addEventListener("DOMContentLoaded", () => {
             panelView.classList.remove("hidden");
             btnLogout.classList.remove("hidden");
             if (userDisplay) userDisplay.textContent = usuarioActivo.nombre || usuarioActivo.email;
-            cargarAvatarUsuario();
             renderizarDashboard();
         } else {
             authView.classList.remove("hidden");
