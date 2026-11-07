@@ -13,7 +13,7 @@
     --danger-color: #b71c1c;
 }
 
-/* TEMAS PASTEL DINÁMICOS - MODO CLARO */
+/* TEMAS PASTEL DINÁMICOS - CLARO */
 body.theme-purple {
     --bg-gradient: radial-gradient(circle at top left, #f3e5f5 0%, #ede7f6 50%, #d1c4e9 100%);
     --card-bg: #ffffff;
@@ -62,7 +62,7 @@ body.theme-peach {
     --btn-dark-hover: #b23c00;
 }
 
-/* MODO OSCURO ARMONIOSO ADAPTADO A CADA COLOR */
+/* TEMAS MODO OSCURO */
 body.dark-mode {
     --bg-gradient: radial-gradient(circle at top left, #2b181d 0%, #1f1216 100%);
     --card-bg: #3d222a;
