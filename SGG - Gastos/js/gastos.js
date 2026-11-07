@@ -39,6 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return regex.test(email);
     }
 
+    // AVATAR SIMPLE POR DEFECTO
+    const defaultAvatarSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e2a4b'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-3.8-.85-5.05-2.2.03-1.68 3.37-2.6 5.05-2.6s5.02.92 5.05 2.6C15.8 19.15 14.03 20 12 20z'/></svg>";
+
     function cargarAvatarUsuario() {
         const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
         const avatarImg = document.getElementById("profile-avatar-img");
@@ -49,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (avatarGuardado) {
             avatarImg.src = avatarGuardado;
         } else {
-            avatarImg.src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop";
+            avatarImg.src = defaultAvatarSvg;
         }
     }
 
@@ -71,6 +74,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 reader.readAsDataURL(file);
             }
         });
+    }
+
+    // VALIDACIÓN DINÁMICA DE REQUISITOS DE CONTRASEÑA CON CAMBIO DE CORAZÓN (♡ a ♥)
+    const regPassInput = document.getElementById("reg-password");
+    if (regPassInput) {
+        regPassInput.addEventListener("input", () => {
+            const val = regPassInput.value;
+            actualizarRequisito("req-length", val.length >= 6);
+            actualizarRequisito("req-number", /\d/.test(val));
+            actualizarRequisito("req-upper", /[A-Z]/.test(val));
+            actualizarRequisito("req-lower", /[a-z]/.test(val));
+        });
+    }
+
+    function actualizarRequisito(id, esValido) {
+        const item = document.getElementById(id);
+        if (item) {
+            const icon = item.querySelector(".heart-icon");
+            if (esValido) {
+                item.classList.add("valid");
+                if (icon) icon.textContent = "♥";
+            } else {
+                item.classList.remove("valid");
+                if (icon) icon.textContent = "♡";
+            }
+        }
     }
 
     // GESTIÓN DE APODO
@@ -126,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // CAMBIO DE PALETA PASTEL
+    // PALETA PASTEL
     const colorBtns = document.querySelectorAll(".color-btn");
     const temaGuardado = localStorage.getItem("sgg_color_theme");
 
@@ -204,7 +233,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const goToLoginFromRec = document.getElementById("go-to-login-from-rec");
     const btnLogout = document.getElementById("btn-logout");
 
-    // USUARIOS BASE CON NOMBRE Y APELLIDO SEPARADOS CORRECTAMENTE
     let usuariosBD = JSON.parse(localStorage.getItem("usuarios_sgg")) || [
         { email: "kiarafalcon@gmail.com", pass: "Kiarafalcon359", nombre: "Kiara", apellido: "Falcón", pregunta: "Rosa" },
         { email: "admin@profesor.com", pass: "123456", nombre: "Profesor", apellido: "Admin", pregunta: "Rosa" }
@@ -225,7 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goToRecover) goToRecover.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("recover"); });
     if (goToLoginFromRec) goToLoginFromRec.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
 
-    // REGISTRO DE NUEVO USUARIO
+    // REGISTRO
     if (formRegister) {
         formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -358,7 +386,6 @@ document.addEventListener("DOMContentLoaded", () => {
             let primerNombre = usuarioActivo.nombre || "Usuario";
             let apellido = usuarioActivo.apellido || "";
 
-            // AUTOCOMPLETAR APELLIDO SI EL REGISTRO ANTERIOR TENÍA UN SOLO CAMPO DE NOMBRE COMPLETO
             if (!apellido && primerNombre.includes(" ")) {
                 const partes = primerNombre.split(" ");
                 primerNombre = partes[0];
