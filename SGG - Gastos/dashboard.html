@@ -183,7 +183,7 @@
                         <div class="field-box full-name">
                             <span class="field-label">Nickname</span>
                             <div class="field-value-wrapper">
-                                <span id="user-nickname-display" class="field-value">Usuario</span>
+                                <span id="user-nickname-display" class="field-value">Usuario ♡</span>
                                 <button type="button" id="btn-edit-nickname" class="btn-edit-icon" title="Editar Apodo">✏️</button>
                             </div>
                         </div>
@@ -202,3 +202,84 @@
                         
                         <div class="color-picker-box">
                             <span class="picker-title">Color de Acento:</span>
+                            <div class="color-palette">
+                                <button type="button" class="color-btn theme-pink-btn" data-color="pink" title="Rosa"></button>
+                                <button type="button" class="color-btn theme-purple-btn" data-color="purple" title="Lila"></button>
+                                <button type="button" class="color-btn theme-blue-btn" data-color="blue" title="Azul"></button>
+                                <button type="button" class="color-btn theme-mint-btn" data-color="mint" title="Verde"></button>
+                                <button type="button" class="color-btn theme-peach-btn" data-color="peach" title="Durazno"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="summary-card">
+                <h2>Total Gastado ♡</h2>
+                <div class="total-monto" id="total-monto">$0.00</div>
+            </section>
+
+            <section class="crud-section">
+                <h2 id="form-title">Registrar Nuevo Gasto 🎀</h2>
+                <form id="form-gastos" class="gastos-form-grid" novalidate>
+                    <input type="hidden" id="gasto-id">
+
+                    <div class="input-group">
+                        <label for="gasto-monto">MONTO ($)</label>
+                        <input type="number" id="gasto-monto" min="0.01" step="0.01" required placeholder="0.00">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="gasto-fecha">FECHA (HASTA HOY)</label>
+                        <input type="date" id="gasto-fecha" required min="1900-01-01">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="gasto-categoria">CATEGORÍA</label>
+                        <select id="gasto-categoria" required>
+                            <option value="" disabled selected>Seleccionar...</option>
+                            <option value="Alimentación">Alimentación 🌸</option>
+                            <option value="Transporte">Transporte 🚌</option>
+                            <option value="Servicios">Servicios 💡</option>
+                            <option value="Ocio">Ocio 🎀</option>
+                            <option value="Salud & Cuidado">Salud & Cuidado 🍓</option>
+                            <option value="Educación/Estudios">Educación/Estudios 📚</option>
+                            <option value="Compras & Moda">Compras & Moda 🛍️</option>
+                            <option value="Varios/Otros">Varios/Otros 💫</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label for="gasto-descripcion">DESCRIPCIÓN</label>
+                        <input type="text" id="gasto-descripcion" required placeholder="Ej. Compras del súper, Salida...">
+                    </div>
+
+                    <div class="form-actions full-width">
+                        <button type="submit" id="btn-guardar" class="btn-primary">Guardar Gasto 🎀</button>
+                        <button type="button" id="btn-cancelar" class="btn-secondary hidden">Cancelar Edición</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="crud-section">
+                <h2>Historial de Gastos 📋</h2>
+                <table class="tabla-gastos">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Categoría</th>
+                            <th>Descripción</th>
+                            <th>Monto</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-gastos"></tbody>
+                </table>
+            </section>
+        </div>
+
+    </main>
+
+    <script src="js/gastos.js"></script>
+</body>
+</html>
