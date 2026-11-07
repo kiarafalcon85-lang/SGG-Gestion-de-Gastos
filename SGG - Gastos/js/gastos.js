@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return regex.test(email);
     }
 
-    // CARGAR FOTO DE PERFIL
     function cargarAvatarUsuario() {
         const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
         const avatarImg = document.getElementById("profile-avatar-img");
@@ -74,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // EDICIÓN Y CARGA DE NICKNAME
     const btnEditNickname = document.getElementById("btn-edit-nickname");
     const nicknameDisplay = document.getElementById("user-nickname-display");
 
@@ -104,7 +102,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // CAMBIO DE PALETA PASTEL
     const colorBtns = document.querySelectorAll(".color-btn");
     const temaGuardado = localStorage.getItem("sgg_color_theme");
 
@@ -123,7 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // MODO OSCURO / CLARO
     const themeBtn = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
@@ -146,7 +142,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // VISIBILIDAD DE CONTRASEÑA
     document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
         btn.addEventListener("click", () => {
             const targetId = btn.getAttribute("data-target");
@@ -203,7 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goToRecover) goToRecover.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("recover"); });
     if (goToLoginFromRec) goToLoginFromRec.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
 
-    // REGISTRO
     if (formRegister) {
         formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -255,7 +249,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // LOGIN
     if (formLogin) {
         formLogin.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -280,7 +273,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // RECUPERACIÓN
     if (formRecover) {
         formRecover.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -333,7 +325,6 @@ document.addEventListener("DOMContentLoaded", () => {
             panelView.classList.remove("hidden");
             btnLogout.classList.remove("hidden");
             
-            // SEPARAR NOMBRE Y APELLIDO REGISTRADOS
             const partesNombre = (usuarioActivo.nombre || "Usuario").split(" ");
             const primerNombre = partesNombre[0] || "";
             const apellido = partesNombre.slice(1).join(" ") || "-";
