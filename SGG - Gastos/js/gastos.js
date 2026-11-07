@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Configuración de fechas límites
     const fechaInput = document.getElementById("gasto-fecha");
     const regNacimiento = document.getElementById("reg-nacimiento");
     
@@ -40,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return regex.test(email);
     }
 
-    // Avatar
+    // CARGAR FOTO DE PERFIL
     function cargarAvatarUsuario() {
         const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
         const avatarImg = document.getElementById("profile-avatar-img");
@@ -75,7 +74,37 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Selector de colores pastel
+    // EDICIÓN Y CARGA DE NICKNAME
+    const btnEditNickname = document.getElementById("btn-edit-nickname");
+    const nicknameDisplay = document.getElementById("user-nickname-display");
+
+    function cargarNicknameUsuario() {
+        const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
+        if (!usuarioActivo || !nicknameDisplay) return;
+
+        const nickGuardado = localStorage.getItem(`sgg_nickname_${usuarioActivo.email}`);
+        if (nickGuardado) {
+            nicknameDisplay.textContent = `${nickGuardado} ♡`;
+        } else {
+            nicknameDisplay.textContent = `${usuarioActivo.nombre || "Usuario"} ♡`;
+        }
+    }
+
+    if (btnEditNickname) {
+        btnEditNickname.addEventListener("click", () => {
+            const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
+            if (!usuarioActivo) return;
+
+            const nuevoNick = prompt("Ingresa tu nuevo apodo (Nickname):");
+            if (nuevoNick && nuevoNick.trim() !== "") {
+                const nickLimpio = nuevoNick.trim();
+                localStorage.setItem(`sgg_nickname_${usuarioActivo.email}`, nickLimpio);
+                nicknameDisplay.textContent = `${nickLimpio} ♡`;
+            }
+        });
+    }
+
+    // CAMBIO DE PALETA PASTEL
     const colorBtns = document.querySelectorAll(".color-btn");
     const temaGuardado = localStorage.getItem("sgg_color_theme");
 
@@ -94,33 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Requisitos de contraseña
-    const regPassInput = document.getElementById("reg-password");
-    if (regPassInput) {
-        regPassInput.addEventListener("input", () => {
-            const val = regPassInput.value;
-            actualizarRequisito("req-length", val.length >= 6);
-            actualizarRequisito("req-number", /\d/.test(val));
-            actualizarRequisito("req-upper", /[A-Z]/.test(val));
-            actualizarRequisito("req-lower", /[a-z]/.test(val));
-        });
-    }
-
-    function actualizarRequisito(id, esValido) {
-        const item = document.getElementById(id);
-        if (item) {
-            const icon = item.querySelector(".heart-icon");
-            if (esValido) {
-                item.classList.add("valid");
-                if (icon) icon.textContent = "♥";
-            } else {
-                item.classList.remove("valid");
-                if (icon) icon.textContent = "♡";
-            }
-        }
-    }
-
-    // Switch Modo Oscuro / Claro
+    // MODO OSCURO / CLARO
     const themeBtn = document.getElementById("theme-toggle");
     const savedTheme = localStorage.getItem("sgg_theme") || "light";
 
@@ -143,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Mostrar/ocultar contraseña
+    // VISIBILIDAD DE CONTRASEÑA
     document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
         btn.addEventListener("click", () => {
             const targetId = btn.getAttribute("data-target");
@@ -168,7 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Gestión de vistas de Autenticación
     const authView = document.getElementById("auth-view");
     const panelView = document.getElementById("panel-view");
     const formLogin = document.getElementById("form-login");
@@ -180,7 +182,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const goToRecover = document.getElementById("go-to-recover");
     const goToLoginFromRec = document.getElementById("go-to-login-from-rec");
     const btnLogout = document.getElementById("btn-logout");
-    const userDisplay = document.getElementById("user-display");
 
     let usuariosBD = JSON.parse(localStorage.getItem("usuarios_sgg")) || [
         { email: "kiarafalcon@gmail.com", pass: "Kiarafalcon359", nombre: "Kiara Falcón", pregunta: "Rosa" },
@@ -202,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goToRecover) goToRecover.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("recover"); });
     if (goToLoginFromRec) goToLoginFromRec.addEventListener("click", (e) => { e.preventDefault(); mostrarVistaAuth("login"); });
 
-    // Formularios
+    // REGISTRO
     if (formRegister) {
         formRegister.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -254,6 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // LOGIN
     if (formLogin) {
         formLogin.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -278,6 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // RECUPERACIÓN
     if (formRecover) {
         formRecover.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -330,10 +333,18 @@ document.addEventListener("DOMContentLoaded", () => {
             panelView.classList.remove("hidden");
             btnLogout.classList.remove("hidden");
             
-            if (userDisplay) {
-                userDisplay.textContent = usuarioActivo.nombre || usuarioActivo.email;
-            }
-            
+            // SEPARAR NOMBRE Y APELLIDO REGISTRADOS
+            const partesNombre = (usuarioActivo.nombre || "Usuario").split(" ");
+            const primerNombre = partesNombre[0] || "";
+            const apellido = partesNombre.slice(1).join(" ") || "-";
+
+            const firstNameDisplay = document.getElementById("user-firstname-display");
+            const lastNameDisplay = document.getElementById("user-lastname-display");
+
+            if (firstNameDisplay) firstNameDisplay.textContent = primerNombre;
+            if (lastNameDisplay) lastNameDisplay.textContent = apellido;
+
+            cargarNicknameUsuario();
             cargarAvatarUsuario();
             renderizarDashboard();
         } else {
