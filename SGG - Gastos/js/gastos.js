@@ -171,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.body.classList.add(`theme-${selectedTheme}`);
             }
             localStorage.setItem("sgg_color_theme", selectedTheme);
+            renderizarGrafico(); // Actualizar colores del gráfico al cambiar tema
         });
     });
 
@@ -194,6 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 localStorage.setItem("sgg_theme", "light");
                 themeBtn.textContent = "🌙 Modo Oscuro";
             }
+            renderizarGrafico(); // Actualizar colores del gráfico al cambiar modo
         });
     }
 
@@ -409,6 +411,212 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // GESTIÓN DE COMPROBANTE (SÍ / NO) Y FOTO
+    let comprobanteBase64Actual = "";
+    const radiosComprobante = document.querySelectorAll('input[name="tiene-comprobante"]');
+    const comprobanteUploadGroup = document.getElementById("comprobante-upload-group");
+    const inputComprobanteFoto = document.getElementById("gasto-comprobante-foto");
+    const comprobantePreviewBox = document.getElementById("comprobante-preview-box");
+    const comprobantePreviewImg = document.getElementById("comprobante-preview-img");
+    const btnQuitarFoto = document.getElementById("btn-quitar-foto");
+
+    radiosComprobante.forEach(radio => {
+        radio.addEventListener("change", () => {
+            if (radio.value === "si" && radio.checked) {
+                comprobanteUploadGroup.classList.remove("hidden");
+            } else if (radio.value === "no" && radio.checked) {
+                comprobanteUploadGroup.classList.add("hidden");
+                limpiarComprobantePreview();
+            }
+        });
+    });
+
+    if (inputComprobanteFoto) {
+        inputComprobanteFoto.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    comprobanteBase64Actual = evt.target.result;
+                    if (comprobantePreviewImg) comprobantePreviewImg.src = comprobanteBase64Actual;
+                    if (comprobantePreviewBox) comprobantePreviewBox.classList.remove("hidden");
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    function limpiarComprobantePreview() {
+        comprobanteBase64Actual = "";
+        if (inputComprobanteFoto) inputComprobanteFoto.value = "";
+        if (comprobantePreviewImg) comprobantePreviewImg.src = "";
+        if (comprobantePreviewBox) comprobantePreviewBox.classList.add("hidden");
+    }
+
+    if (btnQuitarFoto) {
+        btnQuitarFoto.addEventListener("click", limpiarComprobantePreview);
+    }
+
+    // MODAL PARA VER COMPROBANTE GUARDADO
+    const modalComprobante = document.getElementById("modal-comprobante");
+    const imgModalComprobante = document.getElementById("img-modal-comprobante");
+    const btnCloseComprobante = document.getElementById("btn-close-comprobante");
+
+    window.verComprobante = function(id) {
+        const gasto = gastosSGG.find(g => g.id === id);
+        if (gasto && gasto.comprobante_foto) {
+            if (imgModalComprobante) imgModalComprobante.src = gasto.comprobante_foto;
+            if (modalComprobante) modalComprobante.classList.remove("hidden");
+        }
+    };
+
+    if (btnCloseComprobante) {
+        btnCloseComprobante.addEventListener("click", () => {
+            if (modalComprobante) modalComprobante.classList.add("hidden");
+        });
+    }
+
+    // GRÁFICO CIRCULAR POR CATEGORÍA ADAPTADO AL TEMA DETERMINADO
+    function obtenerPaletaGrafico() {
+        const isDark = document.body.classList.contains("dark-mode");
+        const isPurple = document.body.classList.contains("theme-purple");
+        const isBlue = document.body.classList.contains("theme-blue");
+        const isMint = document.body.classList.contains("theme-mint");
+        const isBw = document.body.classList.contains("theme-bw");
+
+        if (isPurple) {
+            return isDark
+                ? ["#ce93d8", "#ba68c8", "#ab47bc", "#9c27b0", "#7b1fa2", "#e1bee7", "#f3e5f5", "#6a1b9a"]
+                : ["#7b1fa2", "#9c27b0", "#ab47bc", "#ba68c8", "#ce93d8", "#6a1b9a", "#4a148c", "#8e24aa"];
+        }
+        if (isBlue) {
+            return isDark
+                ? ["#90caf9", "#64b5f6", "#42a5f5", "#2196f3", "#1e88e5", "#bbdefb", "#e3f2fd", "#1565c0"]
+                : ["#1565c0", "#1976d2", "#1e88e5", "#2196f3", "#42a5f5", "#64b5f6", "#0d47a1", "#90caf9"];
+        }
+        if (isMint) {
+            return isDark
+                ? ["#a5d6a7", "#81c784", "#66bb6a", "#4caf50", "#43a047", "#c8e6c9", "#e8f5e9", "#2e7d32"]
+                : ["#2e7d32", "#388e3c", "#43a047", "#4caf50", "#66bb6a", "#81c784", "#1b5e20", "#a5d6a7"];
+        }
+        if (isBw) {
+            return isDark
+                ? ["#ffffff", "#d4d4d4", "#a3a3a3", "#737373", "#525252", "#e5e5e5", "#8a8a8a", "#404040"]
+                : ["#212121", "#424242", "#616161", "#757575", "#9e9e9e", "#bdbdbd", "#333333", "#888888"];
+        }
+        // Rosa por defecto
+        return isDark
+            ? ["#f48fb1", "#f06292", "#ec407a", "#e91e63", "#d81b60", "#f8bbd0", "#fce4ec", "#ad1457"]
+            : ["#c2185b", "#d81b60", "#e91e63", "#ec407a", "#f06292", "#f48fb1", "#880e4f", "#ad1457"];
+    }
+
+    function renderizarGrafico() {
+        const canvas = document.getElementById("gastos-chart");
+        const emptyMsg = document.getElementById("chart-empty-msg");
+        const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
+        if (!canvas || !usuarioActivo) return;
+
+        const misGastos = gastosSGG.filter(g => 
+            g.email_usuario === usuarioActivo.email && g.estado_activo === true
+        );
+
+        if (misGastos.length === 0) {
+            canvas.classList.add("hidden");
+            if (emptyMsg) emptyMsg.classList.remove("hidden");
+            return;
+        }
+
+        canvas.classList.remove("hidden");
+        if (emptyMsg) emptyMsg.classList.add("hidden");
+
+        // Agrupar montos por categoría
+        const totalesPorCategoria = {};
+        let granTotal = 0;
+
+        misGastos.forEach(g => {
+            const cat = g.categoria;
+            const monto = parseFloat(g.monto);
+            totalesPorCategoria[cat] = (totalesPorCategoria[cat] || 0) + monto;
+            granTotal += monto;
+        });
+
+        const categorias = Object.keys(totalesPorCategoria).sort((a, b) => totalesPorCategoria[b] - totalesPorCategoria[a]);
+        const colores = obtenerPaletaGrafico();
+
+        // Configurar escala retina para nitidez
+        const dpr = window.devicePixelRatio || 1;
+        const width = 560;
+        const height = 310;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+
+        const ctx = canvas.getContext("2d");
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, width, height);
+
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const radius = 92;
+
+        const computedStyles = getComputedStyle(document.body);
+        const textColor = computedStyles.getPropertyValue("--text-primary").trim() || "#801336";
+        const cardBgColor = computedStyles.getPropertyValue("--card-bg").trim() || "#ffffff";
+
+        let startAngle = -Math.PI / 2;
+
+        categorias.forEach((cat, idx) => {
+            const valor = totalesPorCategoria[cat];
+            const sliceAngle = (valor / granTotal) * 2 * Math.PI;
+            const endAngle = startAngle + sliceAngle;
+            const colorSlice = colores[idx % colores.length];
+
+            // Dibujar porción del pastel
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+            ctx.closePath();
+            ctx.fillStyle = colorSlice;
+            ctx.fill();
+
+            // Borde separador limpio
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = cardBgColor;
+            ctx.stroke();
+
+            // Línea conectora y etiqueta externa (estilo imagen de referencia)
+            const midAngle = startAngle + sliceAngle / 2;
+            const porcent = Math.round((valor / granTotal) * 100);
+
+            const lineStartX = centerX + Math.cos(midAngle) * radius;
+            const lineStartY = centerY + Math.sin(midAngle) * radius;
+            const lineMidX = centerX + Math.cos(midAngle) * (radius + 20);
+            const lineMidY = centerY + Math.sin(midAngle) * (radius + 20);
+            const isRight = Math.cos(midAngle) >= 0;
+            const lineEndX = lineMidX + (isRight ? 18 : -18);
+            const lineEndY = lineMidY;
+
+            ctx.beginPath();
+            ctx.moveTo(lineStartX, lineStartY);
+            ctx.lineTo(lineMidX, lineMidY);
+            ctx.lineTo(lineEndX, lineEndY);
+            ctx.strokeStyle = colorSlice;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Texto de etiqueta
+            ctx.font = "bold 12px 'Quicksand', sans-serif";
+            ctx.fillStyle = textColor;
+            ctx.textAlign = isRight ? "left" : "right";
+            ctx.textBaseline = "middle";
+            const labelX = lineEndX + (isRight ? 6 : -6);
+            ctx.fillText(`${cat}: ${porcent}%`, labelX, lineEndY);
+
+            startAngle = endAngle;
+        });
+    }
+
     const formGastos = document.getElementById("form-gastos");
     const listaGastos = document.getElementById("lista-gastos");
     const totalMontoDisplay = document.getElementById("total-monto");
@@ -432,12 +640,17 @@ document.addEventListener("DOMContentLoaded", () => {
         misGastos.forEach((item) => {
             totalAcumulado += parseFloat(item.monto);
 
+            const comprobanteHtml = (item.tiene_comprobante === "si" && item.comprobante_foto)
+                ? `<button type="button" class="btn-ver-comprobante" onclick="verComprobante(${item.id})">Ver Foto 🧾</button>`
+                : `<span class="sin-comprobante-tag">${item.tiene_comprobante === "si" ? "Sí (Sin foto)" : "No"}</span>`;
+
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>${item.fecha}</td>
                 <td>${item.categoria}</td>
                 <td>${item.descripcion}</td>
                 <td>$${parseFloat(item.monto).toFixed(2)}</td>
+                <td class="text-center">${comprobanteHtml}</td>
                 <td class="text-center">
                     <div class="action-btns">
                         <button type="button" class="btn-edit" onclick="prepararEdicion(${item.id})">Editar ✏️</button>
@@ -453,6 +666,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         localStorage.setItem("gastos_sgg", JSON.stringify(gastosSGG));
+        renderizarGrafico();
     }
 
     if (formGastos) {
@@ -467,6 +681,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const fechaStr = document.getElementById("gasto-fecha").value;
             const categoria = document.getElementById("gasto-categoria").value;
             const descripcion = document.getElementById("gasto-descripcion").value.trim();
+            const tieneComprobanteEl = document.querySelector('input[name="tiene-comprobante"]:checked');
+            const tieneComprobante = tieneComprobanteEl ? tieneComprobanteEl.value : "no";
 
             if (!monto || monto <= 0 || isNaN(monto)) {
                 mostrarMensaje("⚠️ El monto debe ser un número positivo mayor a $0.");
@@ -501,6 +717,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            if (tieneComprobante === "si" && !comprobanteBase64Actual) {
+                mostrarMensaje("⚠️ Seleccionaste que tiene comprobante, por favor sube la foto.");
+                return;
+            }
+
             if (idGasto) {
                 const idx = gastosSGG.findIndex(g => g.id == idGasto);
                 if (idx !== -1) {
@@ -508,6 +729,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     gastosSGG[idx].fecha = fechaStr;
                     gastosSGG[idx].categoria = categoria;
                     gastosSGG[idx].descripcion = descripcion;
+                    gastosSGG[idx].tiene_comprobante = tieneComprobante;
+                    gastosSGG[idx].comprobante_foto = tieneComprobante === "si" ? comprobanteBase64Actual : "";
                 }
             } else {
                 const nuevoGasto = {
@@ -517,6 +740,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     fecha: fechaStr,
                     categoria: categoria,
                     descripcion: descripcion,
+                    tiene_comprobante: tieneComprobante,
+                    comprobante_foto: tieneComprobante === "si" ? comprobanteBase64Actual : "",
                     estado_activo: true
                 };
                 gastosSGG.push(nuevoGasto);
@@ -531,9 +756,11 @@ document.addEventListener("DOMContentLoaded", () => {
     function resetearFormulario() {
         if (formGastos) formGastos.reset();
         document.getElementById("gasto-id").value = "";
-        formTitle.textContent = "Registrar Nuevo Gasto 🌸";
+        formTitle.textContent = "Registrar Nuevo Gasto 🎀";
         btnGuardar.textContent = "Guardar Gasto 🎀";
         btnCancelar.classList.add("hidden");
+        if (comprobanteUploadGroup) comprobanteUploadGroup.classList.add("hidden");
+        limpiarComprobantePreview();
     }
 
     window.prepararEdicion = function(id) {
@@ -544,6 +771,24 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("gasto-fecha").value = gasto.fecha;
             document.getElementById("gasto-categoria").value = gasto.categoria;
             document.getElementById("gasto-descripcion").value = gasto.descripcion;
+
+            const tieneComp = gasto.tiene_comprobante || "no";
+            const radioTarget = document.querySelector(`input[name="tiene-comprobante"][value="${tieneComp}"]`);
+            if (radioTarget) radioTarget.checked = true;
+
+            if (tieneComp === "si") {
+                comprobanteUploadGroup.classList.remove("hidden");
+                if (gasto.comprobante_foto) {
+                    comprobanteBase64Actual = gasto.comprobante_foto;
+                    if (comprobantePreviewImg) comprobantePreviewImg.src = comprobanteBase64Actual;
+                    if (comprobantePreviewBox) comprobantePreviewBox.classList.remove("hidden");
+                } else {
+                    limpiarComprobantePreview();
+                }
+            } else {
+                comprobanteUploadGroup.classList.add("hidden");
+                limpiarComprobantePreview();
+            }
 
             formTitle.textContent = "Editar Gasto ✏️";
             btnGuardar.textContent = "Actualizar Gasto";
