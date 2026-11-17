@@ -40,6 +40,20 @@
             </div>
         </div>
 
+        <!-- MODAL PARA VER FOTO DEL COMPROBANTE -->
+        <div id="modal-comprobante" class="modal-overlay hidden">
+            <div class="modal-card modal-comprobante-card">
+                <div class="coquette-bow-header">🧾</div>
+                <h3>Comprobante del Gasto</h3>
+                <div class="comprobante-view-wrapper">
+                    <img id="img-modal-comprobante" src="" alt="Comprobante">
+                </div>
+                <div class="modal-btns">
+                    <button type="button" id="btn-close-comprobante" class="btn-primary">Cerrar 🎀</button>
+                </div>
+            </div>
+        </div>
+
         <!-- VISTA AUTENTICACIÓN -->
         <section id="auth-view" class="auth-card">
 
@@ -235,6 +249,15 @@
                 <div class="total-monto" id="total-monto">$0.00</div>
             </section>
 
+            <!-- SECCIÓN GRÁFICO CIRCULAR POR CATEGORÍA -->
+            <section class="crud-section chart-section">
+                <h2>Distribución de Gastos 📊</h2>
+                <div class="chart-container">
+                    <canvas id="gastos-chart" width="560" height="320"></canvas>
+                    <p id="chart-empty-msg" class="sub-title hidden">Aún no hay gastos registrados para mostrar el gráfico ♡</p>
+                </div>
+            </section>
+
             <section class="crud-section">
                 <h2 id="form-title">Registrar Nuevo Gasto 🎀</h2>
                 <form id="form-gastos" class="gastos-form-grid" novalidate>
@@ -270,6 +293,28 @@
                         <input type="text" id="gasto-descripcion" required placeholder="Ej. Compras del súper, Salida...">
                     </div>
 
+                    <!-- OPCIÓN DE COMPROBANTE (SÍ / NO) + FOTO -->
+                    <div class="input-group full-width">
+                        <label>¿TIENE COMPROBANTE?</label>
+                        <div class="radio-group-comprobante">
+                            <label class="radio-option">
+                                <input type="radio" name="tiene-comprobante" value="no" checked> No
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="tiene-comprobante" value="si"> Sí
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="comprobante-upload-group" class="input-group full-width hidden">
+                        <label for="gasto-comprobante-foto">FOTO DEL COMPROBANTE 📷</label>
+                        <input type="file" id="gasto-comprobante-foto" accept="image/*" class="file-input-coquette">
+                        <div id="comprobante-preview-box" class="comprobante-preview hidden">
+                            <img id="comprobante-preview-img" src="" alt="Vista previa comprobante">
+                            <button type="button" id="btn-quitar-foto" class="btn-delete btn-xs">Quitar foto ✕</button>
+                        </div>
+                    </div>
+
                     <div class="form-actions full-width">
                         <button type="submit" id="btn-guardar" class="btn-primary">Guardar Gasto 🎀</button>
                         <button type="button" id="btn-cancelar" class="btn-secondary hidden">Cancelar Edición</button>
@@ -279,18 +324,21 @@
 
             <section class="crud-section">
                 <h2>Historial de Gastos 📋</h2>
-                <table class="tabla-gastos">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Categoría</th>
-                            <th>Descripción</th>
-                            <th>Monto</th>
-                            <th class="text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lista-gastos"></tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="tabla-gastos">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Categoría</th>
+                                <th>Descripción</th>
+                                <th>Monto</th>
+                                <th class="text-center">Comprobante</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-gastos"></tbody>
+                    </table>
+                </div>
             </section>
         </div>
 
