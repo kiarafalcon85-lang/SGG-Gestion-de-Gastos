@@ -184,7 +184,7 @@ body.dark-mode .top-bar {
 }
 
 .main-container {
-    max-width: 620px;
+    max-width: 660px;
     margin: 35px auto;
     padding: 0 20px;
 }
@@ -205,15 +205,16 @@ body.dark-mode .top-bar {
     transition: all 0.3s ease;
 }
 
-.auth-form h2 {
-    text-align: center;
-    font-size: 1.8rem;
+.auth-form h2, .crud-section h2 {
+    font-size: 1.45rem;
     font-weight: 700;
-    margin: 0 0 6px 0;
+    margin: 0 0 14px 0;
     color: var(--text-primary);
 }
 
-.auth-form p.sub-title {
+.auth-form h2 { text-align: center; font-size: 1.8rem; margin-bottom: 6px; }
+
+.auth-form p.sub-title, .chart-container p.sub-title {
     text-align: center;
     color: var(--text-muted);
     font-size: 0.9rem;
@@ -232,7 +233,11 @@ body.dark-mode .top-bar {
     letter-spacing: 0.5px;
 }
 
-.input-group input, .input-group select {
+.input-group input[type="text"],
+.input-group input[type="password"],
+.input-group input[type="number"],
+.input-group input[type="date"],
+.input-group select {
     width: 100%;
     padding: 13px 18px;
     border: 1.5px solid var(--border-color);
@@ -349,6 +354,7 @@ body.dark-mode .top-bar {
     object-fit: cover;
     border: 1.5px solid var(--border-color);
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    background-color: var(--input-bg);
 }
 
 .btn-change-avatar {
@@ -441,6 +447,101 @@ body.dark-mode .top-bar {
 
 body.dark-mode .theme-bw-btn { background-color: #000000; border: 2px solid #424242; }
 
+/* GRÁFICO DE GASTOS */
+.chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    overflow-x: auto;
+}
+
+#gastos-chart {
+    max-width: 100%;
+    height: auto;
+}
+
+/* COMPROBANTE RADIOS Y VISTA PREVIA */
+.radio-group-comprobante {
+    display: flex;
+    gap: 24px;
+    padding: 10px 16px;
+    background-color: var(--input-bg);
+    border: 1.5px solid var(--border-color);
+    border-radius: 16px;
+}
+
+.radio-option {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    margin: 0 !important;
+    font-size: 0.92rem !important;
+    color: var(--text-primary) !important;
+    cursor: pointer;
+}
+
+.radio-option input[type="radio"] {
+    accent-color: var(--border-coquette);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.file-input-coquette {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px dashed var(--border-coquette);
+    border-radius: 16px;
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.88rem;
+    cursor: pointer;
+}
+
+.comprobante-preview {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px;
+    background-color: var(--input-bg);
+    border: 1.5px solid var(--border-color);
+    border-radius: 16px;
+}
+
+.comprobante-preview img {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1.5px solid var(--border-color);
+}
+
+.btn-xs {
+    padding: 5px 10px !important;
+    font-size: 0.75rem !important;
+}
+
+.comprobante-view-wrapper {
+    margin: 14px 0;
+    max-height: 60vh;
+    overflow: auto;
+    border-radius: 16px;
+    border: 1.5px solid var(--border-color);
+    background-color: var(--input-bg);
+    padding: 8px;
+}
+
+.comprobante-view-wrapper img {
+    max-width: 100%;
+    max-height: 52vh;
+    border-radius: 12px;
+    object-fit: contain;
+}
+
 /* MODAL FLOTANTE */
 .modal-overlay {
     position: fixed;
@@ -466,6 +567,11 @@ body.dark-mode .theme-bw-btn { background-color: #000000; border: 2px solid #424
     text-align: center;
 }
 
+.modal-comprobante-card {
+    width: 440px;
+    max-width: 92vw;
+}
+
 .modal-card h3 {
     margin: 0 0 4px 0;
     color: var(--text-primary);
@@ -484,41 +590,48 @@ body.dark-mode .theme-bw-btn { background-color: #000000; border: 2px solid #424
     margin-top: 14px;
 }
 
-.modal-btns button {
-    flex: 1;
-}
+.modal-btns button { flex: 1; }
 
 .summary-card { text-align: center; }
 .summary-card h2 { margin: 0 0 8px 0; font-size: 0.95rem; color: var(--text-muted); }
 .total-monto { font-size: 2.8rem; font-weight: 800; color: var(--text-primary); }
 
 .gastos-form-grid { display: flex; flex-direction: column; gap: 12px; }
+.form-actions { display: flex; gap: 10px; }
 
-.tabla-gastos { width: 100%; border-collapse: collapse; margin-top: 15px; }
-.tabla-gastos th, .tabla-gastos td { padding: 12px 6px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.88rem; color: var(--text-primary); }
+.table-responsive { width: 100%; overflow-x: auto; }
+.tabla-gastos { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.tabla-gastos th, .tabla-gastos td { padding: 12px 6px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.86rem; color: var(--text-primary); }
 .text-center { text-align: center !important; }
 
 .action-btns { display: inline-flex; gap: 6px; }
 
-.btn-edit, .btn-delete {
+.btn-edit, .btn-delete, .btn-ver-comprobante {
     padding: 6px 12px;
     border-radius: 50px;
     border: none;
     cursor: pointer;
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     font-weight: 700;
 }
 
-.btn-edit { background-color: var(--input-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
+.btn-edit, .btn-ver-comprobante { background-color: var(--input-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
 .btn-delete { background-color: var(--danger-color); color: white; }
+
+.sin-comprobante-tag {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
 
 .msg-box {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 10000;
+    z-index: 10002;
     width: 380px;
+    max-width: 90vw;
     padding: 22px 28px;
     border-radius: 20px;
     font-weight: 700;
