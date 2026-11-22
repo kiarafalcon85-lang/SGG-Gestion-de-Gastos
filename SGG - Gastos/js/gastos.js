@@ -1,11 +1,11 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const fechaInput = document.getElementById("gasto-fecha");
     const regNacimiento = document.getElementById("reg-nacimiento");
-    
+
     const hoyObj = new Date();
     const anio = hoyObj.getFullYear();
-    const mes = String(hoyObj.getMonth() + 1).padStart(2, '0');
-    const dia = String(hoyObj.getDate()).padStart(2, '0');
+    const mes = String(hoyObj.getMonth() + 1).padStart(2, "0");
+    const dia = String(hoyObj.getDate()).padStart(2, "0");
     const hoyStr = `${anio}-${mes}-${dia}`;
 
     if (fechaInput) {
@@ -39,127 +39,19 @@ document.addEventListener("DOMContentLoaded", () => {
         return regex.test(email);
     }
 
-    // AVATAR SIMPLE POR DEFECTO
-    const defaultAvatarSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e2a4b'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-3.8-.85-5.05-2.2.03-1.68 3.37-2.6 5.05-2.6s5.02.92 5.05 2.6C15.8 19.15 14.03 20 12 20z'/></svg>";
-
-    function cargarAvatarUsuario() {
-        const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
-        const avatarImg = document.getElementById("profile-avatar-img");
-        
-        if (!avatarImg || !usuarioActivo) return;
-
-        const avatarGuardado = localStorage.getItem(`sgg_avatar_${usuarioActivo.email}`);
-        if (avatarGuardado) {
-            avatarImg.src = avatarGuardado;
-        } else {
-            avatarImg.src = defaultAvatarSvg;
-        }
+    // INICIALIZAR SQLITE WEBASSEMBLY + OPFS
+    try {
+        await inicializarBaseDeDatos();
+    } catch (error) {
+        console.error("Error al iniciar SQLite/OPFS:", error);
+        mostrarMensaje("⚠️ Abre el proyecto con Live Server para habilitar SQLite y OPFS.");
+        return;
     }
 
-    const inputAvatar = document.getElementById("input-avatar");
-    if (inputAvatar) {
-        inputAvatar.addEventListener("change", (e) => {
-            const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
-            if (!usuarioActivo || !usuarioActivo.email) return;
-
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    const base64Img = evt.target.result;
-                    const avatarImg = document.getElementById("profile-avatar-img");
-                    if (avatarImg) avatarImg.src = base64Img;
-                    localStorage.setItem(`sgg_avatar_${usuarioActivo.email}`, base64Img);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-
-    // VALIDACIÓN DINÁMICA DE REQUISITOS DE CONTRASEÑA CON CAMBIO DE CORAZÓN (♡ a ♥)
-    const regPassInput = document.getElementById("reg-password");
-    if (regPassInput) {
-        regPassInput.addEventListener("input", () => {
-            const val = regPassInput.value;
-            actualizarRequisito("req-length", val.length >= 6);
-            actualizarRequisito("req-number", /\d/.test(val));
-            actualizarRequisito("req-upper", /[A-Z]/.test(val));
-            actualizarRequisito("req-lower", /[a-z]/.test(val));
-        });
-    }
-
-    function actualizarRequisito(id, esValido) {
-        const item = document.getElementById(id);
-        if (item) {
-            const icon = item.querySelector(".heart-icon");
-            if (esValido) {
-                item.classList.add("valid");
-                if (icon) icon.textContent = "♥";
-            } else {
-                item.classList.remove("valid");
-                if (icon) icon.textContent = "♡";
-            }
-        }
-    }
-
-    // GESTIÓN DE APODO
-    const btnEditNickname = document.getElementById("btn-edit-nickname");
-    const nicknameDisplay = document.getElementById("user-nickname-display");
-    const modalNickname = document.getElementById("modal-nickname");
-    const inputNewNickname = document.getElementById("input-new-nickname");
-    const btnSaveNickname = document.getElementById("btn-save-nickname");
-    const btnCancelNickname = document.getElementById("btn-cancel-nickname");
-
-    function cargarNicknameUsuario() {
-        const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
-        if (!usuarioActivo || !nicknameDisplay) return;
-
-        const nickGuardado = localStorage.getItem(`sgg_nickname_${usuarioActivo.email}`);
-        if (nickGuardado) {
-            nicknameDisplay.textContent = `${nickGuardado} ♡`;
-        } else {
-            nicknameDisplay.textContent = `${usuarioActivo.nombre || "Usuario"} ♡`;
-        }
-    }
-
-    if (btnEditNickname) {
-        btnEditNickname.addEventListener("click", () => {
-            const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
-            if (!usuarioActivo) return;
-
-            const nickActual = localStorage.getItem(`sgg_nickname_${usuarioActivo.email}`) || usuarioActivo.nombre || "";
-            if (inputNewNickname) inputNewNickname.value = nickActual;
-            if (modalNickname) modalNickname.classList.remove("hidden");
-        });
-    }
-
-    if (btnCancelNickname) {
-        btnCancelNickname.addEventListener("click", () => {
-            if (modalNickname) modalNickname.classList.add("hidden");
-        });
-    }
-
-    if (btnSaveNickname) {
-        btnSaveNickname.addEventListener("click", () => {
-            const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
-            if (!usuarioActivo) return;
-
-            const nuevoNick = inputNewNickname.value.trim();
-            if (nuevoNick !== "") {
-                localStorage.setItem(`sgg_nickname_${usuarioActivo.email}`, nuevoNick);
-                if (nicknameDisplay) nicknameDisplay.textContent = `${nuevoNick} ♡`;
-                if (modalNickname) modalNickname.classList.add("hidden");
-            } else {
-                mostrarMensaje("⚠️ Por favor ingresa un apodo válido.");
-            }
-        });
-    }
-
-    // PALETA PASTEL
+    // PALETA PASTEL (Mantiene tu comportamiento exacto)
     const colorBtns = document.querySelectorAll(".color-btn");
     const temaGuardado = localStorage.getItem("sgg_color_theme");
-
-    if (temaGuardado) {
+    if (temaGuardado && temaGuardado !== "pink") {
         document.body.classList.add(`theme-${temaGuardado}`);
     }
 
@@ -171,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.body.classList.add(`theme-${selectedTheme}`);
             }
             localStorage.setItem("sgg_color_theme", selectedTheme);
-            renderizarGrafico(); // Actualizar colores del gráfico al cambiar tema
+            renderizarGrafico();
         });
     });
 
@@ -195,34 +87,113 @@ document.addEventListener("DOMContentLoaded", () => {
                 localStorage.setItem("sgg_theme", "light");
                 themeBtn.textContent = "🌙 Modo Oscuro";
             }
-            renderizarGrafico(); // Actualizar colores del gráfico al cambiar modo
+            renderizarGrafico();
         });
     }
 
+    // VER / OCULTAR CONTRASEÑA
     document.querySelectorAll(".btn-toggle-pass").forEach(btn => {
         btn.addEventListener("click", () => {
             const targetId = btn.getAttribute("data-target");
             const input = document.getElementById(targetId);
-            if (input) {
-                if (input.type === "password") {
-                    input.type = "text";
-                    btn.innerHTML = `
-                        <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                            <line x1="1" y1="1" x2="23" y2="23"></line>
-                        </svg>`;
-                } else {
-                    input.type = "password";
-                    btn.innerHTML = `
-                        <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>`;
-                }
+            if (!input) return;
+            if (input.type === "password") {
+                input.type = "text";
+                btn.innerHTML = `<svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+            } else {
+                input.type = "password";
+                btn.innerHTML = `<svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
             }
         });
     });
 
+    // VALIDACIÓN DINÁMICA DE CONTRASEÑA CON CORAZONES
+    const regPassInput = document.getElementById("reg-password");
+    if (regPassInput) {
+        regPassInput.addEventListener("input", () => {
+            const val = regPassInput.value;
+            actualizarRequisito("req-length", val.length >= 6);
+            actualizarRequisito("req-number", /\d/.test(val));
+            actualizarRequisito("req-upper", /[A-Z]/.test(val));
+            actualizarRequisito("req-lower", /[a-z]/.test(val));
+        });
+    }
+
+    function actualizarRequisito(id, esValido) {
+        const item = document.getElementById(id);
+        if (!item) return;
+        const icon = item.querySelector(".heart-icon");
+        if (esValido) {
+            item.classList.add("valid");
+            if (icon) icon.textContent = "♥";
+        } else {
+            item.classList.remove("valid");
+            if (icon) icon.textContent = "♡";
+        }
+    }
+
+    // AVATAR Y APODO EN SQLITE
+    const inputAvatar = document.getElementById("input-avatar");
+    if (inputAvatar) {
+        inputAvatar.addEventListener("change", async (e) => {
+            const usuarioActivo = obtenerUsuarioActivoSQL();
+            if (!usuarioActivo) return;
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const avatarImg = document.getElementById("profile-avatar-img");
+            if (avatarImg) avatarImg.src = URL.createObjectURL(file);
+
+            try {
+                const urlAvatar = await subirComprobanteAPI(file);
+                const bin = await actualizarPerfilSQL(usuarioActivo.email, "avatar_url", urlAvatar);
+                if (avatarImg) avatarImg.src = urlAvatar;
+                await respaldarSQLiteEnNube(usuarioActivo.email, bin);
+            } catch (err) {
+                console.warn("Avatar mostrado en sesión actual (API externa no disponible).");
+            }
+        });
+    }
+
+    const btnEditNickname = document.getElementById("btn-edit-nickname");
+    const nicknameDisplay = document.getElementById("user-nickname-display");
+    const modalNickname = document.getElementById("modal-nickname");
+    const inputNewNickname = document.getElementById("input-new-nickname");
+    const btnSaveNickname = document.getElementById("btn-save-nickname");
+    const btnCancelNickname = document.getElementById("btn-cancel-nickname");
+
+    if (btnEditNickname) {
+        btnEditNickname.addEventListener("click", () => {
+            const usuarioActivo = obtenerUsuarioActivoSQL();
+            if (!usuarioActivo) return;
+            if (inputNewNickname) inputNewNickname.value = usuarioActivo.nickname || usuarioActivo.nombre || "";
+            if (modalNickname) modalNickname.classList.remove("hidden");
+        });
+    }
+
+    if (btnCancelNickname) {
+        btnCancelNickname.addEventListener("click", () => {
+            if (modalNickname) modalNickname.classList.add("hidden");
+        });
+    }
+
+    if (btnSaveNickname) {
+        btnSaveNickname.addEventListener("click", async () => {
+            const usuarioActivo = obtenerUsuarioActivoSQL();
+            if (!usuarioActivo) return;
+            const nuevoNick = inputNewNickname.value.trim();
+            if (!nuevoNick) {
+                mostrarMensaje("⚠️ Por favor ingresa un apodo válido.");
+                return;
+            }
+            const bin = await actualizarPerfilSQL(usuarioActivo.email, "nickname", nuevoNick);
+            if (nicknameDisplay) nicknameDisplay.textContent = `${nuevoNick} ♡`;
+            if (modalNickname) modalNickname.classList.add("hidden");
+            await respaldarSQLiteEnNube(usuarioActivo.email, bin);
+        });
+    }
+
+    // NAVEGACIÓN AUTH
     const authView = document.getElementById("auth-view");
     const panelView = document.getElementById("panel-view");
     const formLogin = document.getElementById("form-login");
@@ -234,11 +205,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const goToRecover = document.getElementById("go-to-recover");
     const goToLoginFromRec = document.getElementById("go-to-login-from-rec");
     const btnLogout = document.getElementById("btn-logout");
-
-    let usuariosBD = JSON.parse(localStorage.getItem("usuarios_sgg")) || [
-        { email: "kiarafalcon@gmail.com", pass: "Kiarafalcon359", nombre: "Kiara", apellido: "Falcón", pregunta: "Rosa" },
-        { email: "admin@profesor.com", pass: "123456", nombre: "Profesor", apellido: "Admin", pregunta: "Rosa" }
-    ];
 
     function mostrarVistaAuth(vista) {
         ocultarMensaje();
@@ -257,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // REGISTRO
     if (formRegister) {
-        formRegister.addEventListener("submit", (e) => {
+        formRegister.addEventListener("submit", async (e) => {
             e.preventDefault();
             const nombre = document.getElementById("reg-nombre").value.trim();
             const apellido = document.getElementById("reg-apellido").value.trim();
@@ -271,35 +237,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 mostrarMensaje("⚠️ Por favor completa todos los campos del registro.");
                 return;
             }
-
             const anioNac = parseInt(nacimiento.split("-")[0], 10);
             if (isNaN(anioNac) || anioNac < 1900 || nacimiento > hoyStr) {
                 mostrarMensaje("⚠️ Ingrese una fecha de nacimiento válida (entre 1900 y hoy).");
                 return;
             }
-
             if (!esEmailValido(email)) {
                 mostrarMensaje("⚠️ Ingrese un correo electrónico válido.");
                 return;
             }
-
             if (pass.length < 6 || !/\d/.test(pass) || !/[A-Z]/.test(pass) || !/[a-z]/.test(pass)) {
                 mostrarMensaje("⚠️ La contraseña debe cumplir todos los requisitos.");
                 return;
             }
-
             if (pass !== confirmPass) {
                 mostrarMensaje("⚠️ Las contraseñas no coinciden.");
                 return;
             }
-
-            if (usuariosBD.some(u => u.email === email)) {
+            if (existeEmailSQL(email)) {
                 mostrarMensaje("⚠️ El correo ya se encuentra registrado.");
                 return;
             }
 
-            usuariosBD.push({ email, pass, nombre: nombre, apellido: apellido, pregunta: pregunta });
-            localStorage.setItem("usuarios_sgg", JSON.stringify(usuariosBD));
+            const bin = await registrarUsuarioSQL({ email, pass, nombre, apellido, nacimiento, pregunta });
+            await respaldarSQLiteEnNube(email, bin);
 
             mostrarMensaje("¡Cuenta registrada con éxito! 🎀 Inicia sesión.", "success");
             formRegister.reset();
@@ -307,9 +268,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // LOGIN
+    // LOGIN (Con descarga Offline-First desde BaaS si es un navegador nuevo)
     if (formLogin) {
-        formLogin.addEventListener("submit", (e) => {
+        formLogin.addEventListener("submit", async (e) => {
             e.preventDefault();
             const email = document.getElementById("login-email").value.trim().toLowerCase();
             const pass = document.getElementById("login-password").value.trim();
@@ -319,10 +280,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const userValido = usuariosBD.find(u => u.email === email && u.pass === pass);
+            if (!existeEmailSQL(email)) {
+                await restaurarSQLiteDesdeNube(email);
+            }
+
+            const userValido = buscarUsuarioPorCredencialesSQL(email, pass);
 
             if (userValido) {
-                localStorage.setItem("usuario_activo_sgg", JSON.stringify(userValido));
+                await guardarSesionSQL(userValido.email);
                 formLogin.reset();
                 ocultarMensaje();
                 verificarSesion();
@@ -332,9 +297,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // RECUPERAR
+    // RECUPERAR CONTRASEÑA
     if (formRecover) {
-        formRecover.addEventListener("submit", (e) => {
+        formRecover.addEventListener("submit", async (e) => {
             e.preventDefault();
             const email = document.getElementById("rec-email").value.trim().toLowerCase();
             const pregunta = document.getElementById("rec-pregunta").value.trim();
@@ -344,64 +309,49 @@ document.addEventListener("DOMContentLoaded", () => {
                 mostrarMensaje("⚠️ Ingrese un correo electrónico válido.");
                 return;
             }
+            if (newPass.length < 6 || !/\d/.test(newPass)) {
+                mostrarMensaje("⚠️ La nueva contraseña debe tener al menos 6 caracteres y 1 número.");
+                return;
+            }
 
-            const idx = usuariosBD.findIndex(u => u.email === email && u.pregunta.toLowerCase() === pregunta.toLowerCase());
-
-            if (idx !== -1) {
-                if (usuariosBD[idx].pass === newPass) {
-                    mostrarMensaje("⚠️ La nueva contraseña no debe ser igual a la anterior.");
-                    return;
-                }
-
-                if (newPass.length < 6 || !/\d/.test(newPass)) {
-                    mostrarMensaje("⚠️ La nueva contraseña debe tener al menos 6 caracteres y 1 número.");
-                    return;
-                }
-
-                usuariosBD[idx].pass = newPass;
-                localStorage.setItem("usuarios_sgg", JSON.stringify(usuariosBD));
+            const res = await actualizarPasswordSQL(email, pregunta, newPass);
+            if (res.ok) {
+                const bin = await persistirCambiosLocales();
+                await respaldarSQLiteEnNube(email, bin);
                 mostrarMensaje("¡Contraseña actualizada con éxito! 🎀 Inicia sesión.", "success");
                 formRecover.reset();
                 mostrarVistaAuth("login");
             } else {
-                mostrarMensaje("⚠️ Correo o respuesta de seguridad incorrectos.");
+                mostrarMensaje(`⚠️ ${res.error}`);
             }
         });
     }
 
     if (btnLogout) {
-        btnLogout.addEventListener("click", () => {
-            localStorage.removeItem("usuario_activo_sgg");
+        btnLogout.addEventListener("click", async () => {
+            await guardarSesionSQL(null);
             ocultarMensaje();
             verificarSesion();
         });
     }
 
     function verificarSesion() {
-        const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
+        const usuarioActivo = obtenerUsuarioActivoSQL();
 
         if (usuarioActivo && usuarioActivo.email) {
             authView.classList.add("hidden");
             panelView.classList.remove("hidden");
             btnLogout.classList.remove("hidden");
-            
-            let primerNombre = usuarioActivo.nombre || "Usuario";
-            let apellido = usuarioActivo.apellido || "";
-
-            if (!apellido && primerNombre.includes(" ")) {
-                const partes = primerNombre.split(" ");
-                primerNombre = partes[0];
-                apellido = partes.slice(1).join(" ");
-            }
 
             const firstNameDisplay = document.getElementById("user-firstname-display");
             const lastNameDisplay = document.getElementById("user-lastname-display");
+            const avatarImg = document.getElementById("profile-avatar-img");
 
-            if (firstNameDisplay) firstNameDisplay.textContent = primerNombre;
-            if (lastNameDisplay) lastNameDisplay.textContent = apellido || "Falcón";
+            if (firstNameDisplay) firstNameDisplay.textContent = usuarioActivo.nombre || "Usuario";
+            if (lastNameDisplay) lastNameDisplay.textContent = usuarioActivo.apellido || "Falcón";
+            if (nicknameDisplay) nicknameDisplay.textContent = `${usuarioActivo.nickname || usuarioActivo.nombre} ♡`;
+            if (avatarImg) avatarImg.src = usuarioActivo.avatar_url || defaultAvatarSvg;
 
-            cargarNicknameUsuario();
-            cargarAvatarUsuario();
             renderizarDashboard();
         } else {
             authView.classList.remove("hidden");
@@ -411,8 +361,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // GESTIÓN DE COMPROBANTE (SÍ / NO) Y FOTO
-    let comprobanteBase64Actual = "";
+    // COMPROBANTE (SÍ / NO) Y SUBIDA A API EXTERNA (SIN BASE64 EN SQLITE)
+    let archivoComprobanteSeleccionado = null;
+    let urlComprobanteEdicion = null;
+
     const radiosComprobante = document.querySelectorAll('input[name="tiene-comprobante"]');
     const comprobanteUploadGroup = document.getElementById("comprobante-upload-group");
     const inputComprobanteFoto = document.getElementById("gasto-comprobante-foto");
@@ -435,19 +387,16 @@ document.addEventListener("DOMContentLoaded", () => {
         inputComprobanteFoto.addEventListener("change", (e) => {
             const file = e.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    comprobanteBase64Actual = evt.target.result;
-                    if (comprobantePreviewImg) comprobantePreviewImg.src = comprobanteBase64Actual;
-                    if (comprobantePreviewBox) comprobantePreviewBox.classList.remove("hidden");
-                };
-                reader.readAsDataURL(file);
+                archivoComprobanteSeleccionado = file;
+                if (comprobantePreviewImg) comprobantePreviewImg.src = URL.createObjectURL(file);
+                if (comprobantePreviewBox) comprobantePreviewBox.classList.remove("hidden");
             }
         });
     }
 
     function limpiarComprobantePreview() {
-        comprobanteBase64Actual = "";
+        archivoComprobanteSeleccionado = null;
+        urlComprobanteEdicion = null;
         if (inputComprobanteFoto) inputComprobanteFoto.value = "";
         if (comprobantePreviewImg) comprobantePreviewImg.src = "";
         if (comprobantePreviewBox) comprobantePreviewBox.classList.add("hidden");
@@ -457,15 +406,14 @@ document.addEventListener("DOMContentLoaded", () => {
         btnQuitarFoto.addEventListener("click", limpiarComprobantePreview);
     }
 
-    // MODAL PARA VER COMPROBANTE GUARDADO
     const modalComprobante = document.getElementById("modal-comprobante");
     const imgModalComprobante = document.getElementById("img-modal-comprobante");
     const btnCloseComprobante = document.getElementById("btn-close-comprobante");
 
     window.verComprobante = function(id) {
-        const gasto = gastosSGG.find(g => g.id === id);
-        if (gasto && gasto.comprobante_foto) {
-            if (imgModalComprobante) imgModalComprobante.src = gasto.comprobante_foto;
+        const mov = obtenerMovimientoPorIdSQL(id);
+        if (mov && mov.url_comprobante) {
+            if (imgModalComprobante) imgModalComprobante.src = mov.url_comprobante;
             if (modalComprobante) modalComprobante.classList.remove("hidden");
         }
     };
@@ -476,7 +424,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // GRÁFICO CIRCULAR POR CATEGORÍA ADAPTADO AL TEMA DETERMINADO
+    // GRÁFICOS INTERACTIVOS CON CHART.JS (CONSULTAS SQL GROUP BY / SUM)
+    let chartDonaCategorias = null;
+    let chartBarrasComparativa = null;
+
     function obtenerPaletaGrafico() {
         const isDark = document.body.classList.contains("dark-mode");
         const isPurple = document.body.classList.contains("theme-purple");
@@ -504,119 +455,109 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? ["#ffffff", "#d4d4d4", "#a3a3a3", "#737373", "#525252", "#e5e5e5", "#8a8a8a", "#404040"]
                 : ["#212121", "#424242", "#616161", "#757575", "#9e9e9e", "#bdbdbd", "#333333", "#888888"];
         }
-        // Rosa por defecto
         return isDark
             ? ["#f48fb1", "#f06292", "#ec407a", "#e91e63", "#d81b60", "#f8bbd0", "#fce4ec", "#ad1457"]
             : ["#c2185b", "#d81b60", "#e91e63", "#ec407a", "#f06292", "#f48fb1", "#880e4f", "#ad1457"];
     }
 
     function renderizarGrafico() {
-        const canvas = document.getElementById("gastos-chart");
-        const emptyMsg = document.getElementById("chart-empty-msg");
-        const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
-        if (!canvas || !usuarioActivo) return;
-
-        const misGastos = gastosSGG.filter(g => 
-            g.email_usuario === usuarioActivo.email && g.estado_activo === true
-        );
-
-        if (misGastos.length === 0) {
-            canvas.classList.add("hidden");
-            if (emptyMsg) emptyMsg.classList.remove("hidden");
-            return;
-        }
-
-        canvas.classList.remove("hidden");
-        if (emptyMsg) emptyMsg.classList.add("hidden");
-
-        // Agrupar montos por categoría
-        const totalesPorCategoria = {};
-        let granTotal = 0;
-
-        misGastos.forEach(g => {
-            const cat = g.categoria;
-            const monto = parseFloat(g.monto);
-            totalesPorCategoria[cat] = (totalesPorCategoria[cat] || 0) + monto;
-            granTotal += monto;
-        });
-
-        const categorias = Object.keys(totalesPorCategoria).sort((a, b) => totalesPorCategoria[b] - totalesPorCategoria[a]);
-        const colores = obtenerPaletaGrafico();
-
-        // Configurar escala retina para nitidez
-        const dpr = window.devicePixelRatio || 1;
-        const width = 560;
-        const height = 310;
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
-        canvas.style.width = `${width}px`;
-        canvas.style.height = `${height}px`;
-
-        const ctx = canvas.getContext("2d");
-        ctx.scale(dpr, dpr);
-        ctx.clearRect(0, 0, width, height);
-
-        const centerX = width / 2;
-        const centerY = height / 2;
-        const radius = 92;
+        const usuarioActivo = obtenerUsuarioActivoSQL();
+        if (!usuarioActivo || typeof Chart === "undefined") return;
 
         const computedStyles = getComputedStyle(document.body);
         const textColor = computedStyles.getPropertyValue("--text-primary").trim() || "#801336";
-        const cardBgColor = computedStyles.getPropertyValue("--card-bg").trim() || "#ffffff";
+        const colores = obtenerPaletaGrafico();
 
-        let startAngle = -Math.PI / 2;
+        // 1. Gráfico de Dona: Egresos por Categoría
+        const canvasCat = document.getElementById("gastos-chart");
+        const emptyMsg = document.getElementById("chart-empty-msg");
+        const datosCategorias = obtenerEgresosPorCategoriaSQL(usuarioActivo.email);
 
-        categorias.forEach((cat, idx) => {
-            const valor = totalesPorCategoria[cat];
-            const sliceAngle = (valor / granTotal) * 2 * Math.PI;
-            const endAngle = startAngle + sliceAngle;
-            const colorSlice = colores[idx % colores.length];
+        if (chartDonaCategorias) {
+            chartDonaCategorias.destroy();
+            chartDonaCategorias = null;
+        }
 
-            // Dibujar porción del pastel
-            ctx.beginPath();
-            ctx.moveTo(centerX, centerY);
-            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-            ctx.closePath();
-            ctx.fillStyle = colorSlice;
-            ctx.fill();
+        if (datosCategorias.length === 0) {
+            if (canvasCat) canvasCat.parentElement.classList.add("hidden");
+            if (emptyMsg) emptyMsg.classList.remove("hidden");
+        } else {
+            if (canvasCat) canvasCat.parentElement.classList.remove("hidden");
+            if (emptyMsg) emptyMsg.classList.add("hidden");
 
-            // Borde separador limpio
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = cardBgColor;
-            ctx.stroke();
+            chartDonaCategorias = new Chart(canvasCat, {
+                type: "doughnut",
+                data: {
+                    labels: datosCategorias.map(d => d.categoria),
+                    datasets: [{
+                        data: datosCategorias.map(d => d.total),
+                        backgroundColor: colores,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: { color: textColor, font: { family: "Quicksand", weight: "bold" } }
+                        }
+                    }
+                }
+            });
+        }
 
-            // Línea conectora y etiqueta externa (estilo imagen de referencia)
-            const midAngle = startAngle + sliceAngle / 2;
-            const porcent = Math.round((valor / granTotal) * 100);
+        // 2. Gráfico de Barras: Ingresos vs. Egresos
+        const canvasComp = document.getElementById("comparativa-chart");
+        const emptyCompMsg = document.getElementById("comparativa-empty-msg");
+        const { ingresos, egresos } = obtenerComparativaIngresosEgresosSQL(usuarioActivo.email);
 
-            const lineStartX = centerX + Math.cos(midAngle) * radius;
-            const lineStartY = centerY + Math.sin(midAngle) * radius;
-            const lineMidX = centerX + Math.cos(midAngle) * (radius + 20);
-            const lineMidY = centerY + Math.sin(midAngle) * (radius + 20);
-            const isRight = Math.cos(midAngle) >= 0;
-            const lineEndX = lineMidX + (isRight ? 18 : -18);
-            const lineEndY = lineMidY;
+        if (chartBarrasComparativa) {
+            chartBarrasComparativa.destroy();
+            chartBarrasComparativa = null;
+        }
 
-            ctx.beginPath();
-            ctx.moveTo(lineStartX, lineStartY);
-            ctx.lineTo(lineMidX, lineMidY);
-            ctx.lineTo(lineEndX, lineEndY);
-            ctx.strokeStyle = colorSlice;
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
+        if (ingresos === 0 && egresos === 0) {
+            if (canvasComp) canvasComp.parentElement.classList.add("hidden");
+            if (emptyCompMsg) emptyCompMsg.classList.remove("hidden");
+        } else {
+            if (canvasComp) canvasComp.parentElement.classList.remove("hidden");
+            if (emptyCompMsg) emptyCompMsg.classList.add("hidden");
 
-            // Texto de etiqueta
-            ctx.font = "bold 12px 'Quicksand', sans-serif";
-            ctx.fillStyle = textColor;
-            ctx.textAlign = isRight ? "left" : "right";
-            ctx.textBaseline = "middle";
-            const labelX = lineEndX + (isRight ? 6 : -6);
-            ctx.fillText(`${cat}: ${porcent}%`, labelX, lineEndY);
-
-            startAngle = endAngle;
-        });
+            chartBarrasComparativa = new Chart(canvasComp, {
+                type: "bar",
+                data: {
+                    labels: ["Ingresos", "Egresos"],
+                    datasets: [{
+                        label: "Total ($)",
+                        data: [ingresos, egresos],
+                        backgroundColor: [colores[2] || "#81c784", colores[0] || "#c2185b"],
+                        borderRadius: 12
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: textColor, font: { family: "Quicksand", weight: "bold" } },
+                            grid: { display: false }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: textColor, font: { family: "Quicksand" } }
+                        }
+                    }
+                }
+            });
+        }
     }
 
+    // CRUD DE MOVIMIENTOS
     const formGastos = document.getElementById("form-gastos");
     const listaGastos = document.getElementById("lista-gastos");
     const totalMontoDisplay = document.getElementById("total-monto");
@@ -624,32 +565,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnGuardar = document.getElementById("btn-guardar");
     const btnCancelar = document.getElementById("btn-cancelar");
 
-    let gastosSGG = JSON.parse(localStorage.getItem("gastos_sgg")) || [];
-
     function renderizarDashboard() {
-        const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
+        const usuarioActivo = obtenerUsuarioActivoSQL();
         if (!usuarioActivo || !listaGastos) return;
 
         listaGastos.innerHTML = "";
-        let totalAcumulado = 0;
+        const movimientos = obtenerMovimientosActivosSQL(usuarioActivo.email);
 
-        const misGastos = gastosSGG.filter(g => 
-            g.email_usuario === usuarioActivo.email && g.estado_activo === true
-        );
-
-        misGastos.forEach((item) => {
-            totalAcumulado += parseFloat(item.monto);
-
-            const comprobanteHtml = (item.tiene_comprobante === "si" && item.comprobante_foto)
+        movimientos.forEach((item) => {
+            const esIngreso = item.tipo_movimiento === "ingreso";
+            const comprobanteHtml = item.url_comprobante
                 ? `<button type="button" class="btn-ver-comprobante" onclick="verComprobante(${item.id})">Ver Foto 🧾</button>`
-                : `<span class="sin-comprobante-tag">${item.tiene_comprobante === "si" ? "Sí (Sin foto)" : "No"}</span>`;
+                : `<span class="sin-comprobante-tag">No</span>`;
 
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>${item.fecha}</td>
+                <td>${esIngreso ? "Ingreso" : "Egreso"}</td>
                 <td>${item.categoria}</td>
                 <td>${item.descripcion}</td>
-                <td>$${parseFloat(item.monto).toFixed(2)}</td>
+                <td>${esIngreso ? "+" : "-"}$${parseFloat(item.monto).toFixed(2)}</td>
                 <td class="text-center">${comprobanteHtml}</td>
                 <td class="text-center">
                     <div class="action-btns">
@@ -661,22 +596,85 @@ document.addEventListener("DOMContentLoaded", () => {
             listaGastos.appendChild(tr);
         });
 
+        const { balance } = obtenerComparativaIngresosEgresosSQL(usuarioActivo.email);
         if (totalMontoDisplay) {
-            totalMontoDisplay.textContent = `$${totalAcumulado.toFixed(2)}`;
+            const signo = balance < 0 ? "-" : "";
+            totalMontoDisplay.textContent = `${signo}$${Math.abs(balance).toFixed(2)}`;
         }
 
-        localStorage.setItem("gastos_sgg", JSON.stringify(gastosSGG));
         renderizarGrafico();
     }
 
+    function resetearFormulario() {
+        if (!formGastos) return;
+        formGastos.reset();
+        document.getElementById("gasto-id").value = "";
+        limpiarComprobantePreview();
+        comprobanteUploadGroup.classList.add("hidden");
+        if (formTitle) formTitle.textContent = "Registrar Nuevo Movimiento 🎀";
+        if (btnGuardar) btnGuardar.textContent = "Guardar Movimiento 🎀";
+        if (btnCancelar) btnCancelar.classList.add("hidden");
+    }
+
+    if (btnCancelar) {
+        btnCancelar.addEventListener("click", resetearFormulario);
+    }
+
+    window.prepararEdicion = function(id) {
+        const mov = obtenerMovimientoPorIdSQL(id);
+        if (!mov) return;
+
+        document.getElementById("gasto-id").value = mov.id;
+        const radioTipo = document.querySelector(`input[name="tipo-movimiento"][value="${mov.tipo_movimiento}"]`);
+        if (radioTipo) radioTipo.checked = true;
+
+        document.getElementById("gasto-monto").value = mov.monto;
+        document.getElementById("gasto-fecha").value = mov.fecha;
+        document.getElementById("gasto-categoria").value = mov.categoria;
+        document.getElementById("gasto-descripcion").value = mov.descripcion;
+
+        if (mov.url_comprobante) {
+            const radioSi = document.querySelector('input[name="tiene-comprobante"][value="si"]');
+            if (radioSi) radioSi.checked = true;
+            comprobanteUploadGroup.classList.remove("hidden");
+            urlComprobanteEdicion = mov.url_comprobante;
+            archivoComprobanteSeleccionado = null;
+            if (comprobantePreviewImg) comprobantePreviewImg.src = mov.url_comprobante;
+            if (comprobantePreviewBox) comprobantePreviewBox.classList.remove("hidden");
+        } else {
+            const radioNo = document.querySelector('input[name="tiene-comprobante"][value="no"]');
+            if (radioNo) radioNo.checked = true;
+            comprobanteUploadGroup.classList.add("hidden");
+            limpiarComprobantePreview();
+        }
+
+        if (formTitle) formTitle.textContent = "Editar Movimiento ✏️";
+        if (btnGuardar) btnGuardar.textContent = "Actualizar Movimiento 🎀";
+        if (btnCancelar) btnCancelar.classList.remove("hidden");
+        formGastos.scrollIntoView({ behavior: "smooth" });
+    };
+
+    // BORRADO LÓGICO (UPDATE activo = 0)
+    window.eliminarGasto = async function(id) {
+        const usuarioActivo = obtenerUsuarioActivoSQL();
+        if (!usuarioActivo) return;
+
+        const bin = await eliminarMovimientoLogicoSQL(id);
+        renderizarDashboard();
+        await respaldarSQLiteEnNube(usuarioActivo.email, bin);
+    };
+
+    // GUARDAR / EDITAR MOVIMIENTO + RESILIENCIA API REST
     if (formGastos) {
-        formGastos.addEventListener("submit", (e) => {
+        formGastos.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            const usuarioActivo = JSON.parse(localStorage.getItem("usuario_activo_sgg"));
+            const usuarioActivo = obtenerUsuarioActivoSQL();
             if (!usuarioActivo) return;
 
             const idGasto = document.getElementById("gasto-id").value;
+            const tipoMovimientoEl = document.querySelector('input[name="tipo-movimiento"]:checked');
+            const tipoMovimiento = tipoMovimientoEl ? tipoMovimientoEl.value : "egreso";
             const monto = parseFloat(document.getElementById("gasto-monto").value);
             const fechaStr = document.getElementById("gasto-fecha").value;
             const categoria = document.getElementById("gasto-categoria").value;
@@ -688,122 +686,75 @@ document.addEventListener("DOMContentLoaded", () => {
                 mostrarMensaje("⚠️ El monto debe ser un número positivo mayor a $0.");
                 return;
             }
-
             if (!fechaStr) {
                 mostrarMensaje("⚠️ Por favor selecciona una fecha.");
                 return;
             }
-
-            const partesFecha = fechaStr.split("-");
-            const anioGasto = parseInt(partesFecha[0], 10);
-
-            if (isNaN(anioGasto) || anioGasto < 1900) {
-                mostrarMensaje("⚠️ El año ingresado no es válido. Debe ser a partir del año 1900.");
+            const anioGasto = parseInt(fechaStr.split("-")[0], 10);
+            if (isNaN(anioGasto) || anioGasto < 1900 || fechaStr > hoyStr) {
+                mostrarMensaje("⚠️ Ingrese una fecha válida (entre 1900 y hoy).");
                 return;
             }
-
-            if (fechaStr > hoyStr) {
-                mostrarMensaje("⚠️ La fecha seleccionada no puede ser posterior al día de hoy.");
-                return;
-            }
-
             if (!categoria) {
                 mostrarMensaje("⚠️ Por favor selecciona una categoría.");
                 return;
             }
-
             if (!descripcion) {
-                mostrarMensaje("⚠️ Ingresa una descripción para el gasto.");
+                mostrarMensaje("⚠️ Ingresa una descripción para el movimiento.");
                 return;
             }
 
-            if (tieneComprobante === "si" && !comprobanteBase64Actual) {
-                mostrarMensaje("⚠️ Seleccionaste que tiene comprobante, por favor sube la foto.");
-                return;
-            }
+            let urlFinalComprobante = null;
+            let huboErrorApi = false;
 
-            if (idGasto) {
-                const idx = gastosSGG.findIndex(g => g.id == idGasto);
-                if (idx !== -1) {
-                    gastosSGG[idx].monto = monto;
-                    gastosSGG[idx].fecha = fechaStr;
-                    gastosSGG[idx].categoria = categoria;
-                    gastosSGG[idx].descripcion = descripcion;
-                    gastosSGG[idx].tiene_comprobante = tieneComprobante;
-                    gastosSGG[idx].comprobante_foto = tieneComprobante === "si" ? comprobanteBase64Actual : "";
+            if (tieneComprobante === "si") {
+                if (archivoComprobanteSeleccionado) {
+                    try {
+                        urlFinalComprobante = await subirComprobanteAPI(archivoComprobanteSeleccionado);
+                    } catch (err) {
+                        huboErrorApi = true;
+                        urlFinalComprobante = null;
+                    }
+                } else if (urlComprobanteEdicion) {
+                    urlFinalComprobante = urlComprobanteEdicion;
                 }
-            } else {
-                const nuevoGasto = {
-                    id: Date.now(),
-                    email_usuario: usuarioActivo.email,
-                    monto: monto,
+            }
+
+            let binActualizado = null;
+            if (idGasto) {
+                binActualizado = await actualizarMovimientoSQL({
+                    id: parseInt(idGasto, 10),
+                    tipo_movimiento: tipoMovimiento,
+                    monto,
                     fecha: fechaStr,
-                    categoria: categoria,
-                    descripcion: descripcion,
-                    tiene_comprobante: tieneComprobante,
-                    comprobante_foto: tieneComprobante === "si" ? comprobanteBase64Actual : "",
-                    estado_activo: true
-                };
-                gastosSGG.push(nuevoGasto);
+                    categoria,
+                    descripcion,
+                    url_comprobante: urlFinalComprobante
+                });
+            } else {
+                binActualizado = await insertarMovimientoSQL({
+                    email_usuario: usuarioActivo.email,
+                    tipo_movimiento: tipoMovimiento,
+                    monto,
+                    fecha: fechaStr,
+                    categoria,
+                    descripcion,
+                    url_comprobante: urlFinalComprobante
+                });
             }
 
             resetearFormulario();
-            ocultarMensaje();
             renderizarDashboard();
-        });
-    }
 
-    function resetearFormulario() {
-        if (formGastos) formGastos.reset();
-        document.getElementById("gasto-id").value = "";
-        formTitle.textContent = "Registrar Nuevo Gasto 🎀";
-        btnGuardar.textContent = "Guardar Gasto 🎀";
-        btnCancelar.classList.add("hidden");
-        if (comprobanteUploadGroup) comprobanteUploadGroup.classList.add("hidden");
-        limpiarComprobantePreview();
-    }
-
-    window.prepararEdicion = function(id) {
-        const gasto = gastosSGG.find(g => g.id === id);
-        if (gasto) {
-            document.getElementById("gasto-id").value = gasto.id;
-            document.getElementById("gasto-monto").value = gasto.monto;
-            document.getElementById("gasto-fecha").value = gasto.fecha;
-            document.getElementById("gasto-categoria").value = gasto.categoria;
-            document.getElementById("gasto-descripcion").value = gasto.descripcion;
-
-            const tieneComp = gasto.tiene_comprobante || "no";
-            const radioTarget = document.querySelector(`input[name="tiene-comprobante"][value="${tieneComp}"]`);
-            if (radioTarget) radioTarget.checked = true;
-
-            if (tieneComp === "si") {
-                comprobanteUploadGroup.classList.remove("hidden");
-                if (gasto.comprobante_foto) {
-                    comprobanteBase64Actual = gasto.comprobante_foto;
-                    if (comprobantePreviewImg) comprobantePreviewImg.src = comprobanteBase64Actual;
-                    if (comprobantePreviewBox) comprobantePreviewBox.classList.remove("hidden");
-                } else {
-                    limpiarComprobantePreview();
-                }
+            if (huboErrorApi) {
+                mostrarMensaje("⚠️ No se pudo subir la imagen, pero el movimiento se guardó sin comprobante (NULL).");
             } else {
-                comprobanteUploadGroup.classList.add("hidden");
-                limpiarComprobantePreview();
+                mostrarMensaje("¡Movimiento guardado con éxito! 🎀", "success");
             }
 
-            formTitle.textContent = "Editar Gasto ✏️";
-            btnGuardar.textContent = "Actualizar Gasto";
-            btnCancelar.classList.remove("hidden");
-        }
-    };
-
-    if (btnCancelar) btnCancelar.addEventListener("click", resetearFormulario);
-
-    window.eliminarGasto = function(id) {
-        if (confirm("¿Estás segura de eliminar este gasto?")) {
-            gastosSGG = gastosSGG.map(g => g.id === id ? { ...g, estado_activo: false } : g);
-            renderizarDashboard();
-        }
-    };
+            await respaldarSQLiteEnNube(usuarioActivo.email, binActualizado);
+        });
+    }
 
     verificarSesion();
 });
