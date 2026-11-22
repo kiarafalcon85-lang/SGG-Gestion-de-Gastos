@@ -8,6 +8,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Librerías requeridas: SQLite WebAssembly, Chart.js y Supabase BaaS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="light-mode">
 
@@ -44,7 +49,7 @@
         <div id="modal-comprobante" class="modal-overlay hidden">
             <div class="modal-card modal-comprobante-card">
                 <div class="coquette-bow-header">🧾</div>
-                <h3>Comprobante del Gasto</h3>
+                <h3>Comprobante del Movimiento</h3>
                 <div class="comprobante-view-wrapper">
                     <img id="img-modal-comprobante" src="" alt="Comprobante">
                 </div>
@@ -81,7 +86,7 @@
                     </div>
                 </div>
                 
-                <button type="submit" class="btn-primary">INGRESAR 🎀</button>
+                <button type="submit" id="btn-login-submit" class="btn-primary">INGRESAR 🎀</button>
                 <p class="switch-auth">¿Olvidaste tu contraseña? <a href="javascript:void(0)" id="go-to-recover">Recupérala aquí</a></p>
                 <p class="switch-auth">¿No tienes una cuenta aún? <a href="javascript:void(0)" id="go-to-register">Regístrate aquí</a></p>
             </form>
@@ -108,242 +113,4 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="reg-email">CORREO ELECTRÓNICO</label>
-                    <input type="text" id="reg-email" required placeholder="tu.correo@gmail.com">
-                </div>
-
-                <div class="input-group">
-                    <label for="reg-password">CONTRASEÑA</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="reg-password" required placeholder="••••••••">
-                        <button type="button" class="btn-toggle-pass" data-target="reg-password" aria-label="Ver u Ocultar contraseña">
-                            <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
-                    </div>
-                    <ul class="pass-req-list">
-                        <li id="req-length"><span class="heart-icon">♡</span> Mínimo 6 caracteres</li>
-                        <li id="req-number"><span class="heart-icon">♡</span> Al menos 1 número</li>
-                        <li id="req-upper"><span class="heart-icon">♡</span> Al menos 1 mayúscula</li>
-                        <li id="req-lower"><span class="heart-icon">♡</span> Al menos 1 minúscula</li>
-                    </ul>
-                </div>
-
-                <div class="input-group">
-                    <label for="reg-confirm-password">REPETIR CONTRASEÑA</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="reg-confirm-password" required placeholder="••••••••">
-                        <button type="button" class="btn-toggle-pass" data-target="reg-confirm-password" aria-label="Ver u Ocultar contraseña">
-                            <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label for="reg-pregunta">PREGUNTA DE SEGURIDAD: ¿Cuál es tu color favorito?</label>
-                    <input type="text" id="reg-pregunta" required placeholder="Ingresa tu respuesta">
-                </div>
-
-                <button type="submit" class="btn-primary">REGISTRARSE 🎀</button>
-                <p class="switch-auth">¿Ya tienes cuenta? <a href="javascript:void(0)" id="go-to-login-from-reg">Inicia sesión</a></p>
-            </form>
-
-            <!-- Form Recuperación -->
-            <form id="form-recover" class="auth-form hidden" novalidate>
-                <div class="coquette-bow-header">🎀</div>
-                <h2>Cambiar Contraseña</h2>
-                <p class="sub-title">Ingresa tus datos para restablecer tu acceso ♡</p>
-
-                <div class="input-group">
-                    <label for="rec-email">CORREO ELECTRÓNICO</label>
-                    <input type="text" id="rec-email" required placeholder="tu.correo@gmail.com">
-                </div>
-
-                <div class="input-group">
-                    <label for="rec-pregunta">RESPUESTA DE SEGURIDAD: ¿Cuál es tu color favorito?</label>
-                    <input type="text" id="rec-pregunta" required placeholder="Ingresa tu respuesta">
-                </div>
-
-                <div class="input-group">
-                    <label for="rec-new-password">NUEVA CONTRASEÑA</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="rec-new-password" required placeholder="••••••••">
-                        <button type="button" class="btn-toggle-pass" data-target="rec-new-password" aria-label="Ver u Ocultar contraseña">
-                            <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-primary">ACTUALIZAR CONTRASEÑA 🎀</button>
-                <p class="switch-auth"><a href="javascript:void(0)" id="go-to-login-from-rec">Volver al Inicio de Sesión</a></p>
-            </form>
-        </section>
-
-        <!-- VISTA PANEL DE GASTOS -->
-        <div id="panel-view" class="hidden">
-            
-            <!-- TARJETA PERFIL ESTILO NOTION OS -->
-            <section class="profile-widget-card">
-                <div class="window-header">
-                    <div class="window-dots">
-                        <span class="dot dot-red"></span>
-                        <span class="dot dot-yellow"></span>
-                        <span class="dot dot-green"></span>
-                    </div>
-                    <span class="window-title">♡ Bienvenido a su perfil de gastos</span>
-                </div>
-                
-                <div class="profile-layout">
-                    <div class="avatar-wrapper">
-                        <img id="profile-avatar-img" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e2a4b'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-3.8-.85-5.05-2.2.03-1.68 3.37-2.6 5.05-2.6s5.02.92 5.05 2.6C15.8 19.15 14.03 20 12 20z'/></svg>" alt="Foto de perfil">
-                        <label for="input-avatar" class="btn-change-avatar" title="Cambiar foto de perfil">📷</label>
-                        <input type="file" id="input-avatar" accept="image/*" class="hidden">
-                    </div>
-
-                    <div class="profile-details">
-                        <!-- APODO EDITABLE -->
-                        <div class="field-box full-name">
-                            <span class="field-label">Apodo</span>
-                            <div class="field-value-wrapper">
-                                <span id="user-nickname-display" class="field-value">Usuario ♡</span>
-                                <button type="button" id="btn-edit-nickname" class="btn-edit-icon" title="Editar Apodo">✏️</button>
-                            </div>
-                        </div>
-
-                        <!-- NOMBRE Y APELLIDO -->
-                        <div class="fields-row">
-                            <div class="field-box">
-                                <span class="field-label">Nombre</span>
-                                <div class="field-value" id="user-firstname-display">Nombre</div>
-                            </div>
-                            <div class="field-box">
-                                <span class="field-label">Apellido</span>
-                                <div class="field-value" id="user-lastname-display">Apellido</div>
-                            </div>
-                        </div>
-                        
-                        <div class="color-picker-box">
-                            <span class="picker-title">Color determinado:</span>
-                            <div class="color-palette">
-                                <button type="button" class="color-btn theme-pink-btn" data-color="pink" title="Rosa"></button>
-                                <button type="button" class="color-btn theme-purple-btn" data-color="purple" title="Lila"></button>
-                                <button type="button" class="color-btn theme-blue-btn" data-color="blue" title="Azul"></button>
-                                <button type="button" class="color-btn theme-mint-btn" data-color="mint" title="Verde"></button>
-                                <button type="button" class="color-btn theme-bw-btn" data-color="bw" title="Blanco / Negro"></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="summary-card">
-                <h2>Total Gastado ♡</h2>
-                <div class="total-monto" id="total-monto">$0.00</div>
-            </section>
-
-            <!-- SECCIÓN GRÁFICO CIRCULAR POR CATEGORÍA -->
-            <section class="crud-section chart-section">
-                <h2>Distribución de Gastos 📊</h2>
-                <div class="chart-container">
-                    <canvas id="gastos-chart" width="560" height="320"></canvas>
-                    <p id="chart-empty-msg" class="sub-title hidden">Aún no hay gastos registrados para mostrar el gráfico ♡</p>
-                </div>
-            </section>
-
-            <section class="crud-section">
-                <h2 id="form-title">Registrar Nuevo Gasto 🎀</h2>
-                <form id="form-gastos" class="gastos-form-grid" novalidate>
-                    <input type="hidden" id="gasto-id">
-
-                    <div class="input-group">
-                        <label for="gasto-monto">MONTO ($)</label>
-                        <input type="number" id="gasto-monto" min="0.01" step="0.01" required placeholder="0.00">
-                    </div>
-
-                    <div class="input-group">
-                        <label for="gasto-fecha">FECHA (HASTA HOY)</label>
-                        <input type="date" id="gasto-fecha" required min="1900-01-01">
-                    </div>
-
-                    <div class="input-group">
-                        <label for="gasto-categoria">CATEGORÍA</label>
-                        <select id="gasto-categoria" required>
-                            <option value="" disabled selected>Seleccionar...</option>
-                            <option value="Alimentación">Alimentación 🌸</option>
-                            <option value="Transporte">Transporte 🚌</option>
-                            <option value="Servicios">Servicios 💡</option>
-                            <option value="Ocio">Ocio 🎀</option>
-                            <option value="Salud & Cuidado">Salud & Cuidado 🍓</option>
-                            <option value="Educación/Estudios">Educación/Estudios 📚</option>
-                            <option value="Compras & Moda">Compras & Moda 🛍️</option>
-                            <option value="Varios/Otros">Varios/Otros 💫</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group full-width">
-                        <label for="gasto-descripcion">DESCRIPCIÓN</label>
-                        <input type="text" id="gasto-descripcion" required placeholder="Ej. Compras del súper, Salida...">
-                    </div>
-
-                    <!-- OPCIÓN DE COMPROBANTE (SÍ / NO) + FOTO -->
-                    <div class="input-group full-width">
-                        <label>¿TIENE COMPROBANTE?</label>
-                        <div class="radio-group-comprobante">
-                            <label class="radio-option">
-                                <input type="radio" name="tiene-comprobante" value="no" checked> No
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="tiene-comprobante" value="si"> Sí
-                            </label>
-                        </div>
-                    </div>
-
-                    <div id="comprobante-upload-group" class="input-group full-width hidden">
-                        <label for="gasto-comprobante-foto">FOTO DEL COMPROBANTE 📷</label>
-                        <input type="file" id="gasto-comprobante-foto" accept="image/*" class="file-input-coquette">
-                        <div id="comprobante-preview-box" class="comprobante-preview hidden">
-                            <img id="comprobante-preview-img" src="" alt="Vista previa comprobante">
-                            <button type="button" id="btn-quitar-foto" class="btn-delete btn-xs">Quitar foto ✕</button>
-                        </div>
-                    </div>
-
-                    <div class="form-actions full-width">
-                        <button type="submit" id="btn-guardar" class="btn-primary">Guardar Gasto 🎀</button>
-                        <button type="button" id="btn-cancelar" class="btn-secondary hidden">Cancelar Edición</button>
-                    </div>
-                </form>
-            </section>
-
-            <section class="crud-section">
-                <h2>Historial de Gastos 📋</h2>
-                <div class="table-responsive">
-                    <table class="tabla-gastos">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Categoría</th>
-                                <th>Descripción</th>
-                                <th>Monto</th>
-                                <th class="text-center">Comprobante</th>
-                                <th class="text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lista-gastos"></tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-
-    </main>
-
-    <script src="js/gastos.js"></script>
-</body>
-</html>
+                    <label for="reg-email">CORREO ELECTRÓNICO</
